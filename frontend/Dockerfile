@@ -1,4 +1,4 @@
-FROM launcher.gcr.io/google/nodejs
+FROM node:alpine
 ENV APP_ROOT /frontend
 
 WORKDIR $APP_ROOT
