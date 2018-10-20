@@ -1,4 +1,17 @@
+# Store
+## 概要
+
+本サービスのバックエンドAPIを担うものです。
+
 ## 準備
+
+MySQLサーバの使うにはふた通りの方法があります。
+
+- GCP Cloud SQLを使う方法
+- PC内に立てる方法
+
+後者はいままで通りなので前者だけ説明します
+
 ### Google Cloud Platform CLIツールのインストールと認証を済ませる
 
 ```
@@ -60,3 +73,10 @@ python app.py
 ```
 make deploy
 ```
+
+## Member
+
+- @HiromuYamazaki
+- @karzawa
+- @KeisukeYamashita
+- @yosshi0774

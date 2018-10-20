@@ -1,5 +1,5 @@
 FROM golang:1.11 as build
-LABEL MAINTAINER=KeisukeYamashita
+LABEL MAINTAINER="KeisukeYamashita"
 
 RUN mkdir -p /go
 ENV GOPATH /go
