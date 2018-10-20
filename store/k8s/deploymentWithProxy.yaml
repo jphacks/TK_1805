@@ -1,0 +1,63 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: store
+  labels:
+    app: store
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: store
+  template:
+    metadata:
+      labels:
+        app: store
+    spec:
+      containers:
+        - name: store
+          image: "asia.gcr.io/jphack2018-219415/store:latest"
+          imagePullPolicy: Always
+          env:
+            - name: STORE_HOST
+              value: "store"
+            - name: STORE_PORT
+              value: "5000"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: username
+          command: ["python"]
+          args: ["/app/app.py"]
+          ports:
+            - containerPort: 5000
+          readinessProbe:
+            httpGet:
+              path: /healthy
+              port: 5000
+          resources:
+            requests:
+              cpu: 50m
+        - image: gcr.io/cloudsql-docker/gce-proxy:1.09
+          name: cloudsql-proxy
+          command: ["/cloud_sql_proxy", "--dir=/cloudsql",
+                    "-instances=jphack2018-219415:asia-northeast1:store-db=tcp:3306",
+                    "-credential_file=/secrets/cloudsql/credentials.json"]
+          volumeMounts:
+            - name: cloudsql-instance-credentials
+              mountPath: /secrets/cloudsql
+              readOnly: true
+            - name: ssl-certs
+              mountPath: /etc/ssl/certs
+            - name: cloudsql
+              mountPath: /cloudsql
+      volumes:
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
+        - name: ssl-certs
+          hostPath:
+            path: /etc/ssl/certs
+        - name: cloudsql
+          emptyDir:
