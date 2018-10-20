@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: "asia.gcr.io/jphack2018-219415/frontend:latest"
+          imagePullPolicy: Always
+          command: ["yarn"]
+          args: ["start"]
+          ports:
+            - containerPort: 3000
+          readinessProbe:
+            httpGet:
+              path: /healthy
+              port: 3000
+          resources:
+            requests:
+              cpu: 50m
