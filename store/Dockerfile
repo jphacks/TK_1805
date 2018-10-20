@@ -1,5 +1,6 @@
-
 FROM python:3-slim
+LABEL MAINTAINER="KeisukeYamashita"
+
 ADD . /app
 WORKDIR /app
 

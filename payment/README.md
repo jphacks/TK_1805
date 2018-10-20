@@ -4,6 +4,10 @@
 ![goversion batch](https://img.shields.io/badge/go-1.11-blue.svg)
 ![version batch](https://img.shields.io/badge/apiversion-v1-blue.svg)
 
+## 概要
+
+決済を行うためのAPIサーバーです。
+
 ## API仕様書
 
 以下のコマンドを実行してください。
@@ -27,3 +31,10 @@ go run main.go
 ```
 GO_ENV=test go test -v ./...
 ```
+
+## Member
+
+- @HiromuYamazaki
+- @karzawa
+- @KeisukeYamashita
+- @yosshi0774
