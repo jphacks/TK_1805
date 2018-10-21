@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "aglio -i store/v1/api.apib -o store/v1/api.html && aglio -i payment/v1/api.apib -o payment/v1/api.html && aglio -i frontend/api.apib -o frontend/api.html",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
