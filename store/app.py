@@ -1,9 +1,13 @@
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 
+import views
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///store.db'
 db = SQLAlchemy(app)
+
+app.register_blueprint(views.app, url_prefix = '')
 
 
 class Store(db.Model):
@@ -40,15 +44,6 @@ class Item(db.Model):
     def __repr__(self):
         return '<Item %r>' % self.name
 
-
-@app.route('/')
-def index():
-    return "Hello World"
-
-# デプロイ時に必要なので残しておいてください
-@app.route('/healthy')
-def health():
-    return "I am healthy"
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0', port=5000)
