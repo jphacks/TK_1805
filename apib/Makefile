@@ -11,9 +11,9 @@ build:
 	@for subdir in $(SUBDIRS); do\
 		$(APIB_HTML_CONVERTER) -i $$subdir/v1/api.apib -o $$subdir/v1/api.html;\
 	done
-	$(CONTAINER_BUILDER) build -t asia.gcr.io/$(PROJECT_ID)/$(HELM_RELEASE_NAME)-apib:$(VERSION) .
+	$(CONTAINER_BUILDER) build -t asia.gcr.io/$(PROJECT_ID)/apib:$(VERSION) .
 
 .PHONY:deploy
 deploy:
 	make build
-	$(ClOUD_PROVIDER) docker -- push asia.gcr.io/$(PROJECT_ID)/$(HELM_RELEASE_NAME)-apib:$(VERSION)
+	$(ClOUD_PROVIDER) docker -- push asia.gcr.io/$(PROJECT_ID)/apib:$(VERSION)
