@@ -16,7 +16,7 @@ HOST: http://payment:8880/v1
 + Parameters
     + stripeToken: tok_visa (string) - PublicKeyとカード情報を元に発行されたStripe上のtoken。`customerID`がない限り`required`です。
     + email: hogehoge@aho.com (string) - StripeのCustomerとして登録用のメールアドレスです。
-    + amount: 4000 (int64) - 料金。単位は**円*です。
+    + amount: 4000 (int64) - 料金。単位は円です。
     + customerID: cus_Dn1g1NTijBHzzl (string) - Stripe上の一意なID。`stripeToken`がない限り`required`である。`stripeToken`です。
     + userID: 3 (int) - 本サービス上のユーザ識別子。初回決済時に必要です。
     + description: "This is desc" (string, optional) - 説明用。主にハンドラテストと統合テストを分けるために付与するものです。

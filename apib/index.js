@@ -19,7 +19,8 @@ app.get('/store', (req, res) => {
 });
 
 app.get('/frontend', (req, res) => {
-    res.sendFile(path.join(__dirname, 'frontend', 'api.html'));
+    res.sendFile(path.join(__dirname, 'frontend', 'v1', 'api.html'));
 });
+
 
 app.listen(3000, () => console.log('Example express app listening on port 3000!'));

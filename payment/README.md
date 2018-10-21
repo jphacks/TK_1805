@@ -13,7 +13,7 @@
 以下のコマンドを実行してください。
 
 ```
-open doc/v1/api.html
+open ../apib/payment/v1/api.html
 ```
 
 ## 起動
