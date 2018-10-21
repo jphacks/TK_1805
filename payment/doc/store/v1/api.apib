@@ -1,0 +1,177 @@
+FORMAT: 1A
+HOST: http://35.221.123.85:5000/v1
+
+# StoreAPI v1
+
+- version: 1.0
+
+店舗のメニューや注文を管理するためのAPIを定義する。
+
+このAPIでは次の形式のデータを扱う。
+
+- store
+    - id: string
+    - name: string
+- item
+    - id: string
+    - category_id: string
+    - name: string
+    - description: string
+    - photo: object
+        - url: string
+    - price: number
+- category
+    - id: string
+    - store_id: string
+    - name: string
+    - description: string
+    - photo: object
+        - url: string
+- table
+    - id: string
+- group
+    - id: string
+    - table_id: string
+    - state: string - "IN_STORE", "WAITING_PAYMENT" or "PAID"
+- order
+    - id: string
+    - items: object[]
+        - item_id: string
+        - count: number
+
+## Group [/store/{storeId}/groups{?tableId}]
+
+### 入店時にGroupIDを取得する [GET]
+
+`Group#state` を返す。
+これが `"PAID"` だった場合は以前のグループの情報を取得してしまっていることになる。
+その場合は新規の注文を許可せず、GroupIDの更新をユーザーに促す。
+
++ Parameters
+    + tableId: vHTbfXPPgXFrHoXaeAG9eTxz (string) - tableIdをもとに現在のGroupのIDを返す
+
++ Response 200 (application/json)
+    + Body
+        {
+            "error": "",
+            "message": {
+                "groupId": "UTHER4TwQEYJERUEwHNhrxjo"
+                "state": "IN_STORE"
+            }
+        }
+
++ Response 400 (application/json)
+    リクエストフォーマットに関するエラーです。
+
+    + Body
+        {
+            "error": {
+                "statusCode": 400,
+                "message": "Message about the error",
+            }
+        }
+
++ Response 500 (application/json)
+    APIのデータベースに関するエラーです。
+
+    + Body
+        {
+            "error": {
+                "statusCode": 500,
+                "message": "Message about the error",
+            }
+        }
+
+### テーブルに対してGroup IDを発行する [POST]
+
+テーブルに客が入れることを店員が確認した後に作成し、新しい客を受け入れる準備ができたことを明確にする。
+決済が終了したテーブルの場合、客も自身でGroup IDを作成するかもしれない。
+（店員が更新を忘れるかもしれないので）
+
++ Parameters
+    + tableId: vHTbfXPPgXFrHoXaeAG9eTxz (string)
+
++ Response 200 (application/json)
+    + Body
+        {
+            "error": "",
+            "message": {
+                "groupId": "UTHER4TwQEYJERUEwHNhrxjo"
+            }
+        }
+
+## Menu [/store/{storeId}/menu]
+
+### メニューの一覧を返す [GET]
+
++ Response 200 (application/json)
+    + Body
+        {
+            "error": "",
+            "message": {
+                "items": [
+                    {
+                        "id": "TagaXrsTqbeM7fmwNMkFZTRF",
+                        "categoryId": "qYTyxLh8YHFwPaJZiipppXTj",
+                        "name": "鶏せせりの九条葱ぽん酢",
+                        "description": "ビールに合うよ",
+                        "photo": {
+                            "url": "https://goo.gl/5dXWKW"
+                        },
+                        "price": 399
+                    },
+                    ...
+                ],
+                "categories": [
+                    {
+                        "id": "qYTyxLh8YHFwPaJZiipppXTj",
+                        "name": "逸品料理",
+                        "description": "自慢の逸品が勢揃いです",
+                        "photo": {
+                            "url": "https://goo.gl/YqZ4Ye"
+                        }
+                    },
+                    ...
+                ]
+            }
+        }
+
+## Firebase [/firestore]
+
+### 注文を行う [POST]
+
+注文はFirestoreを更新することで行うのでサーバーサイドでは何もしない。
+URLもダミーなので注意。
+
+## Payment [/store/:id/pay{&paymentMethod}]
+
+### 決済を行う [POST]
+
+TODO: どんな情報が必要なのかわからない
+NOTE: 注文の情報はFirestoreにあるので、そこへのアクセスが必要
+
++ Request
+    + Attribute
+        + paymentMethod: `CreditCard` (string, required) - 決済方法を示す(知らんけど)
+        + groupId: `UTHER4TwQEYJERUEwHNhrxjo` (string, required)
+
++ Reponse 200 (application/json)
+    + Body
+        {
+            "error": "",
+            "message": {
+                "token": "cZaNWUTsfdHRkcKmcGw4EpEf"
+            }
+        }
+
+## Item [/store/{storeId}/items]
+
+### メニューを追加する [POST]
+
+NOTE: ハッカソン中はデータベースに直箸で入れてしまえばいいので実装しなくても良い。
+
+## Category [/store/{storeId}/categories]
+
+### カテゴリーを追加する [POST]
+
+NOTE: 同上
