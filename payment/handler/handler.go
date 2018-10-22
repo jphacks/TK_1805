@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"github.com/KeisukeYamashita/payment/helpers"
-	"github.com/KeisukeYamashita/payment/types"
+	"github.com/KeisukeYamashita/TK_1805/payment/helpers"
+	"github.com/KeisukeYamashita/TK_1805/payment/types"
 	"github.com/k0kubun/pp"
 	"github.com/kataras/iris"
 	stripe "github.com/stripe/stripe-go"

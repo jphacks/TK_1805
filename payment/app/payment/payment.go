@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/KeisukeYamashita/payment/app"
-	"github.com/KeisukeYamashita/payment/types"
+	"github.com/KeisukeYamashita/TK_1805/payment/app"
+	"github.com/KeisukeYamashita/TK_1805/payment/types"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/joho/godotenv"

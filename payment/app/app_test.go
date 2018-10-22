@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/KeisukeYamashita/payment/handler"
-	"github.com/KeisukeYamashita/payment/types"
+	"github.com/KeisukeYamashita/TK_1805/payment/handler"
+	"github.com/KeisukeYamashita/TK_1805/payment/types"
 	"github.com/joho/godotenv"
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/httptest"
