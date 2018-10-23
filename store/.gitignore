@@ -20,3 +20,5 @@ vendor/
 .gcp/*.json
 
 node_modules/
+
+main
