@@ -32,6 +32,7 @@
     "eslint-plugin-react": "7.11.1",
     "express": "^4.16.4",
     "file-loader": "2.0.0",
+    "firebase": "^5.5.5",
     "fs-extra": "7.0.0",
     "html-webpack-plugin": "4.0.0-alpha.2",
     "identity-obj-proxy": "3.0.0",
