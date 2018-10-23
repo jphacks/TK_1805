@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 
-from store import _get_store_groups
+from store import _get_store_groups, _post_store_groups, _get_store_menu
 
 
 app = Blueprint(__name__, "views")
@@ -21,3 +21,11 @@ def health():
 def store_groups():
     if request.method == 'GET':
         return _get_store_groups()
+    if request.method == 'POST':
+        return _post_store_groups()
+
+
+@app.route('/store/menu')
+def store_menu():
+    if request.method == 'GET':
+        return _get_store_menu()
