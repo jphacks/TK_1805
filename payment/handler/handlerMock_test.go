@@ -3,7 +3,7 @@ package handler
 import (
 	"testing"
 
-	"github.com/KeisukeYamashita/payment/types"
+	"github.com/KeisukeYamashita/TK_1805/payment/types"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

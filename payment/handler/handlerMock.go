@@ -3,7 +3,7 @@ package handler
 import (
 	"errors"
 
-	"github.com/KeisukeYamashita/payment/types"
+	"github.com/KeisukeYamashita/TK_1805/payment/types"
 )
 
 // MockDB ...
