@@ -12,7 +12,7 @@ HOST: http://35.221.123.85:5000/v1
 - store
     - id: string
     - name: string
-- item
+- item - Firestore
     - id: string
     - category_id: string
     - name: string
@@ -33,7 +33,7 @@ HOST: http://35.221.123.85:5000/v1
     - id: string
     - table_id: string
     - state: string - "IN_STORE", "WAITING_PAYMENT" or "PAID"
-- order
+- order - Firestore
     - id: string
     - items: object[]
         - item_id: string
@@ -97,70 +97,6 @@ HOST: http://35.221.123.85:5000/v1
             "error": "",
             "message": {
                 "groupId": "UTHER4TwQEYJERUEwHNhrxjo"
-            }
-        }
-
-## Menu [/store/{storeId}/menu]
-
-### メニューの一覧を返す [GET]
-
-+ Response 200 (application/json)
-    + Body
-        {
-            "error": "",
-            "message": {
-                "items": [
-                    {
-                        "id": "TagaXrsTqbeM7fmwNMkFZTRF",
-                        "categoryId": "qYTyxLh8YHFwPaJZiipppXTj",
-                        "name": "鶏せせりの九条葱ぽん酢",
-                        "description": "ビールに合うよ",
-                        "photo": {
-                            "url": "https://goo.gl/5dXWKW"
-                        },
-                        "price": 399
-                    },
-                    ...
-                ],
-                "categories": [
-                    {
-                        "id": "qYTyxLh8YHFwPaJZiipppXTj",
-                        "name": "逸品料理",
-                        "description": "自慢の逸品が勢揃いです",
-                        "photo": {
-                            "url": "https://goo.gl/YqZ4Ye"
-                        }
-                    },
-                    ...
-                ]
-            }
-        }
-
-## Firebase [/firestore]
-
-### 注文を行う [POST]
-
-注文はFirestoreを更新することで行うのでサーバーサイドでは何もしない。
-URLもダミーなので注意。
-
-## Payment [/store/:id/pay{&paymentMethod}]
-
-### 決済を行う [POST]
-
-TODO: どんな情報が必要なのかわからない
-NOTE: 注文の情報はFirestoreにあるので、そこへのアクセスが必要
-
-+ Request
-    + Attribute
-        + paymentMethod: `CreditCard` (string, required) - 決済方法を示す(知らんけど)
-        + groupId: `UTHER4TwQEYJERUEwHNhrxjo` (string, required)
-
-+ Reponse 200 (application/json)
-    + Body
-        {
-            "error": "",
-            "message": {
-                "token": "cZaNWUTsfdHRkcKmcGw4EpEf"
             }
         }
 
