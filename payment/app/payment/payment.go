@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/KeisukeYamashita/TK_1805/payment/app"
+	"github.com/KeisukeYamashita/TK_1805/payment/handler"
 	"github.com/KeisukeYamashita/TK_1805/payment/types"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -19,7 +20,7 @@ const (
 )
 
 var (
-	db *gorm.DB
+	db types.Datastorable
 )
 
 func init() {
@@ -27,29 +28,37 @@ func init() {
 
 	if os.Getenv("GO_ENV") != "test" {
 		err = godotenv.Load()
-	}
 
-	if err != nil {
-		log.Fatal(fmt.Sprintf("Error loading .env file: %v", err))
-	}
+		if err != nil {
+			log.Fatal(fmt.Sprintf("Error loading .env file: %v", err))
+		}
 
-	if os.Getenv("GO_ENV") == "TEST" {
 		connectionArgs := fmt.Sprintf("%v:%v@/%v?charset=utf8&parseTime=True&loc=Local", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_DATABASE"))
 
-		db, err = gorm.Open("mysql", connectionArgs)
+		dbClient, err := gorm.Open("mysql", connectionArgs)
+
 		if err != nil {
 			log.Fatal(fmt.Sprintf("Error while connecting to db: %v", err))
 		}
 
-		db.AutoMigrate(&types.User{}, &types.Transaction{})
+		dbClient.AutoMigrate(&types.User{}, &types.Transaction{})
+
+		db = &types.DB{
+			Client: dbClient,
+		}
+	} else {
+		err = godotenv.Load("./.env.test")
+
+		if err != nil {
+			log.Fatal(fmt.Sprintf("Error loading .env file: %v", err))
+		}
+
+		mdb := new(handler.MockDB)
+		db = mdb
 	}
 }
 
 func main() {
-	db := &types.DB{
-		Client: db,
-	}
-
 	app := app.NewIrisApp(db)
 	app.Run(iris.Addr(":8880"))
 }
