@@ -1,7 +1,7 @@
 FROM python:3-slim
 LABEL MAINTAINER="KeisukeYamashita"
 
-ADD . /app
+ADD ./store /app
 WORKDIR /app
 
 RUN pip install -r requirements.txt
