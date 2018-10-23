@@ -3,8 +3,8 @@ steps:
   args:
   - kms
   - decrypt
-  - --ciphertext-file=payment/.env.enc
-  - --plaintext-file=payment/.env
+  - --ciphertext-file=$_SERVICEDIR_NAME/.env.enc
+  - --plaintext-file=$_SERVICEDIR_NAME/.env
   - --location=global
   - --keyring=$_KEY_RING
   - --key=$_KEY
