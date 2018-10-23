@@ -3,7 +3,6 @@ package handler
 import (
 	"github.com/KeisukeYamashita/TK_1805/payment/helpers"
 	"github.com/KeisukeYamashita/TK_1805/payment/types"
-	"github.com/k0kubun/pp"
 	"github.com/kataras/iris"
 	stripe "github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/charge"
@@ -68,7 +67,7 @@ func (ctr *Controller) ExecPayment() func(ctx iris.Context) {
 			email := ctx.FormValue("email")
 			stripeToken := ctx.FormValue("stripeToken")
 
-			if email == "" || stripeToken == "" {
+			if stripeToken == "" {
 				ctx.StatusCode(iris.StatusBadRequest)
 				ctx.JSON(iris.Map{
 					"error": iris.Map{
@@ -79,7 +78,7 @@ func (ctr *Controller) ExecPayment() func(ctx iris.Context) {
 				return
 			}
 
-			cus, err := helpers.CreateCustomerWithEmail(email, stripeToken)
+			cus, err := helpers.CreateCustomerWithEmailAndUserID(email, userID, stripeToken)
 
 			if err != nil {
 				ctx.StatusCode(iris.StatusBadRequest)
@@ -123,7 +122,6 @@ func (ctr *Controller) ExecPayment() func(ctx iris.Context) {
 		ch, err := charge.New(chargeParams)
 
 		if err != nil {
-			pp.Print(err)
 			ctx.StatusCode(iris.StatusBadRequest)
 			ctx.JSON(iris.Map{
 				"error": iris.Map{

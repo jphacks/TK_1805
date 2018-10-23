@@ -52,3 +52,7 @@
 [[constraint]]
   name = "github.com/smartystreets/goconvey"
   version = "1.6.3"
+
+[[constraint]]
+  name = "github.com/snikch/goodman"
+  version = "0.3.1"
