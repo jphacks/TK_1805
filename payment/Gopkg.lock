@@ -411,6 +411,18 @@
   version = "1.6.3"
 
 [[projects]]
+  digest = "1:5122673c1fb366ee71eb213662b5ac11f577e6cd4f9aaffa62410c577d91ca42"
+  name = "github.com/snikch/goodman"
+  packages = [
+    ".",
+    "hooks",
+    "transaction",
+  ]
+  pruneopts = "UT"
+  revision = "87fd9cdeb18985e2e3f79ee473d0dcabfef92b76"
+  version = "0.3.1"
+
+[[projects]]
   digest = "1:c40d65817cdd41fac9aa7af8bed56927bb2d6d47e4fea566a74880f5c2b1c41e"
   name = "github.com/stretchr/testify"
   packages = [
@@ -578,6 +590,9 @@
     "github.com/kataras/iris",
     "github.com/kataras/iris/httptest",
     "github.com/smartystreets/goconvey/convey",
+    "github.com/snikch/goodman",
+    "github.com/snikch/goodman/hooks",
+    "github.com/snikch/goodman/transaction",
     "github.com/stripe/stripe-go",
     "github.com/stripe/stripe-go/charge",
     "github.com/stripe/stripe-go/customer",
