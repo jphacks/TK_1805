@@ -1,0 +1,18 @@
+FORMAT: 1A
+HOST: http://104.198.92.135/
+
+# Frontend v1
+
+- version: 1.0
+
+ユーザーがはじめにアクセスするサイト。
+SPAなのでAPIどころかルーティングがない。
+
+## Home [/{?tableId}]
+
+### ホーム画面を見る [GET]
+
++ Parameters
+    + tableId: "vHTbfXPPgXFrHoXaeAG9eTxz" (string, required)
+
+Owner向けAPIでテーブルごとのURLを発行するときはこのURLを設定する。
