@@ -2,7 +2,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'asia.gcr.io/$PROJECT_ID/apib:latest', '-f', './apib/Dockerfile', '.']
 - name: 'gcr.io/cloud-builders/docker'
-  args: ["push", "gcr.io/$PROJECT_ID/apib:latest"]
+  args: ["push", "asia.gcr.io/$PROJECT_ID/apib:latest"]
 - name: 'gcr.io/cloud-builders/gcloud'
   args:
   - container
