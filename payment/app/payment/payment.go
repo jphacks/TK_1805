@@ -1,9 +1,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/KeisukeYamashita/TK_1805/payment/app"
 	"github.com/KeisukeYamashita/TK_1805/payment/handler"
@@ -60,5 +64,24 @@ func init() {
 
 func main() {
 	app := app.NewIrisApp(db)
-	app.Run(iris.Addr(":8880"))
+
+	go func() {
+		if err := app.Run(iris.Addr(":8880")); err != nil {
+			log.Fatal("shutting down server")
+		}
+	}()
+
+	quitSig := make(chan os.Signal)
+	signal.Notify(quitSig,
+		syscall.SIGHUP,
+		syscall.SIGINT,
+		syscall.SIGTERM,
+		syscall.SIGQUIT)
+	<-quitSig
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := app.Shutdown(ctx); err != nil {
+		log.Fatal(err)
+	}
 }
