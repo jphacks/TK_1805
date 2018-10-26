@@ -1,5 +1,7 @@
-import inbox from './inbox';
+import order from './order';
+import store from './store';
 
 export default {
-  inbox,
+  order,
+  store,
 };

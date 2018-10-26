@@ -1,7 +1,7 @@
 import { observable } from 'mobx';
 import { Item } from '../types/item';
 import { Category } from '../types/category';
-import firebase from '../../config/firebase';
+import firebase from '../config/firebase';
 
 const db = firebase.firestore();
 
@@ -13,11 +13,14 @@ function arrayFromSnapshot(snapshot: firebase.firestore.QuerySnapshot) {
   return items;
 }
 
-class Menu {
+class Store {
+  @observable storeId: string = '';
   @observable items: Item[] = [];
   @observable categories: Category[] = [];
 
   init(storeId: string) {
+    this.storeId = storeId;
+
     db.collection(`stores/${storeId}/items`).get().then(snapshot => {
       this.items = arrayFromSnapshot(snapshot);
     });
@@ -28,4 +31,4 @@ class Menu {
   }
 }
 
-export default new Menu();
+export default new Store();
