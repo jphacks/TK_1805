@@ -63,6 +63,8 @@ export default class OrderConfirm extends React.Component<Props> {
           { items }
         </ItemsContainer>
 
+        { items.length === 0 && <NoData>まだ注文がありません</NoData> }
+
         <AddButton onClick={this.onClickConfirmButton.bind(this)}>注文を確定する</AddButton>
       </ArticleContainer>
     );
@@ -81,26 +83,28 @@ const ItemCard = ({ tableId, item, count, style }) => (
 
 const ArticleContainer = styled.article`
   position: related;
-`
-
+`;
 
 const ItemsContainer = styled.div`
   position: related;
   display: flex;
   flex-direction: column;
   padding: 10px 24px;
-`
+`;
 
 const ItemContainer = styled.div`
   position: relative;
   display: flex;
   align-items: center;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
-`
+  border-radius: 8px;
+  margin-bottom: 20px;
+`;
+
 const ItemName = styled.div`
   padding-left: 20px;
   color: orange;
-`
+`;
 
 const CountCircle = styled.div`
   position: absolute;
@@ -117,7 +121,9 @@ const CountCircle = styled.div`
 const styles = {
   img: {
     width: 60,
-    height: 60
+    height: 60,
+    borderTopLeftRadius: 8,
+    borderBottomLeftRadius: 8,
   },
   a: {
     textDecoration: "none"
@@ -137,4 +143,13 @@ const AddButton = styled.button`
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
   font-size: 16px;
   border-radius: 100px;
+`;
+
+const NoData = styled.div`
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 100px;
+  font-weight: bold;
+  color: grey;
+  text-align: center;
 `;
