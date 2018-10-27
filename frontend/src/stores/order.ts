@@ -1,13 +1,20 @@
 import { observable, action } from 'mobx';
 import { Order } from '../types/order';
 import { db } from '../config/firebase';
+import { arrayFromSnapshot } from '../lib/firestore';
 
 class OrderStore {
   @observable inbox: Order[] = [];
   @observable orders: Order[] = [];
+  unsubscribe: any = null;
 
+  @action.bound
   init(storeId: string, groupId: string) {
-    db.collection(`stores/${storeId}/groups`).doc(groupId).onSnapshot(doc => {
+    if (this.unsubscribe) {
+      return;
+    }
+
+    this.unsubscribe = db.collection(`stores/${storeId}/groups/${groupId}/orders`).onSnapshot(snapshot => {
       // TODO: 差分だけ取ってきて通知したい
       // snapshot.docChanges.forEach(change => {
       //   if (change.type === 'added') {
@@ -16,24 +23,24 @@ class OrderStore {
       //   }
       // });
 
-      this.orders = (doc.data() as any).orders;
+      this.orders = arrayFromSnapshot(snapshot);
     });
   }
 
-  // NOTE: action.bindを使わないと行けないかも
-  @action
+  @action.bound
   add(order) {
     this.inbox.push(order);
   }
 
-  // NOTE: action.bindを使わないと行けないかも
-  @action
-  commit(storeId, groupId) {
+  @action.bound
+  commit(storeId: string, groupId: string) {
     // TODO: 決済が終了していたら注文できないようにする
 
     for (let order of this.inbox) {
       db.collection(`stores/${storeId}/groups/${groupId}/orders`).add(order);
     }
+
+    this.inbox = [];
   }
 }
 

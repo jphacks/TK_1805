@@ -1,16 +1,25 @@
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/storage';
 
 const config = {
-  apiKey: "<API_KEY>",
-  authDomain: "<PROJECT_ID>.firebaseapp.com",
-  databaseURL: "https://<DATABASE_NAME>.firebaseio.com",
-  projectId: "<PROJECT_ID>",
-  storageBucket: "<BUCKET>.appspot.com",
-  messagingSenderId: "<SENDER_ID>",
+  apiKey: "AIzaSyADON2Sh8SviGoldN9iP8EVMTZU5XQZBow",
+  authDomain: "jphack2018-219415.firebaseapp.com",
+  databaseURL: "https://jphack2018-219415.firebaseio.com",
+  projectId: "jphack2018-219415",
+  storageBucket: "jphack2018-219415.appspot.com",
+  messagingSenderId: "1078175040609"
 };
+
 
 firebase.initializeApp(config);
 
 export default firebase;
 
-export const db = firebase.firestore();
+const firestore = firebase.firestore();
+
+firestore.settings({ timestampsInSnapshots: true });
+
+export const db = firestore;
+
+export const storage = firebase.storage();
