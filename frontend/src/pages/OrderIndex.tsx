@@ -5,7 +5,7 @@ import { Order } from '../types/order';
 import { Item } from '../types/item';
 import Header from '../components/Header';
 import { Link } from 'react-router-dom';
-import PaymentMethodModal from '../components/PaymentMethodModal';
+import anime from 'animejs';
 
 type Props = {
   itemMap: any,
@@ -123,8 +123,17 @@ export default class OrderIndex extends React.Component<Props> {
   }
 
   renderButtons() {
+    const overlayFunc = ref => {
+      anime({
+        targets: ref,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        easing: 'easeInSine',
+        duration: 300,
+      })
+    };
+
     return (
-      <Overlay onClick={ () => this.setState({ showModal: false }) }>
+      <Overlay onClick={ () => this.setState({ showModal: false }) } ref={overlayFunc}>
         <CloseButton onClick={ () => this.setState({ showModal: false })}>✕</CloseButton>
 
         <StyledLink
@@ -218,7 +227,7 @@ const TotalPriceContainer = styled.div`
 const PayButton = styled.div`
   position: fixed;
   background: #FF8100;
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.10);
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.1);
   bottom: 28px;
   align-self: center;
   color: white;
@@ -238,7 +247,7 @@ const Overlay = styled.div`
   bottom: 0;
   right: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0);
   display: flex;
   flex-direction: column-reverse;
   align-items: center;

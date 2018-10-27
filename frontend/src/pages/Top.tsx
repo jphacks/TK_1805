@@ -14,14 +14,20 @@ type Props = {
   match: any,
   tableId: string,
   enterTime: DateTime,
+  storeId: string,
+  groupId: string,
+  initOrder: (groupId: string, storeId: string) => void
 };
 
-@inject(({ store }) => ({
+@inject(({ store, order }) => ({
   init: store.init,
   storeName: store.name,
   categories: store.categories,
   tableId: store.tableId,
   enterTime: store.enterTime,
+  storeId: store.storeId,
+  groupId: store.groupId,
+  initOrder: order.init,
 }))
 @observer
 export default class Top extends React.Component<Props> {
@@ -29,6 +35,20 @@ export default class Top extends React.Component<Props> {
     super(props);
 
     this.props.init(props.match.params.tableId);
+  }
+
+  componentWillMount() {
+    this.init(this.props);
+  }
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    this.init(nextProps);
+  }
+
+  init(props: Props) {
+    if (props.storeId !== '' && props.groupId !== '') {
+      this.props.initOrder(props.storeId, props.groupId);
+    }
   }
 
   render() {

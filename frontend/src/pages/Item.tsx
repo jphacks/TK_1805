@@ -4,6 +4,7 @@ import FireStorageImage from '../components/FireStorageImage';
 import { Item } from '../types/item';
 import { Order } from '../types/order';
 import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 type Props = {
   init: (string) => void,
@@ -83,7 +84,7 @@ export default class ItemPage extends React.Component<Props> {
         <FireStorageImage type="item" photo={this.item.photo} style={styles.img} />
 
         <CloseButton onClick={ () => this.props.history.goBack() }>
-          ✕
+          <FontAwesomeIcon icon='times' />
         </CloseButton>
 
         <ItemContainer>
@@ -98,9 +99,13 @@ export default class ItemPage extends React.Component<Props> {
                 <span>数量</span>
               </ListLabel>
               <ListValue>
-                <MathButton onClick={this.decrement.bind(this)}>-</MathButton>
+                <MathButton onClick={this.decrement.bind(this)}>
+                  <FontAwesomeIcon icon='minus' />
+                </MathButton>
                 <CountNumber>{ this.state.count }</CountNumber>
-                <MathButton onClick={this.increment.bind(this)}>+</MathButton>
+                <MathButton onClick={this.increment.bind(this)}>
+                  <FontAwesomeIcon icon='plus' />
+                </MathButton>
               </ListValue>
             </ListItem>
             <ListItem>
@@ -258,6 +263,7 @@ const MathButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 12px;
 `;
 
 const styles = {
