@@ -64,7 +64,8 @@ export default class ItemPage extends React.Component<Props> {
     }
 
     return (
-      <article>
+      <Article>
+        <BackButtonContainer onClick={ () => this.props.history.goBack() }>×</BackButtonContainer>
         <FireStorageImage type="item" photo={this.item.photo} style={styles.img} />
           <ItemContainer>
           <ItemHeader>{ this.item.name }</ItemHeader>
@@ -95,10 +96,29 @@ export default class ItemPage extends React.Component<Props> {
           </ListContainer>
           <AddButton onClick={this.onClickAddItemButton.bind(this)}>追加する</AddButton>
         </ItemContainer>
-      </article>
+      </Article>
     );
   }
 }
+
+const Article = styled.article`
+  position: related;
+`
+
+const BackButtonContainer = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 24px;
+  height: 24px;
+  background: lightgray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 14px;
+  padding: 0;
+`
 
 const ItemHeader = styled.h1`
   color: #E46A6E;
