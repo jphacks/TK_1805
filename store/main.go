@@ -16,6 +16,10 @@ var db *gorm.DB
 var debugMode bool
 
 func init() {
+
+}
+
+func main() {
 	db, err := gorm.Open("mysql", "root:@/jphack2018?charset=utf8&parseTime=True&loc=Local")
 
 	if err != nil {
@@ -26,9 +30,6 @@ func init() {
 
 	db.LogMode(debugMode)
 	db.AutoMigrate(&types.User{}, &types.Transaction{}, &types.Store{}, &types.Table{}, &types.Group{})
-}
-
-func main() {
 	app := app.NewIrisApp(db, debugMode)
 	app.Run(iris.Addr(":8880"))
 

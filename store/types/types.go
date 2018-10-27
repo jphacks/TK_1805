@@ -2,6 +2,7 @@ package types
 
 import (
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 const (
@@ -16,15 +17,17 @@ type Store struct {
 
 type Table struct {
 	gorm.Model
-	Store   Store `gorm:"foreignkey:StoreId"`
-	StoreId int
+	Store    Store `gorm:"foreignkey:StoreId"`
+	StoreID  int
+	TableKey string
 }
 
 type Group struct {
 	gorm.Model
-	Table   Table `gorm:"foreignkey:TableId"`
-	TableId int
-	Key     string
+	Table    Table `gorm:"foreignkey:TableKey"`
+	TableKey string
+	Key      string
+	State    string
 }
 
 // User ...

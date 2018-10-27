@@ -4,6 +4,9 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"time"
+	"unicode/utf8"
+
+	"github.com/k0kubun/pp"
 
 	"github.com/KeisukeYamashita/TK_1805/store/types"
 	"github.com/kataras/iris"
@@ -11,17 +14,19 @@ import (
 
 func (ctr *Controller) CreateGroupId() func(ctx iris.Context) {
 	return func(ctx iris.Context) {
-		tableId := ctx.Params().Get("tableId")
+		tableID := ctx.FormValue("tableId")
 		now := time.Now()
-		data := fmt.Sprintf("%v-%v", tableId, now)
+		data := fmt.Sprintf("%v-%v", tableID, now)
 		keyByteArray := sha256.Sum256([]byte(data))
 
 		key := string(keyByteArray[:])
+		keyR, _ := utf8.DecodeRuneInString(key)
+		keyUtf8 := string(keyR)
 
 		group := types.Group{
-			Key: key,
+			Key:      keyUtf8,
+			TableKey: tableID,
 		}
-
 		if err := ctr.DB.Create(&group).Error; err != nil {
 			ctx.StatusCode(iris.StatusInternalServerError)
 			ctx.JSON(iris.Map{
@@ -36,10 +41,60 @@ func (ctr *Controller) CreateGroupId() func(ctx iris.Context) {
 		ctx.JSON(iris.Map{
 			"error": "",
 			"message": iris.Map{
-				// "groupId": key,
-				"state": "IN_STORE",
+				"groupId": keyUtf8,
+				"state":   "IN_STORE",
 			},
 		})
+		return
+	}
+}
+
+func (ctr *Controller) FetchState() func(ctx iris.Context) {
+	return func(ctx iris.Context) {
+		tableID := ctx.FormValue("tableId")
+		pp.Println(tableID)
+
+		group := new(types.Group)
+
+		if err := ctr.DB.Where("table_key = ?", tableID).First(group); err.Error != nil {
+			ctx.StatusCode(iris.StatusInternalServerError)
+			ctx.JSON(iris.Map{
+				"error": iris.Map{
+					"statusCode": iris.StatusInternalServerError,
+					"message":    err.Error,
+				},
+			})
+			return
+		}
+
+		groupID := &group.Key
+		state := &group.State
+
+		table := new(types.Table)
+
+		if err := ctr.DB.Where("table_key = ?", tableID).First(table); err.Error != nil {
+			pp.Println("hello")
+			ctx.StatusCode(iris.StatusInternalServerError)
+			ctx.JSON(iris.Map{
+				"error": iris.Map{
+					"statusCode": iris.StatusInternalServerError,
+					"message":    err.Error,
+				},
+			})
+			return
+		}
+
+		storeID := &table.StoreID
+
+		ctx.JSON(iris.Map{
+			"error": "",
+			"message": iris.Map{
+				"groupId": groupID,
+				"storeId": storeID,
+				"state":   state,
+			},
+		})
+
 		return
 	}
 }

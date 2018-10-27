@@ -24,7 +24,7 @@ func NewIrisApp(db *gorm.DB, debugMode bool) *iris.Application {
 	api := app.Party(fmt.Sprintf("/v%v", types.VERSION))
 	api.Post("/store/groups", ctr.CreateGroupId())
 
-	// api.Get("/store/groups", ctr.FetchState())
+	api.Get("/store/groups", ctr.FetchState())
 
 	api.Get("/store", ctr.CreateGroupId())
 
