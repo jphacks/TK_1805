@@ -113,28 +113,28 @@ export default class OrderIndex extends React.Component<Props> {
         <CloseButton onClick={ () => this.setState({ showModal: false })}>✕</CloseButton>
 
         <StyledLink
-          to={`/tableId/${this.props.tableId}/pay&paymentMethod=apple_pay`}
+          to={`/tableId/${this.props.tableId}/pay/applePay`}
           color='#9B9B9B'
         >
           Apple Pay
         </StyledLink>
 
         <StyledLink
-          to={`/tableId/${this.props.tableId}/pay&paymentMethod=credit_card`}
+          to={`/tableId/${this.props.tableId}/pay/creditCard`}
           color='#4A90E2'
         >
           クレジットカード
         </StyledLink>
 
         <StyledLink
-          to={`/tableId/${this.props.tableId}/pay&paymentMethod=line_pay`}
+          to={`/tableId/${this.props.tableId}/pay/linePay`}
           color='#7ED321'
         >
           LINE Pay
         </StyledLink>
 
         <StyledLink
-          to={`/tableId/${this.props.tableId}/pay&paymentMethod=cash`}
+          to={[ `/tableId/${this.props.tableId}/pay/cash`, `/tableId/${this.props.tableId}/pay` ]}
           color='#FFFFFF'
           textcolor='#4A4A4A'
         >

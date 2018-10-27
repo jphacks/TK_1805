@@ -2,7 +2,6 @@ import { observable, action } from 'mobx';
 import { Order } from '../types/order';
 import firebase, { db, auth } from '../config/firebase';
 import { arrayFromSnapshot } from '../lib/firestore';
-import { toast } from 'react-toastify';
 import { Interval } from 'luxon';
 
 function validDate(start, end) {

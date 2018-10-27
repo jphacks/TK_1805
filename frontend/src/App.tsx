@@ -32,7 +32,7 @@ export default class App extends React.Component {
             <Route path='/tables/:tableId/items/:itemId' component={Item} />
             <Route exact path='/tables/:tableId/order' component={OrderConfirm} />
             <Route exact path='/tables/:tableId/orders' component={OrderIndex} />
-            <Route exact path='/tables/:tableId/pay' component={CreditCard} />
+            <Route exact path='/tables/:tableId/pay/creditCard' component={CreditCard} />
             <Redirect to="/" />
           </Switch>
         </BrowserRouter>
