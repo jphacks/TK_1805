@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Provider } from 'mobx-react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import stores from './stores';
 import IndexTest from './pages/IndexTest';
 import Poyo from './pages/Poyo';
@@ -12,6 +12,7 @@ import OrderIndex from './pages/OrderIndex';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faPlus, faMinus, faTimes } from '@fortawesome/free-solid-svg-icons';
+import CreditCard from './pages/CreditCard';
 
 library.add(faChevronLeft);
 library.add(faPlus);
@@ -31,6 +32,8 @@ export default class App extends React.Component {
             <Route path='/tables/:tableId/items/:itemId' component={Item} />
             <Route exact path='/tables/:tableId/order' component={OrderConfirm} />
             <Route exact path='/tables/:tableId/orders' component={OrderIndex} />
+            <Route exact path='/tables/:tableId/pay' component={CreditCard} />
+            <Redirect to="/" />
           </Switch>
         </BrowserRouter>
       </Provider>

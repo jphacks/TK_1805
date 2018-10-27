@@ -3524,6 +3524,10 @@ form-data@~2.3.2:
     combined-stream "^1.0.6"
     mime-types "^2.1.12"
 
+form-urlencoded@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/form-urlencoded/-/form-urlencoded-1.5.1.tgz#fb69d16a6469363b3fdabf9d256a39a7a5ed2e13"
+
 forwarded@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/forwarded/-/forwarded-0.1.2.tgz#98c23dab1175657b8c0573e8ceccd91b0ff18c84"
@@ -7901,6 +7905,12 @@ strip-eof@^1.0.0:
 strip-json-comments@^2.0.1, strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
+
+stripe-client@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/stripe-client/-/stripe-client-1.1.5.tgz#49e8a6f3c884fa96d5d8023c0d436b58ed7bf713"
+  dependencies:
+    form-urlencoded "^1.5.1"
 
 style-loader@0.23.0:
   version "0.23.0"
