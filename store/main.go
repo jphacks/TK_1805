@@ -1,28 +1,36 @@
 package main
 
 import (
-	"github.com/kataras/iris"
-	"github.com/jinzhu/gorm"
 	"log"
+	"os"
+
+	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/kataras/iris"
 
 	"github.com/KeisukeYamashita/TK_1805/store/app"
 	"github.com/KeisukeYamashita/TK_1805/store/types"
-
 )
 
-func main() {
+var db *gorm.DB
+var debugMode bool
+
+func init() {
 	db, err := gorm.Open("mysql", "root:@/jphack2018?charset=utf8&parseTime=True&loc=Local")
-	db.LogMode(true)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	db.AutoMigrate(&types.User{}, &types.Transaction{}, &types.Store{}, &types.Table{}, &types.Group{})
+	debugMode = os.Getenv("GO_ENV") == "test"
 
-	app := app.NewIrisApp(db)
+	db.LogMode(debugMode)
+	db.AutoMigrate(&types.User{}, &types.Transaction{}, &types.Store{}, &types.Table{}, &types.Group{})
+}
+
+func main() {
+	app := app.NewIrisApp(db, debugMode)
 	app.Run(iris.Addr(":8880"))
 
-  defer db.Close()
+	defer db.Close()
 }
