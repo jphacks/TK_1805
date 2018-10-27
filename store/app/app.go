@@ -9,21 +9,22 @@ import (
 	"github.com/kataras/iris"
 )
 
-func NewIrisApp(db *gorm.DB) *iris.Application {
+// NewIrisApp ...
+func NewIrisApp(db *gorm.DB, debugMode bool) *iris.Application {
 	app := iris.Default()
 
 	app.Get("/healthy", func(ctx iris.Context) {
 		ctx.WriteString("OK")
 	})
 
-	ctr := handler.NewController(db)
+	ctr := handler.NewController(db, debugMode)
 
 	fmt.Printf("v%v\n", types.VERSION)
 
 	api := app.Party(fmt.Sprintf("/v%v", types.VERSION))
 	api.Post("/store/groups", ctr.CreateGroupId())
 
-	api.Get("/store/groups", ctr.FetchState())
+	// api.Get("/store/groups", ctr.FetchState())
 
 	api.Get("/store", ctr.CreateGroupId())
 

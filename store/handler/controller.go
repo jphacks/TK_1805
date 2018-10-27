@@ -5,11 +5,13 @@ import (
 )
 
 type Controller struct {
-  DB *gorm.DB
+	DB        *gorm.DB
+	DebugMode bool
 }
 
-func NewController(db *gorm.DB) *Controller {
+func NewController(db *gorm.DB, debugMode bool) *Controller {
 	return &Controller{
-    DB: db,
-  }
+		DB:        db,
+		DebugMode: debugMode,
+	}
 }
