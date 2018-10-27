@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Category } from '../types/category';
 import FireStorageImage from '../components/FireStorageImage';
 import MenuFooter from '../components/MenuFooter';
-import { chunk } from '../lib/array';
+import { DateTime } from 'luxon';
 
 type Props = {
   categories: Category[],
@@ -13,6 +13,7 @@ type Props = {
   storeName: string,
   match: any,
   tableId: string,
+  enterTime: DateTime,
 };
 
 @inject(({ store }) => ({
@@ -20,6 +21,7 @@ type Props = {
   storeName: store.name,
   categories: store.categories,
   tableId: store.tableId,
+  enterTime: store.enterTime,
 }))
 @observer
 export default class Top extends React.Component<Props> {
@@ -37,7 +39,13 @@ export default class Top extends React.Component<Props> {
     return (
       <main>
         <Header>
-          { this.props.storeName }
+          <StoreName>
+            { this.props.storeName }
+          </StoreName>
+
+          <EnterTime>
+            入店 { this.props.enterTime && this.props.enterTime.toFormat('T') }
+          </EnterTime>
         </Header>
 
         <Main>
@@ -82,11 +90,23 @@ const CategoryPanel = ({ tableId, category }) => (
   </Link>
 );
 
+const StoreName = styled.span`
+  font-size: 22px;
+  font-weight: bold;
+`;
+
+const EnterTime = styled.span`
+  font-size: 16px;
+  color: grey;
+`;
+
 const Header = styled.header`
   width: 100%;
   box-sizing: border-box;
   padding: 26px 24px;
-  font-size: 22px;
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
   font-weight: bold;
 `;
 

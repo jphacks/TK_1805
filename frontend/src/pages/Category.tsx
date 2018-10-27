@@ -55,7 +55,13 @@ export default class CategoryPage extends React.Component<Props> {
 
   render() {
     const items = this.items.map(item => (
-      <ItemPanel key={item.id} tableId={this.props.tableId} item={item} count={this.itemToCountMap[item.id]} style={style} />
+      <ItemPanel
+        key={item.id}
+        tableId={this.props.tableId}
+        item={item}
+        count={this.itemToCountMap[item.id]}
+        style={style}
+      />
     ));
 
     return (
@@ -73,7 +79,7 @@ export default class CategoryPage extends React.Component<Props> {
   }
 }
 
-const ItemPanel = ({ tableId, item, count, style}) => (
+const ItemPanel = ({ tableId, item, count, style }) => (
   <Link to={`/tables/${tableId}/items/${item.id}`} style={style.a} >
     <PanelContainer>
       <FireStorageImage type='item' photo={item.photo} style={style.img}/>
@@ -100,7 +106,7 @@ const MainContainer = styled.div`
 const OverlayLabel = styled.div`
   position: absolute;
   bottom: 10px;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   width: calc(100% - 30px);
   color: white;
   padding-left: 10px;
@@ -131,7 +137,7 @@ const CountLabel = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-
+  opacity: 0.9;
 
   & > p {
     margin: 0px;
