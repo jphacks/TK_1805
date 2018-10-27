@@ -63,6 +63,8 @@ class Store {
     db.collection(`stores/${this.storeId}/items`).get().then(snapshot => {
       this.items = arrayFromSnapshot(snapshot);
     });
+
+    console.debug('Initialized Store!');
   }
 }
 

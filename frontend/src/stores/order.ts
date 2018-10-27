@@ -25,6 +25,8 @@ class OrderStore {
 
       this.orders = arrayFromSnapshot(snapshot);
     });
+
+    console.debug('Initialized Order!');
   }
 
   @action.bound

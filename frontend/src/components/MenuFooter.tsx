@@ -15,8 +15,6 @@ type Props = {
 @observer
 export default class MenuFooter extends React.Component<Props> {
   get totalCount() {
-    console.log(this.props.inbox);
-
     if (!this.props.inbox) {
       return 0;
     }

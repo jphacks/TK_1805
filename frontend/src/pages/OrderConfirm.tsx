@@ -15,7 +15,9 @@ type Props = {
   groupId: string,
   itemMap: any,
   commit: (storeId: string, groupId: string) => void,
+  init: (tableId: string) => void,
   history: any,
+  match: any,
 };
 
 @inject(({ store, order }) => ({
@@ -26,9 +28,16 @@ type Props = {
   groupId: store.groupId,
   commit: order.commit,
   itemMap: store.itemMap,
+  init: store.init,
 }))
 @observer
 export default class OrderConfirm extends React.Component<Props> {
+  constructor(props) {
+    super(props);
+
+    this.props.init(this.props.match.params.tableId);
+  }
+
   onClickConfirmButton() {
     this.props.commit(this.props.storeId, this.props.groupId);
     this.props.history.goBack();

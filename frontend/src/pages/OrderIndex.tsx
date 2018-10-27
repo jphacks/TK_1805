@@ -42,9 +42,17 @@ export default class OrderIndex extends React.Component<Props> {
     this.props.initStore(this.props.match.params.tableId);
   }
 
+  componentWillMount() {
+    this.init(this.props);
+  }
+
   componentWillReceiveProps(nextProps, nextContext) {
-    if (nextProps.storeId !== '' && nextProps.groupId !== '') {
-      this.props.initOrder(nextProps.storeId, nextProps.groupId);
+    this.init(nextProps);
+  }
+
+  init(props: Props) {
+    if (props.storeId !== '' && props.groupId !== '') {
+      this.props.initOrder(props.storeId, props.groupId);
     }
   }
 
@@ -74,9 +82,9 @@ export default class OrderIndex extends React.Component<Props> {
 
       return (
         <ListItem key={index}>
-          <Link to={`/tables/${this.props.tableId}/`} style={{ flex: 1, color: '#FF8100' }}>
+          <ItemLink to={`/tables/${this.props.tableId}/items/${item.id}`}>
             { item.name }
-          </Link>
+          </ItemLink>
 
           <Counter>
             x { order.count }
@@ -168,6 +176,11 @@ const ListItem = styled.li`
   display: flex;
   align-items: center;
   margin-bottom: 16px;
+`;
+
+const ItemLink = styled(Link)`
+  flex: 1;
+  color: #FF8100;
 `;
 
 const OrderName = styled.span`

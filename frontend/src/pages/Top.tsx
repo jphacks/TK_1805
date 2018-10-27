@@ -98,7 +98,7 @@ const Main = styled.main`
 
 const styles = {
   link: {
-    marginBottom: 26,
+    marginBottom: 12,
     textDecoration: 'none',
     padding: 10,
     width: '50%',
