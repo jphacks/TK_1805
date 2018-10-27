@@ -7,6 +7,7 @@ import { Order } from '../types/order';
 import FireStorageImage from '../components/FireStorageImage';
 import { Category } from '../types/category';
 import Header from '../components/Header';
+import MenuFooter from '../components/MenuFooter';
 
 type Props = {
   items: Item[],
@@ -66,6 +67,7 @@ export default class CategoryPage extends React.Component<Props> {
         <MainContainer>
           { items }
         </MainContainer>
+        <MenuFooter tableId={this.props.tableId} />
       </div>
     );
   }
