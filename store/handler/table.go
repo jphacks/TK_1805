@@ -19,6 +19,7 @@ func (ctr *Controller) CreateGroupId() func(ctx iris.Context) {
 		data := fmt.Sprintf("%v-%v", tableID, now)
 		keyByteArray := sha256.Sum256([]byte(data))
 
+		//byte list -> utf8 strings
 		key := string(keyByteArray[:])
 		keyR, _ := utf8.DecodeRuneInString(key)
 		keyUtf8 := string(keyR)
@@ -52,7 +53,17 @@ func (ctr *Controller) CreateGroupId() func(ctx iris.Context) {
 func (ctr *Controller) FetchState() func(ctx iris.Context) {
 	return func(ctx iris.Context) {
 		tableID := ctx.FormValue("tableId")
-		pp.Println(tableID)
+
+		if tableID == "" {
+			ctx.StatusCode(iris.StatusBadRequest)
+			ctx.JSON(iris.Map{
+				"error": iris.Map{
+					"statusCode": iris.StatusBadRequest,
+					"message":    "tableId is missing",
+				},
+			})
+			return
+		}
 
 		group := new(types.Group)
 
