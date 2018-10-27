@@ -130,6 +130,24 @@ const CloseButton = styled.div`
     cursor: pointer;
   }
 `;
+const Article = styled.article`
+  position: related;
+`
+
+const BackButtonContainer = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 24px;
+  height: 24px;
+  background: lightgray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 14px;
+  padding: 0;
+`
 
 const ItemHeader = styled.h1`
   font-size: 18px;

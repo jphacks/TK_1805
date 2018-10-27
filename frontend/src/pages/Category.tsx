@@ -54,7 +54,7 @@ export default class CategoryPage extends React.Component<Props> {
 
   render() {
     const items = this.items.map(item => (
-      <ItemPanel key={item.id} tableId={this.props.tableId} item={item} count={this.itemToCountMap[item.id]} />
+      <ItemPanel key={item.id} tableId={this.props.tableId} item={item} count={this.itemToCountMap[item.id]} style={style} />
     ));
 
     return (
@@ -63,22 +63,87 @@ export default class CategoryPage extends React.Component<Props> {
           <Header title={this.category.name} history={this.props.history} />
         }
 
-        <main>
+        <MainContainer>
           { items }
-        </main>
+        </MainContainer>
       </div>
     );
   }
 }
 
-const ItemPanel = ({ tableId, item, count }) => (
-  <Link to={`/tables/${tableId}/items/${item.id}`}>
-    <FireStorageImage type='item' photo={item.photo} />
-    <span>{ item.name }</span>
-    <span>{ count }</span>{}
+const ItemPanel = ({ tableId, item, count, style}) => (
+  <Link to={`/tables/${tableId}/items/${item.id}`} style={style.a} >
+  <PanelContainer>
+    <FireStorageImage type='item' photo={item.photo} style={style.img}/>
+    <OverlayLabel>{ item.name }</OverlayLabel>
+    { count &&
+      <CountLabel><p>{ count }</p></CountLabel>
+    }
+  </PanelContainer>
   </Link>
 );
 
-const HogeContainer = styled.header`
+const MainContainer = styled.div`
+  width: 100%;
+  box-sizing: border-box;
+  padding: 4px 12px;
   display: flex;
+  flex-wrap: wrap
+  
+  & > a {
+    width: 50%;
+  }
 `
+
+const OverlayLabel = styled.div`
+  position: absolute;
+  bottom: 12px;
+  background-color: rgba(0,0,0,0.4);
+  width: calc(100% - 30px);
+  color: white;
+  padding-left: 10px;
+  border-radius: 0 0 4px 4px;
+`
+
+const PanelContainer = styled.div`
+  display: flex;
+  border-radius: 4px;
+  overflow: hidden;
+`
+
+const CountLabel = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 50;
+  width: 50px;
+  height: 50px;
+  background-color: orange;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+
+
+  & > p {
+    margin: 0px;
+    font-weight: bold;
+    font-size: 32px;
+    opacity: 1.0;
+  }
+`
+
+const style = {
+  a: {
+    padding: 10,
+    textDecoration: "none",
+    boxSizing: "border-box",
+    position: "relative",
+  },
+  img: {
+    width: "100%",
+    height: "100%",
+  }
+}
