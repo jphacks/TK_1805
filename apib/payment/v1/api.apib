@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: http://payment:8880/v1
+HOST: http://payment:8880
 
 # PaymentAPI v1 
 
@@ -10,55 +10,47 @@ HOST: http://payment:8880/v1
 主に必要なのは、本サービスに紐づくStripe Customer IDです。
 
 # Group Payment
-## Payment [/payment{?stripeToken}{&customerID}{&userID}{&amount}{&description}]
+## Payment [/v1/payment{?stripeToken,customerID,userID,amount,description,email}]
 ### 決済を行う　[POST]
 
 + Parameters
     + stripeToken: tok_visa (string) - PublicKeyとカード情報を元に発行されたStripe上のtoken。`customerID`がない限り`required`です。
-    + email: hogehoge@aho.com (string) - StripeのCustomerとして登録用のメールアドレスです。
-    + amount: 4000 (int64) - 料金。単位は円です。
-    + customerID: cus_Dn1g1NTijBHzzl (string) - Stripe上の一意なID。`stripeToken`がない限り`required`である。`stripeToken`です。
+    + amount: 4000 (int64) - 料金。単位は**円*です。
     + userID: 3 (int) - 本サービス上のユーザ識別子。初回決済時に必要です。
-    + description: "This is desc" (string, optional) - 説明用。主にハンドラテストと統合テストを分けるために付与するものです。
-
-+ Response 200 (application/json)
+    + customerID: cus_Dn1g1NTijBHzzl (string, optional) - Stripe上の一意なID。`stripeToken`がない限り`required`である。`stripeToken`です。
+    + description: "This is desc" (string, optional) - 決済ひとつひとつにつける説明用。主にハンドラテストと統合テストを分けるために付与するものです。
+    + email: hogehoge@aho.com (string, optional) - StripeのCustomerとして登録用のメールアドレスです。
++ Response 200 (application/json; charset=UTF-8)
     + Body
-        {
-            "error": "",
-            "message": {
-                "customerID": "cus_Dn1g1NTijBHzzl",
-                "amount": 4000,
-                "currency": "JPY",
-                "description": "This is desc",
-                "chargeID": "ch_hnc9Eaieeoau3442Nte"
-            }
-        }
-
-+ Response 400 (application/json)
+                {
+                    "error": "",
+                    "message": {
+                        "customerID": "cus_Dn1g1NTijBHzzl",
+                        "amount": 4000,
+                        "currency": "JPY",
+                        "description": "This is desc",
+                        "chargeID": "ch_hnc9Eaieeoau3442Nte"
+                    }
+                }
++ Response 400 (application/json; charset=UTF-8)
     リクエストフォーマットに関するエラーです。
-
     + Body
-        {
-            "error": {
-                "statusCode": 400,
-                "message": "Message about the error",
+            {
+                "error": {
+                    "statusCode": 400,
+                    "message": "Message about the error",
+                }
             }
-        }
-
-
-+ Response 500 (application/json)
++ Response 500 (application/json; charset=UTF-8)
     APIのデータベースに関するエラーです。
-
     + Body
-        {
-            "error": {
-                "statusCode": 500,
-                "message": "Message about the error",
-            }
-        }
-
+                {
+                    "error": {
+                        "statusCode": 500,
+                        "message": "Message about the error",
+                    }
+                }
 # Group Refund
 ## Refund [/refund]
 ### 返金を行う
-
 TODO

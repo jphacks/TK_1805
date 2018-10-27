@@ -1,0 +1,19 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'asia.gcr.io/$PROJECT_ID/$_SERVICEDIR_NAME:latest', '-f', './$_SERVICEDIR_NAME/Dockerfile', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ["push", "asia.gcr.io/$PROJECT_ID/$_SERVICEDIR_NAME:latest"]
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+  - container
+  - clusters
+  - get-credentials
+  - $_TARGET_CLUSTER
+  - --zone=$_ZONE
+  - --project=$PROJECT_ID
+- name: 'gcr.io/cloud-builders/kubectl'
+  args:
+  - 'delete'
+  - 'pod'
+  - -l
+  - app=$_SERVICEDIR_NAME
