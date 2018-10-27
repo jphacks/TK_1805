@@ -19,7 +19,7 @@ func _Setenv() {
 }
 
 func TestGetPaymentServerInfo(t *testing.T) {
-	Convey("GetPaymentServerInfo is", t, func() {
+	Convey("GetPaymentServerInfo will return host and port of PaymentAPI", t, func() {
 		Convey("when debug, dev, test mode", func() {
 			var testBool bool = true
 			_Setenv()
