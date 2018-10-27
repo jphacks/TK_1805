@@ -1,19 +1,15 @@
 # PaymentAPI
 
-![CircleCI](https://circleci.com/gh/KeisukeYamashita/payment.svg?style=svg&circle-token=c76f1766d1bcdcc597e785c89d9e20e37f8db21f)
+![CircleCI](https://circleci.com/gh/KeisukeYamashita/TK_1805/payment.svg?style=svg&circle-token=c76f1766d1bcdcc597e785c89d9e20e37f8db21f)
 ![goversion batch](https://img.shields.io/badge/go-1.11-blue.svg)
 ![version batch](https://img.shields.io/badge/apiversion-v1-blue.svg)
-
-## 概要
-
-決済を行うためのAPIサーバーです。
 
 ## API仕様書
 
 以下のコマンドを実行してください。
 
 ```
-open ../apib/payment/v1/api.html
+open doc/v1/api.html
 ```
 
 ## 起動
@@ -31,10 +27,3 @@ go run main.go
 ```
 GO_ENV=test go test -v ./...
 ```
-
-## Member
-
-- @HiromuYamazaki
-- @karzawa
-- @KeisukeYamashita
-- @yosshi0774

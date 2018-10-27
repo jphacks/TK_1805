@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/KeisukeYamashita/payment/handler"
-	"github.com/KeisukeYamashita/payment/types"
+	"github.com/KeisukeYamashita/TK_1805/payment/handler"
+	"github.com/KeisukeYamashita/TK_1805/payment/types"
 	"github.com/kataras/iris"
 	stripe "github.com/stripe/stripe-go"
 )

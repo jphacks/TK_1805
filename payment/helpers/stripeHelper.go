@@ -7,10 +7,11 @@ import (
 	"github.com/stripe/stripe-go/source"
 )
 
-// CreateCustomerWithEmail ...
-func CreateCustomerWithEmail(email, stripeToken string) (*stripe.Customer, error) {
+// CreateCustomerWithEmailAndUserID ...
+func CreateCustomerWithEmailAndUserID(email, userID, stripeToken string) (*stripe.Customer, error) {
 	customerParams := &stripe.CustomerParams{
-		Email: &email,
+		Description: &userID,
+		Email:       &email,
 		Source: &stripe.SourceParams{
 			Token: &stripeToken,
 		},
