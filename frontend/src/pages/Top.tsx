@@ -30,11 +30,8 @@ export default class Top extends React.Component<Props> {
   }
 
   render() {
-    const list = chunk(this.props.categories.slice(), 2).map((pair, index) => (
-      <Sub key={index}>
-        <CategoryPanel key={pair[0].id} tableId={this.props.tableId} category={pair[0]} />
-        <CategoryPanel key={pair[1].id} tableId={this.props.tableId} category={pair[1]} />
-      </Sub>
+    const items = this.props.categories.slice().map(category => (
+      <CategoryPanel key={category.id} tableId={this.props.tableId} category={category} />
     ));
 
     return (
@@ -44,7 +41,7 @@ export default class Top extends React.Component<Props> {
         </Header>
 
         <Main>
-          { list }
+          { items }
         </Main>
 
         <MenuFooter tableId={this.props.tableId} />
@@ -54,7 +51,7 @@ export default class Top extends React.Component<Props> {
 }
 
 const __CategoryPanelContainer = styled.div`
-  width: 160px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -77,7 +74,7 @@ const __CategoryPanelName = styled.span`
 `;
 
 const CategoryPanel = ({ tableId, category }) => (
-  <Link to={`/tables/${tableId}/categories/${category.id}`} style={styles.link}>
+  <Link to={`/tables/${tableId}/categories/${category.id}`} style={{ ...styles.link, boxSizing: 'border-box' }}>
     <__CategoryPanelContainer>
       <FireStorageImage type='category' photo={category.photo} style={styles.image} />
       <__CategoryPanelName>{category.name}</__CategoryPanelName>
@@ -95,20 +92,16 @@ const Header = styled.header`
 
 const Main = styled.main`
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   padding-bottom: 100px;
-`;
-
-const Sub = styled.div`
-  display: flex;
-  padding: 0 16px;
-  justify-content: space-between;
 `;
 
 const styles = {
   link: {
     marginBottom: 26,
     textDecoration: 'none',
+    padding: 10,
+    width: '50%',
   },
   image: {
     width: '100%',
