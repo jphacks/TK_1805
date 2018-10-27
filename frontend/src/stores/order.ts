@@ -1,33 +1,46 @@
 import { observable, action } from 'mobx';
 import { Order } from '../types/order';
-import { db } from '../config/firebase';
+import firebase, { db, auth } from '../config/firebase';
 import { arrayFromSnapshot } from '../lib/firestore';
 import { toast } from 'react-toastify';
+import { Interval } from 'luxon';
+
+function validDate(start, end) {
+  return Interval.fromDateTimes(start, end).toDuration().seconds < 60;
+}
 
 class OrderStore {
   @observable inbox: Order[] = [];
   @observable orders: Order[] = [];
+  @observable uid: string = '';
   unsubscribe: any = null;
 
   @action.bound
-  init(storeId: string, groupId: string) {
+  init(storeId: string, groupId: string, notify: (ids: Order[]) => void) {
     if (this.unsubscribe) {
       return;
     }
 
+    auth.signInAnonymously().then(data => {
+      if (data.user) {
+        this.uid = data.user.uid;
+      }
+    }).catch((e) => {
+      console.error(e);
+    });
+
     this.unsubscribe = db.collection(`stores/${storeId}/groups/${groupId}/orders`).onSnapshot(snapshot => {
-      // TODO: 差分だけ取ってきて通知したい
-      // snapshot.docChanges.forEach(change => {
-      //   if (change.type === 'added') {
-      //     const orders = change.doc.data().orders;
-      //     this.orders.push(orders);
-      //   }
-      // });
+      console.debug('Fetch new orders');
 
       const orders = arrayFromSnapshot(snapshot);
-      const newOrders = orders.slice(this.orders.length);
+      const newOrders = orders.slice(this.orders.length)
+        .filter(order => order.uid !== this.uid)
+        .filter(order => validDate(order.createdAt.toDate(), new Date()));
 
-      toast.info(newOrders.map(order => order.id).join(','));
+      if (newOrders.length > 0) {
+        console.debug(`Notify ${newOrders.length} orders`);
+        notify(newOrders);
+      }
 
       this.orders = orders;
     });
@@ -53,7 +66,11 @@ class OrderStore {
     // TODO: 決済が終了していたら注文できないようにする
 
     for (let order of this.inbox) {
-      db.collection(`stores/${storeId}/groups/${groupId}/orders`).add(order);
+      db.collection(`stores/${storeId}/groups/${groupId}/orders`).add({
+        ...order,
+        uid: this.uid,
+        createdAt: firebase.firestore.Timestamp.now(),
+      });
     }
 
     this.inbox = [];

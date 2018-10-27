@@ -2,12 +2,14 @@ import * as React from 'react';
 import { inject, observer } from 'mobx-react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Order } from '../types/order';
 
 type Props = {
   storeId?: string,
   groupId?: string,
+  itemMap?: any,
   initStore?: (tableId: string) => void,
-  initOrder?: (storeId: string, groupId: string) => void,
+  initOrder?: (storeId: string, groupId: string, notify: (ids: Order[]) => void) => void,
   match: any,
 };
 
@@ -16,6 +18,7 @@ type Props = {
   groupId: store.groupId,
   initStore: store.init,
   initOrder: order.init,
+  itemMap: store.itemMap,
 }))
 @observer
 export default class Initializer extends React.Component<Props> {
@@ -28,7 +31,6 @@ export default class Initializer extends React.Component<Props> {
   }
 
   componentWillMount() {
-    console.log('componentWillMount')
     this.init(this.props);
   }
 
@@ -38,8 +40,14 @@ export default class Initializer extends React.Component<Props> {
 
   init(props: Props) {
     if (props.storeId && props.groupId && this.props.initOrder) {
-      this.props.initOrder(props.storeId, props.groupId);
+      this.props.initOrder(props.storeId, props.groupId, this.notifyNewOrder.bind(this));
     }
+  }
+
+  // TODO: Test
+  notifyNewOrder(orders: Order[]) {
+    const items = orders.map(order => `「${this.props.itemMap[order.itemId].name}」x${order.count}`).join('、');
+    toast.info(`次の料理が注文されました。\n${items}`);
   }
 
   render() {
