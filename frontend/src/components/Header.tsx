@@ -27,7 +27,8 @@ export default class Header extends React.Component<Props> {
 }
 
 const NavigationHeader = styled.header`
-  padding: 26px 0;
+  padding: 26px 20px;
+  box-sizing: border-box;
   width: 100%;
   background-color: white;
   font-weight: bold;
@@ -44,7 +45,7 @@ const NavigationHeader = styled.header`
   }
 `;
 
-const BackButton = styled.button`
+const BackButton = styled.div`
   flex: 1;
   font-size: 16px;
   font-weight: bold;

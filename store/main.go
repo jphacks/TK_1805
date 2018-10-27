@@ -9,18 +9,21 @@ import (
 	"github.com/kataras/iris"
 
 	"github.com/KeisukeYamashita/TK_1805/store/app"
+	"github.com/KeisukeYamashita/TK_1805/store/helpers"
 	"github.com/KeisukeYamashita/TK_1805/store/types"
 )
 
-var db *gorm.DB
-var debugMode bool
+var (
+	db          *gorm.DB
+	debugMode   bool
+	paymentHost string
+	paymentPort int
+)
 
 func init() {
+	var err error
 
-}
-
-func main() {
-	db, err := gorm.Open("mysql", "root:@/jphack2018?charset=utf8&parseTime=True&loc=Local")
+	db, err = gorm.Open("mysql", "root:@/jphack2018?charset=utf8&parseTime=True&loc=Local")
 
 	if err != nil {
 		log.Fatal(err)
@@ -28,9 +31,19 @@ func main() {
 
 	debugMode = os.Getenv("GO_ENV") == "test"
 
+	paymentHost, paymentPort, err = helpers.GetPaymentServerInfo(debugMode)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	db.LogMode(debugMode)
 	db.AutoMigrate(&types.User{}, &types.Transaction{}, &types.Store{}, &types.Table{}, &types.Group{})
-	app := app.NewIrisApp(db, debugMode)
+
+}
+
+func main() {
+	app := app.NewIrisApp(db, debugMode, paymentHost, paymentPort)
 	app.Run(iris.Addr(":8880"))
 
 	defer db.Close()

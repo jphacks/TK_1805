@@ -6,6 +6,7 @@ import Header from '../components/Header';
 import FireStorageImage from '../components/FireStorageImage';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import Initializer from '../components/Initializer';
 
 type Props = {
   inbox: Order[],
@@ -15,7 +16,6 @@ type Props = {
   groupId: string,
   itemMap: any,
   commit: (storeId: string, groupId: string) => void,
-  init: (tableId: string) => void,
   history: any,
   match: any,
 };
@@ -28,16 +28,9 @@ type Props = {
   groupId: store.groupId,
   commit: order.commit,
   itemMap: store.itemMap,
-  init: store.init,
 }))
 @observer
 export default class OrderConfirm extends React.Component<Props> {
-  constructor(props) {
-    super(props);
-
-    this.props.init(this.props.match.params.tableId);
-  }
-
   onClickConfirmButton() {
     this.props.commit(this.props.storeId, this.props.groupId);
     this.props.history.goBack();
@@ -64,6 +57,8 @@ export default class OrderConfirm extends React.Component<Props> {
 
     return (
       <ArticleContainer>
+        <Initializer match={this.props.match} />
+
         <Header title='注文確認' history={this.props.history} />
 
         <ItemsContainer>
