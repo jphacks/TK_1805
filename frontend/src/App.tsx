@@ -9,6 +9,11 @@ import Category from './pages/Category';
 import Item from './pages/Item';
 import OrderConfirm from './pages/OrderConfirm';
 import OrderIndex from './pages/OrderIndex';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faChevronLeft);
 
 export default class App extends React.Component {
   render() {
