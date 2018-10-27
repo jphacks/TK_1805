@@ -29,6 +29,7 @@ class OrderStore {
 
   @action.bound
   add(order) {
+    console.log(`ADD ORDER: ${JSON.stringify(order)}`);
     this.inbox.push(order);
   }
 

@@ -44,7 +44,7 @@ export default class MenuFooter extends React.Component<Props> {
 }
 
 const Footer = styled.footer`
-  position: absolute;
+  position: fixed;
   display: flex;
   bottom: 0;
   width: calc(100% - 48px);
@@ -55,6 +55,8 @@ const Footer = styled.footer`
   justify-content: space-between;
   height: 58px;
   box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  background-color: white;
 `;
 
 const Counter = styled.div`

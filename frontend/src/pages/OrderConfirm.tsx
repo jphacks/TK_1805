@@ -34,12 +34,12 @@ export default class OrderConfirm extends React.Component<Props> {
   }
 
   render() {
-    console.log(this.props.inbox);
+    console.log(this.props.inbox.slice());
 
     const items = this.props.inbox.slice().map((order, index) => {
       const item = this.props.itemMap[order.itemId];
 
-      if (item) {
+      if (!item) {
         return <div key={index} />;
       }
 
@@ -48,7 +48,7 @@ export default class OrderConfirm extends React.Component<Props> {
           key={index}
           count={order.count}
           tableId={this.props.tableId}
-          item={this.props.itemMap[order.itemId]}
+          item={item}
         />
       );
     });

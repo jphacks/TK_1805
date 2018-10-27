@@ -63,7 +63,7 @@ export default class OrderIndex extends React.Component<Props> {
   }
 
   render() {
-    const items = this.props.orders.map((order, index) => {
+    const items = this.props.orders.slice().map((order, index) => {
       const item = this.props.itemMap[order.itemId];
 
       if (!item) {
