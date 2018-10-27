@@ -15,6 +15,8 @@ type State = {
 const storageRef = storage.ref();
 
 export default class FireStorageImage extends React.Component<Props, State> {
+  static memo = { };
+
   state: State = { };
 
   get type() {
@@ -26,8 +28,15 @@ export default class FireStorageImage extends React.Component<Props, State> {
   }
 
   componentWillMount() {
-    storageRef.child(`${this.type}/${this.props.photo.filename}`).getDownloadURL().then(url => {
+    const key = `${this.type}/${this.props.photo.filename}`;
+
+    if (FireStorageImage.memo[key]) {
+      this.setState({ url: FireStorageImage.memo[key] });
+    }
+
+    storageRef.child(key).getDownloadURL().then(url => {
       this.setState({ url });
+      FireStorageImage.memo[key] = url;
     });
   }
 
