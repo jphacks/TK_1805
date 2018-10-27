@@ -21,13 +21,13 @@ class OrderStore {
   }
 
   // NOTE: action.bindを使わないと行けないかも
-  @action
+  @action.bound
   add(order) {
     this.inbox.push(order);
   }
 
   // NOTE: action.bindを使わないと行けないかも
-  @action
+  @action.bound
   commit(storeId, groupId) {
     // TODO: 決済が終了していたら注文できないようにする
 

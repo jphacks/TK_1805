@@ -26,8 +26,6 @@ export default class FireStorageImage extends React.Component<Props, State> {
   }
 
   componentWillMount() {
-    console.log(this.props.photo);
-
     storageRef.child(`${this.type}/${this.props.photo.filename}`).getDownloadURL().then(url => {
       this.setState({ url });
     });

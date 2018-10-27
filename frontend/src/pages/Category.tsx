@@ -2,6 +2,7 @@ import * as React from 'react';
 import { inject, observer } from 'mobx-react';
 import { Link } from 'react-router-dom';
 import { Item } from '../types/item';
+import { Order } from '../types/order';
 import FireStorageImage from '../components/FireStorageImage';
 import { Category } from '../types/category';
 
@@ -10,12 +11,16 @@ type Props = {
   categories: Category[],
   match: any,
   init: (string) => void,
+  tableId: string,
+  inbox: Order[],
 };
 
-@inject(({ store }) => ({
+@inject(({ store, order }) => ({
   init: store.init,
   items: store.items,
   categories: store.categories,
+  tableId: store.tableId,
+  inbox: order.inbox,
 }))
 @observer
 export default class CategoryPage extends React.Component<Props> {
@@ -23,8 +28,6 @@ export default class CategoryPage extends React.Component<Props> {
     super(props);
 
     this.props.init(props.match.params.tableId);
-
-    console.log('CategoryPage')
   }
 
   get category() {
@@ -39,9 +42,16 @@ export default class CategoryPage extends React.Component<Props> {
     return this.props.items.filter(item => item.categoryId === this.categoryId);
   }
 
+  get itemToCountMap() {
+    return this.props.inbox.reduce((hash, order) => {
+      hash[order.itemId] = order.count;
+      return hash;
+    }, {});
+  }
+
   render() {
     const items = this.items.map(item => (
-      <ItemPanel key={item.id} item={item} />
+      <ItemPanel key={item.id} tableId={this.props.tableId} item={item} count={this.itemToCountMap[item.id]} />
     ));
 
     return (
@@ -60,9 +70,10 @@ export default class CategoryPage extends React.Component<Props> {
   }
 }
 
-const ItemPanel = ({ item }) => (
-  <Link to={`items/${item.id}`}>
+const ItemPanel = ({ tableId, item, count }) => (
+  <Link to={`/tables/${tableId}/items/${item.id}`}>
     <FireStorageImage type='item' photo={item.photo} />
     <span>{ item.name }</span>
+    <span>{ count }</span>{}
   </Link>
 );
