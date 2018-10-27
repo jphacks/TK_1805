@@ -14,10 +14,6 @@ func NewIrisApp() *iris.Application {
 		ctx.WriteString("OK")
 	})
 
-	app.Get("/hog", func (ctx iris.Context) {
-		ctx.WriteString("OKOK")
-	})
-
 	ctr := handler.NewController()
 
 	fmt.Printf("v%v\n", types.VERSION)
@@ -26,6 +22,8 @@ func NewIrisApp() *iris.Application {
 	api.Post("/store/groups", ctr.CreateGroupId())
 
 	api.Get("/store", ctr.CreateGroupId())
+
+	api.Post("/payment", ctr.ExecutePayment())
 
 
 	return app
