@@ -10,21 +10,23 @@ const stripe = require('stripe-client')('pk_test_DdyKpX6fYBy1gMoJqeVYdFuj');
 type Props = {
   itemMap: any,
   orders: Order[],
+  uid: string,
   match: any,
   history: any,
 };
 
 @inject(({ store, order }) => ({
   itemMap: store.itemMap,
-  orders: order.orders
+  orders: order.orders,
+  uid: order.uid,
 }))
 @observer
 export default class CreditCard extends React.Component<Props> {
   state = {
     number: '',
-    exp_month: 1,
-    exp_year: 2000,
-    cvc: null,
+    exp_month: 11,
+    exp_year: 2018,
+    cvc: '',
   };
 
   get amount() {
@@ -39,33 +41,61 @@ export default class CreditCard extends React.Component<Props> {
     }, 0);
   }
 
+  get card() {
+    return {
+      number: String(this.state.number),
+      exp_month: Number(this.state.exp_month),
+      exp_year: Number(this.state.exp_year),
+      cvc: String(this.state.cvc).padStart(3, '0'),
+    };
+  }
+
+  get host() {
+    return 'http://35.221.123.85:5000';
+  }
+
   async onClickSendButton() {
-    const data = await stripe.createToken({
-      card: {
-        "number": '4242424242424242',
-        "exp_month": 12,
-        "exp_year": 2018,
-        "cvc": '123'
+    // const data = await stripe.createToken({
+    //   card: {
+    //     "number": '4242424242424242',
+    //     "exp_month": 12,
+    //     "exp_year": 2018,
+    //     "cvc": '123'
+    //   }
+    // });
+
+    try {
+      const response = await stripe.createToken({ card: this.card });
+      const data = await response.json();
+
+      console.debug(`Create Token ${data.id}`);
+
+      // const storeResp = await fetch('http://35.221.123.85:5000', {
+      const storeResp = await fetch('http://localhost:8880', {
+        method: 'POST',
+        body: JSON.stringify({
+          amount: 1,
+          userID: this.props.uid,
+          token: data.id,
+        })
+      });
+
+      const storeData = await storeResp.json();
+
+      if (storeResp.ok) {
+        alert('[DEMO] 決済に成功しました。')
+      } else {
+        alert(`[DEMO] 決済に失敗しました。有効なカード情報が入力されていません。`);
       }
-    });
-
-    const response = await fetch('http://localhost:8880', {
-      method: 'POST',
-      body: JSON.stringify({
-        amount: 1000,
-        userID: "123",
-        token: data.id,
-      })
-    });
-
-    console.log(response);
-
-    const json = await response.json();
-
-    console.log(json);
+    } catch (e) {
+      // TODO: handle error
+      alert(`[DEMO] 決済に失敗しました。有効なカード情報が入力されていません。`);
+    }
   }
 
   render() {
+    // TODO: validation
+
     return (
       <main>
         <Initializer match={this.props.match} />
@@ -103,12 +133,14 @@ export default class CreditCard extends React.Component<Props> {
             required
             autoComplete='cc-csc'
             value={this.state.cvc}
-            onChange={e => this.setState({ cvc: Number(e.target.value)})}
+            onChange={e => this.setState({ cvc: e.target.value })}
             placeholder="123"
           />
         </Form>
 
-        <SendButton onClick={this.onClickSendButton.bind(this)}>Send!</SendButton>
+        <SendButton onClick={this.onClickSendButton.bind(this)}>
+          クレジットカードで支払う
+        </SendButton>
       </main>
     );
   }
