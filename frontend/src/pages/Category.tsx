@@ -73,6 +73,7 @@ export default class CategoryPage extends React.Component<Props> {
         <MainContainer>
           { items }
         </MainContainer>
+
         <MenuFooter tableId={this.props.tableId} />
       </div>
     );
@@ -97,6 +98,7 @@ const MainContainer = styled.div`
   padding: 4px 12px;
   display: flex;
   flex-wrap: wrap
+  padding-bottom: 72px;
 
   & > a {
     width: 50%;
