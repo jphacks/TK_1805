@@ -18,14 +18,6 @@
   revision = "8828253bfc54f2f91aaef5f32b44a244b0a98e4f"
 
 [[projects]]
-  branch = "store-go"
-  digest = "1:fb90b51f38eab5e646299774af502acb46450a86c16625494add9eeb857474c6"
-  name = "github.com/KeisukeYamashita/TK_1805"
-  packages = ["store/app"]
-  pruneopts = "UT"
-  revision = "d87f19209274177259659104051c5782231c158b"
-
-[[projects]]
   branch = "master"
   digest = "1:f3d644e4f9c0f3c3a23c0556df749b111bea11cf9f083f975659d8206535d06f"
   name = "github.com/Shopify/goreferrer"
@@ -307,7 +299,6 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/KeisukeYamashita/TK_1805/store/app",
     "github.com/jinzhu/gorm",
     "github.com/kataras/iris",
   ]
