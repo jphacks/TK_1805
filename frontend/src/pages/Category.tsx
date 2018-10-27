@@ -5,6 +5,7 @@ import { Item } from '../types/item';
 import { Order } from '../types/order';
 import FireStorageImage from '../components/FireStorageImage';
 import { Category } from '../types/category';
+import Header from '../components/Header';
 
 type Props = {
   items: Item[],
@@ -13,6 +14,7 @@ type Props = {
   init: (string) => void,
   tableId: string,
   inbox: Order[],
+  history: any,
 };
 
 @inject(({ store, order }) => ({
@@ -56,11 +58,9 @@ export default class CategoryPage extends React.Component<Props> {
 
     return (
       <div>
-        <header>
-          <span>
-            { this.category && this.category.name }
-          </span>
-        </header>
+        { this.category &&
+          <Header title={this.category.name} history={this.props.history} />
+        }
 
         <main>
           { items }

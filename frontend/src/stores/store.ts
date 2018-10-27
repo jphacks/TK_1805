@@ -2,20 +2,11 @@ import { observable, action, computed } from 'mobx';
 import { Item } from '../types/item';
 import { Category } from '../types/category';
 import firebase from '../config/firebase';
+import { arrayFromSnapshot } from '../lib/firestore';
 
 const db = firebase.firestore();
 
 const URL_BASE = 'http://35.221.123.85:5000/v1';
-
-function arrayFromSnapshot(snapshot: firebase.firestore.QuerySnapshot) {
-  let items: any[] = [];
-
-  snapshot.forEach(item => {
-    items.push({ ...item.data(), id: item.id });
-  });
-
-  return items;
-}
 
 class Store {
   @observable storeId: string = '';
@@ -28,6 +19,14 @@ class Store {
   @computed
   get initialized() {
     return !!this.storeId;
+  }
+
+  @computed
+  get itemMap() {
+    return this.items.slice().reduce((hash, item) => {
+      hash[item.id] = item;
+      return hash;
+    }, {});
   }
 
   @action.bound

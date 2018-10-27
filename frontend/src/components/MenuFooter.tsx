@@ -17,13 +17,15 @@ export default class MenuFooter extends React.Component<Props> {
       return 0;
     }
 
-    return this.props.inbox.reduce((sum: number, order: Order) => sum + order.count, 0);
+    return this.props.inbox.slice().reduce((sum: number, order: Order) => (
+      sum + order.count
+    ), 0);
   }
 
   render() {
     return (
       <footer>
-        <Link to={`/tables/${this.props.tableId}`}>
+        <Link to={`/tables/${this.props.tableId}/orders`}>
           注文一覧・お会計
         </Link>
 
