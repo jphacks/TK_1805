@@ -78,6 +78,7 @@ const styles = {
   },
   orderConfirmLink: {
     display: 'flex',
+    alignItems: 'center',
     fontSize: 18,
     textDecoration: 'none',
     // whiteSpace: 'nowrap',
