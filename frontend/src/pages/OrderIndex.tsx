@@ -1,0 +1,177 @@
+import * as React from 'react';
+import { inject, observer } from 'mobx-react';
+import styled from 'styled-components';
+import { Order } from '../types/order';
+import { Item } from '../types/item';
+import Header from '../components/Header';
+import { Link } from 'react-router-dom';
+
+type Props = {
+  itemMap: any,
+  tableId: string,
+  storeId: string,
+  groupId: string,
+  items: Item[],
+  initStore: (tableId: string) => void,
+  initOrder: (storeId: string, groupId: string) => void,
+  orders: Order[],
+  history: any,
+  match: any,
+};
+
+@inject(({ store, order }) => ({
+  initStore: store.init,
+  initOrder: order.init,
+  orders: order.orders,
+  items: store.items,
+  itemMap: store.itemMap,
+  tableId: store.tableId,
+  storeId: store.storeId,
+  groupId: store.groupId,
+}))
+@observer
+export default class OrderIndex extends React.Component<Props> {
+  state = {
+    showModal: false,
+  };
+
+  constructor(props) {
+    super(props);
+
+    this.props.initStore(this.props.match.params.tableId);
+  }
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    if (nextProps.storeId !== '' && nextProps.groupId !== '') {
+      this.props.initOrder(nextProps.storeId, nextProps.groupId);
+    }
+  }
+
+  get totalPrice() {
+    return this.props.orders.reduce((sum, order) => {
+      const item = this.props.itemMap[order.itemId];
+
+      if (!item) {
+        return sum;
+      }
+
+      return sum + item.price * order.count;
+    }, 0);
+  }
+
+  onClickSelectPaymentMethod() {
+    this.setState({ showModal: true });
+  }
+
+  render() {
+    const items = this.props.orders.slice().map((order, index) => {
+      const item = this.props.itemMap[order.itemId];
+
+      if (!item) {
+        return <div key={index} />;
+      }
+
+      return (
+        <ListItem key={index}>
+          <Link to={`/tables/${this.props.tableId}/`} style={{ flex: 1, color: '#FF8100' }}>
+            { item.name }
+          </Link>
+
+          <Counter>
+            x { order.count }
+          </Counter>
+
+          <Price>
+            { item.price * order.count }円
+          </Price>
+        </ListItem>
+      );
+    });
+
+    return (
+      <Container>
+        <Header title='注文一覧' history={this.props.history} />
+
+        <List>
+          { items }
+        </List>
+
+        <TotalPriceContainer>
+          <span>小計</span>
+          <span>¥{ this.totalPrice }円</span>
+        </TotalPriceContainer>
+
+        <PayButton onClick={this.onClickSelectPaymentMethod.bind(this)}>
+          お支払い方法を選択する
+        </PayButton>
+      </Container>
+    );
+  }
+}
+
+const Container = styled.article`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 50px;
+`;
+
+const List = styled.ul`
+  width: calc(100% - 48px);
+  padding: 0 24px;
+  list-style: none;
+`;
+
+const ListItem = styled.li`
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+`;
+
+const OrderName = styled.span`
+  flex: 1;
+  color: #FF8100;
+`;
+
+const Counter = styled.span`
+  padding: 0 12px;
+  color: #4A4A4A;
+  background-color: #D8D8D8;
+  border-radius: 24px;
+  margin-right: 12px;
+  width: 28px;
+  text-align: center;
+`;
+
+const Price = styled.span`
+  width: 58px;
+  text-align: right;
+  color: #4A4A4A;
+`;
+
+const TotalPriceContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  align-self: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #4A4A4A;
+  border-bottom: 1px solid #4A4A4A;
+`;
+
+const PayButton = styled.div`
+  position: fixed;
+  background: #FF8100;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.10);
+  bottom: 28px;
+  align-self: center;
+  color: white;
+  font-size: 18px;
+  padding: 5px 40px;
+  font-weight: bold;
+  border-radius: 50px;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
