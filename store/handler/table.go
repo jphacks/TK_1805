@@ -15,6 +15,18 @@ import (
 func (ctr *Controller) CreateGroupId() func(ctx iris.Context) {
 	return func(ctx iris.Context) {
 		tableID := ctx.FormValue("tableId")
+
+		if tableID == "" {
+			ctx.StatusCode(iris.StatusBadRequest)
+			ctx.JSON(iris.Map{
+				"error": iris.Map{
+					"statusCode": iris.StatusBadRequest,
+					"message":    "tableId is missing",
+				},
+			})
+			return
+		}
+
 		now := time.Now()
 		data := fmt.Sprintf("%v-%v", tableID, now)
 		keyByteArray := sha256.Sum256([]byte(data))
