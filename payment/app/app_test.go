@@ -171,9 +171,10 @@ func TestNewIrisApp(t *testing.T) {
 				e := httptest.New(t, app, httptest.URL("http://payment:8880.com"))
 
 				var count int
-
+				var testNum int
 				// Test 5 times
-				for i := 0; i < 5; i++ {
+
+				for i := 0; i < testNum; i++ {
 					count++
 					req := e.POST("/v1/payment")
 					req.WithQuery("customerID", customerID)
@@ -193,8 +194,8 @@ func TestNewIrisApp(t *testing.T) {
 					})
 				}
 
-				if count == 5 {
-					t.Errorf("test tries got %v\nwant %v", count, 5)
+				if count != 5 {
+					t.Errorf("test tries got %v\nwant %v", count, testNum)
 				}
 			})
 		})
