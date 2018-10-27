@@ -38,7 +38,7 @@ export default class Top extends React.Component<Props> {
     ));
 
     return (
-      <div>
+      <main>
         <Header>
           { this.props.storeName }
         </Header>
@@ -48,7 +48,7 @@ export default class Top extends React.Component<Props> {
         </Main>
 
         <MenuFooter tableId={this.props.tableId} />
-      </div>
+      </main>
     )
   }
 }
@@ -87,6 +87,7 @@ const CategoryPanel = ({ tableId, category }) => (
 
 const Header = styled.header`
   width: 100%;
+  box-sizing: border-box;
   padding: 26px 24px;
   font-size: 22px;
   font-weight: bold;
@@ -112,5 +113,7 @@ const styles = {
   image: {
     width: '100%',
     height: 'auto',
+    borderTopRightRadius: 4,
+    borderTopLeftRadius: 4,
   }
 }

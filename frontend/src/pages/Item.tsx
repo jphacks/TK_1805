@@ -111,6 +111,7 @@ const Container = styled.article`
   flex-direction: column;
   display: flex;
   justify-content: center;
+  padding-bottom: 72px;
 `;
 
 const CloseButton = styled.div`
@@ -130,24 +131,6 @@ const CloseButton = styled.div`
     cursor: pointer;
   }
 `;
-const Article = styled.article`
-  position: related;
-`
-
-const BackButtonContainer = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 24px;
-  height: 24px;
-  background: lightgray;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  font-size: 14px;
-  padding: 0;
-`
 
 const ItemHeader = styled.h1`
   font-size: 18px;
@@ -236,7 +219,7 @@ const ListValueWithUnderLine = styled.div`
 `;
 
 const AddButton = styled.button`
-  position: absolute;
+  position: fixed;
   bottom: 28px;
   width: 320px;
   background-color: #FF8100;
@@ -252,7 +235,7 @@ const AddButton = styled.button`
 
 const MathButton = styled.div`
   background-color: #F0F0F0;
-  font-weigtht: bold;
+  font-weight: bold;
   height: 35px;
   width: 35px;
   border-radius: 50%;

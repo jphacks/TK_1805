@@ -73,13 +73,13 @@ export default class CategoryPage extends React.Component<Props> {
 
 const ItemPanel = ({ tableId, item, count, style}) => (
   <Link to={`/tables/${tableId}/items/${item.id}`} style={style.a} >
-  <PanelContainer>
-    <FireStorageImage type='item' photo={item.photo} style={style.img}/>
-    <OverlayLabel>{ item.name }</OverlayLabel>
-    { count &&
-      <CountLabel><p>{ count }</p></CountLabel>
-    }
-  </PanelContainer>
+    <PanelContainer>
+      <FireStorageImage type='item' photo={item.photo} style={style.img}/>
+      <OverlayLabel>{ item.name }</OverlayLabel>
+      { count &&
+        <CountLabel><p>{ count }</p></CountLabel>
+      }
+    </PanelContainer>
   </Link>
 );
 
@@ -89,27 +89,31 @@ const MainContainer = styled.div`
   padding: 4px 12px;
   display: flex;
   flex-wrap: wrap
-  
+
   & > a {
     width: 50%;
   }
-`
+`;
 
 const OverlayLabel = styled.div`
   position: absolute;
-  bottom: 12px;
-  background-color: rgba(0,0,0,0.4);
+  bottom: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
   width: calc(100% - 30px);
   color: white;
   padding-left: 10px;
   border-radius: 0 0 4px 4px;
-`
+  color: #FFFFFF;
+  letter-spacing: 0.14px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.50);
+`;
 
 const PanelContainer = styled.div`
   display: flex;
-  border-radius: 4px;
+  border-radius: 8px;
   overflow: hidden;
-`
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+`;
 
 const CountLabel = styled.div`
   position: absolute;
@@ -133,7 +137,7 @@ const CountLabel = styled.div`
     font-size: 32px;
     opacity: 1.0;
   }
-`
+`;
 
 const style = {
   a: {
@@ -146,4 +150,4 @@ const style = {
     width: "100%",
     height: "100%",
   }
-}
+};

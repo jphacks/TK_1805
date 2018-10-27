@@ -47,7 +47,8 @@ const Footer = styled.footer`
   position: fixed;
   display: flex;
   bottom: 0;
-  width: calc(100% - 48px);
+  width: 100%;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   padding-left: 24px;
