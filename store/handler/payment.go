@@ -10,17 +10,20 @@ import (
 	"github.com/kataras/iris"
 )
 
+// Payment ...
 type Payment struct {
 	Amount int
 	UserID int
 	Token  string
 }
 
+// PaymentInfo ...
 type PaymentInfo struct {
 	Error   interface{}
 	Message *Message
 }
 
+// Message ...
 type Message struct {
 	CustomerID  string
 	Amount      int `json:"amount"`
@@ -29,11 +32,13 @@ type Message struct {
 	ChargeID    string
 }
 
+// PaymentError ...
 type PaymentError struct {
 	StatusCode int    `json:"statusCode"`
 	Message    string `json:"message"`
 }
 
+// ExecutePayment ...
 func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 	return func(ctx iris.Context) {
 		var payment Payment
@@ -64,14 +69,7 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 		var err error
 		if payment.Token == "" {
 
-			var paymentURL string
-
-			if ctr.DebugMode {
-				paymentURL = "http://payment:8880"
-			} else {
-				paymentURL = "http://localhost:8000/v1/payment"
-			}
-
+			paymentURL := fmt.Sprintf("http://%v:%v/v1/payment", ctr.PaymentHost, ctr.PaymentPort)
 			resp, err = http.PostForm(paymentURL, url.Values{"stripeToken": {"Value"}, "amount": {"123"}, "userID": {"1"}})
 
 			if err != nil {
@@ -98,10 +96,9 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 				return
 			}
 
-			jsonBytes := ([]byte)(byteArray)
-			data := new(PaymentInfo)
+			resp := new(PaymentInfo)
 
-			if err := json.Unmarshal(jsonBytes, data); err != nil {
+			if err := json.Unmarshal(([]byte)(byteArray), resp); err != nil {
 				ctx.StatusCode(iris.StatusBadRequest)
 				ctx.JSON(iris.Map{
 					"error": iris.Map{
@@ -112,11 +109,11 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 				return
 			}
 
-			switch paymentErrInfo := data.Error.(type) {
+			switch paymentErrInfo := resp.Error.(type) {
 			case string:
-				//TODO confirm type of data
+				//TODO confirm type of resp
 				fmt.Print(paymentErrInfo)
-				ctx.JSON(data)
+				ctx.JSON(resp)
 				return
 			default:
 				ctx.StatusCode(iris.StatusInternalServerError)
@@ -128,8 +125,6 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 				})
 				return
 			}
-
-			return
 		}
 
 		return

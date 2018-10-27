@@ -10,16 +10,14 @@ import (
 )
 
 // NewIrisApp ...
-func NewIrisApp(db *gorm.DB, debugMode bool) *iris.Application {
+func NewIrisApp(db *gorm.DB, debugMode bool, host string, port int) *iris.Application {
 	app := iris.Default()
 
 	app.Get("/healthy", func(ctx iris.Context) {
 		ctx.WriteString("OK")
 	})
 
-	ctr := handler.NewController(db, debugMode)
-
-	fmt.Printf("v%v\n", types.VERSION)
+	ctr := handler.NewController(db, debugMode, host, port)
 
 	api := app.Party(fmt.Sprintf("/v%v", types.VERSION))
 	api.Post("/store/groups", ctr.CreateGroupId())
