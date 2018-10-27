@@ -5,6 +5,7 @@ import stores from './stores';
 import IndexTest from './pages/IndexTest';
 import Poyo from './pages/Poyo';
 import Top from './pages/Top';
+import Category from './pages/Category';
 
 export default class App extends React.Component {
   render() {
@@ -14,7 +15,8 @@ export default class App extends React.Component {
           <Switch>
             <Route exact path='/' component={IndexTest} />
             <Route path='/poyo' component={Poyo} />
-            <Route path='/tables/:tableId' component={Top} />
+            <Route exact path='/tables/:tableId' component={Top} />
+            <Route path='/tables/:tableId/categories/:categoryId' component={Category} />
           </Switch>
         </BrowserRouter>
       </Provider>

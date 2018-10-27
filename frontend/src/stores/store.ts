@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx';
+import { observable, action, computed } from 'mobx';
 import { Item } from '../types/item';
 import { Category } from '../types/category';
 import firebase from '../config/firebase';
@@ -25,8 +25,16 @@ class Store {
   @observable items: Item[] = [];
   @observable categories: Category[] = [];
 
+  @computed
+  get initialized() {
+    return !!this.storeId;
+  }
+
   @action.bound
   async init(tableId: string) {
+    if (this.initialized) { return; }
+    if (!tableId) { throw 'ERROR: tableId is not defined!' }
+
     this.tableId = tableId;
 
     // const response = await fetch(`${URL_BASE}/store/groups?tableId=${tableId}`, {
@@ -50,13 +58,12 @@ class Store {
     });
 
     db.collection(`stores/${this.storeId}/categories`).get().then(snapshot => {
-      console.log(snapshot);
       this.categories = arrayFromSnapshot(snapshot);
     });
 
-    // db.collection(`stores/${this.storeId}/items`).get().then(snapshot => {
-    //   this.items = arrayFromSnapshot(snapshot);
-    // });
+    db.collection(`stores/${this.storeId}/items`).get().then(snapshot => {
+      this.items = arrayFromSnapshot(snapshot);
+    });
   }
 }
 
