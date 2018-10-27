@@ -64,13 +64,18 @@ export default class ItemPage extends React.Component<Props> {
     }
 
     return (
-      <article>
+      <Container>
         <FireStorageImage type="item" photo={this.item.photo} style={styles.img} />
-          <ItemContainer>
+
+        <CloseButton onClick={ () => this.props.history.goBack() }>
+          ✕
+        </CloseButton>
+
+        <ItemContainer>
           <ItemHeader>{ this.item.name }</ItemHeader>
           <DescContainer>
-            <span>{ this.item.description }</span>
-            <span>¥{ this.item.price }円(税抜き)</span>
+            <Description>{ this.item.description }</Description>
+            <Price>¥{ this.item.price }円(税抜き)</Price>
           </DescContainer>
           <ListContainer>
             <ListItem>
@@ -78,36 +83,61 @@ export default class ItemPage extends React.Component<Props> {
                 <span>数量</span>
               </ListLabel>
               <ListValue>
-                  <MathButton onClick={this.decrement.bind(this)}>-</MathButton>
-                  <span>{ this.state.count }</span>
-                  <MathButton onClick={this.increment.bind(this)}>+</MathButton>
+                <MathButton onClick={this.decrement.bind(this)}>-</MathButton>
+                <CountNumber>{ this.state.count }</CountNumber>
+                <MathButton onClick={this.increment.bind(this)}>+</MathButton>
               </ListValue>
             </ListItem>
             <ListItem>
               <ListLabel>
-                  <span>価格</span>
+                <span>価格</span>
               </ListLabel>
               <ListValueWithUnderLine>
-                  <p className="currecny-label">¥</p>
-                  <p><span>{ this.totalPrice }</span>円</p>
+                <p className="currecny-label">¥</p>
+                <p><span>{ this.totalPrice }</span>円</p>
               </ListValueWithUnderLine>
             </ListItem>
           </ListContainer>
-          <AddButton onClick={this.onClickAddItemButton.bind(this)}>追加する</AddButton>
         </ItemContainer>
-      </article>
+
+        <AddButton onClick={this.onClickAddItemButton.bind(this)}>追加する</AddButton>
+      </Container>
     );
   }
 }
 
-const ItemHeader = styled.h1`
-  color: #E46A6E;
-`
+const Container = styled.article`
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+`;
 
+const CloseButton = styled.div`
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #9B9B9B;
+  border-radius: 50%;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const ItemHeader = styled.h1`
+  font-size: 18px;
+  color: #E46A6E;
+`;
 
 const ItemContainer = styled.div`
   padding: 10px 30px;
-`
+`;
 
 const DescContainer = styled.div`
   display: flex;
@@ -116,7 +146,18 @@ const DescContainer = styled.div`
   & > span {
     font-size: 10px
   }
+`;
+
+const Description = styled.div`
+  color: #4A4A4A;
+  font-size: 12px;
+  padding-right: 20px;
 `
+
+const Price = styled.div`
+  color: #4A4A4A;
+  white-space: nowrap;
+`;
 
 const ListContainer = styled.ul`
   list-style: none;
@@ -124,8 +165,7 @@ const ListContainer = styled.ul`
   margin: 20px auto;
   padding: 0px;
   font-size: 20px;
-`
-
+`;
 
 const ListItem = styled.li`
   display: flex;
@@ -138,23 +178,23 @@ const ListItem = styled.li`
 
   &:not(:last-child) {
     margin-bottom: 12px;
-  } 
-`
+  }
+`;
 
 const ListLabel = styled.div`
   font-size: 20px;
-`
+`;
 
 const ListValue = styled.div`
-  width: 120px;
   display: flex;
   flex-direction: row;
+`;
 
-  & > * {
-    text-align: center;
-    width: 100%;
-  }
-`
+const CountNumber = styled.span`
+  padding: 0 20px;
+  text-align: center;
+  width: 25px;
+`;
 
 const ListValueWithUnderLine = styled.div`
   width: 120px;
@@ -174,34 +214,39 @@ const ListValueWithUnderLine = styled.div`
       text-align: left;
     }
   }
-`
-
+`;
 
 const AddButton = styled.button`
   position: absolute;
   bottom: 20px;
-  margin: 0px auto;
   width: 320px;
-  heigth: 30px
   background-color: #FF8100;
-  font-size: 18px;
-  border-radius: 15px;
   border-style: none;
   color: white;
-`
+  right: calc((100% - 320px) / 2);
+  font-weight: bold;
+  padding: 6px 0;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  border-radius: 100px;
+`;
 
-const MathButton = styled.button`
-  background-color: lightgray;
-  font-weigth: bold;
-  heigth: 40px;
-  width: 40px;
+const MathButton = styled.div`
+  background-color: #F0F0F0;
+  font-weigtht: bold;
+  height: 35px;
+  width: 35px;
   border-radius: 50%;
   padding: 0px;
-`
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const styles = {
   img: {
     width: "100%",
     height: "100%",
   }
-}
+};
