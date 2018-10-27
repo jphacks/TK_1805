@@ -3,6 +3,7 @@ import { Item } from '../types/item';
 import { Category } from '../types/category';
 import firebase from '../config/firebase';
 import { arrayFromSnapshot } from '../lib/firestore';
+import { DateTime } from 'luxon';
 
 const db = firebase.firestore();
 
@@ -15,6 +16,7 @@ class Store {
   @observable name: string = '';
   @observable items: Item[] = [];
   @observable categories: Category[] = [];
+  @observable enterTime = null;
 
   @computed
   get initialized() {
@@ -44,9 +46,11 @@ class Store {
 
     // this.storeId = data.storeId;
     // this.groupId = data.groupId;
+    // this.enterTime = data.enterTime;
 
     this.storeId = 'store-1';
     this.groupId = 'hoge';
+    this.enterTime = DateTime.local();
 
     db.collection(`stores`).doc(this.storeId).get().then(doc => {
       const data = doc.data();
@@ -56,13 +60,15 @@ class Store {
       }
     });
 
-    db.collection(`stores/${this.storeId}/categories`).get().then(snapshot => {
+    db.collection(`stores/${this.storeId}/categories`).orderBy('precedence').get().then(snapshot => {
       this.categories = arrayFromSnapshot(snapshot);
     });
 
     db.collection(`stores/${this.storeId}/items`).get().then(snapshot => {
       this.items = arrayFromSnapshot(snapshot);
     });
+
+    console.debug('Initialized Store!');
   }
 }
 

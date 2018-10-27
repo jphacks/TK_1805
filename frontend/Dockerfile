@@ -11,4 +11,4 @@ COPY frontend/ $APP_ROOT
 RUN yarn run build
 
 EXPOSE 3000
-CMD [ "yarn", "start" ]
+CMD [ "npm", "run", "dev" ]

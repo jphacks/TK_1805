@@ -19,19 +19,6 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:8ffc7dc3003525ba3136ad0c5432a415edbc71f5c1ed7c68aab3b1ec46e1b69e"
-  name = "github.com/KeisukeYamashita/TK_1805"
-  packages = [
-    "payment/app",
-    "payment/handler",
-    "payment/helpers",
-    "payment/types",
-  ]
-  pruneopts = "UT"
-  revision = "4e55dcbfa354d68265a17dd82e8a1205102c7dba"
-
-[[projects]]
-  branch = "master"
   digest = "1:f3d644e4f9c0f3c3a23c0556df749b111bea11cf9f083f975659d8206535d06f"
   name = "github.com/Shopify/goreferrer"
   packages = ["."]
@@ -576,10 +563,6 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/KeisukeYamashita/TK_1805/payment/app",
-    "github.com/KeisukeYamashita/TK_1805/payment/handler",
-    "github.com/KeisukeYamashita/TK_1805/payment/helpers",
-    "github.com/KeisukeYamashita/TK_1805/payment/types",
     "github.com/jinzhu/gorm",
     "github.com/jinzhu/gorm/dialects/mysql",
     "github.com/joho/godotenv",

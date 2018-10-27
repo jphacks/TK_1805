@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Photo } from '../types/photo';
 import { storage } from '../config/firebase';
+import ReactLoading from 'react-loading';
+// import ImageLoader from
 
 type Props = {
   type: string,
@@ -42,11 +44,22 @@ export default class FireStorageImage extends React.Component<Props, State> {
 
   render() {
     if (!this.state.url) {
-      return <div style={this.props.style} />;
+      return (
+        <div style={{
+          backgroundColor: 'lightgrey',
+          height: this.props.style.height,
+          width: this.props.style.width
+        }} />
+      );
     }
 
     return (
-      <img src={this.state.url} style={this.props.style} />
+      <img
+        src={this.state.url}
+        style={this.props.style}
+        width={this.props.style.width}
+        height={this.props.style.height}
+      />
     );
   }
 }
