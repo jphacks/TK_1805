@@ -1,6 +1,6 @@
 .PHONY: build
 build:
-	go build main.go
+	go build -v -o store main.go
 
 .PHONY: run
 run:
