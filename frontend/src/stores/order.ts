@@ -5,6 +5,9 @@ import { arrayFromSnapshot } from '../lib/firestore';
 import { Interval } from 'luxon';
 
 function validDate(start, end) {
+  console.debug(Interval.fromDateTimes(start, end).toDuration().seconds);
+  console.debug(Interval.fromDateTimes(start, end).toDuration());
+
   return Interval.fromDateTimes(start, end).toDuration().seconds < 60;
 }
 
