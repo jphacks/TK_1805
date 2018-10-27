@@ -2,6 +2,7 @@ import { observable, action } from 'mobx';
 import { Order } from '../types/order';
 import { db } from '../config/firebase';
 import { arrayFromSnapshot } from '../lib/firestore';
+import { toast } from 'react-toastify';
 
 class OrderStore {
   @observable inbox: Order[] = [];
@@ -25,6 +26,8 @@ class OrderStore {
 
       const orders = arrayFromSnapshot(snapshot);
       const newOrders = orders.slice(this.orders.length);
+
+      toast.info(newOrders.map(order => order.id).join(','));
 
       this.orders = orders;
     });

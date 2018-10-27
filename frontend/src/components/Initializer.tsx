@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 type Props = {
   storeId?: string,
@@ -41,6 +43,6 @@ export default class Initializer extends React.Component<Props> {
   }
 
   render() {
-    return <div style={{ display: 'none', width: 0, height: 0 }} />;
+    return <ToastContainer autoClose={5000} pauseOnHover={false} />;
   }
 }
