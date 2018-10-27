@@ -27,7 +27,6 @@ const NavigationHeader = styled.header`
   width: 100%;
   background-color: white;
   font-weight: bold;
-  z-index: 999;
 
   display:flex;
   align-items: center;

@@ -5,6 +5,7 @@ import { Order } from '../types/order';
 import { Item } from '../types/item';
 import Header from '../components/Header';
 import { Link } from 'react-router-dom';
+import PaymentMethodModal from '../components/PaymentMethodModal';
 
 type Props = {
   itemMap: any,
@@ -101,10 +102,52 @@ export default class OrderIndex extends React.Component<Props> {
           <span>¥{ this.totalPrice }円</span>
         </TotalPriceContainer>
 
-        <PayButton onClick={this.onClickSelectPaymentMethod.bind(this)}>
+        <PayButton
+          style={this.state.showModal ? { display: 'none'} : {}}
+          onClick={this.onClickSelectPaymentMethod.bind(this)}
+        >
           お支払い方法を選択する
         </PayButton>
+
+        { this.state.showModal && this.renderButtons() }
       </Container>
+    );
+  }
+
+  renderButtons() {
+    return (
+      <Overlay onClick={ () => this.setState({ showModal: false }) }>
+        <CloseButton onClick={ () => this.setState({ showModal: false })}>✕</CloseButton>
+
+        <StyledLink
+          to={`/tableId/${this.props.tableId}/pay&paymentMethod=apple_pay`}
+          color='#9B9B9B'
+        >
+          Apple Pay
+        </StyledLink>
+
+        <StyledLink
+          to={`/tableId/${this.props.tableId}/pay&paymentMethod=credit_card`}
+          color='#4A90E2'
+        >
+          クレジットカード
+        </StyledLink>
+
+        <StyledLink
+          to={`/tableId/${this.props.tableId}/pay&paymentMethod=line_pay`}
+          color='#7ED321'
+        >
+          LINE Pay
+        </StyledLink>
+
+        <StyledLink
+          to={`/tableId/${this.props.tableId}/pay&paymentMethod=cash`}
+          color='#FFFFFF'
+          textcolor='#4A4A4A'
+        >
+          現金でお支払い
+        </StyledLink>
+      </Overlay>
     );
   }
 }
@@ -174,4 +217,46 @@ const PayButton = styled.div`
   &:hover {
     cursor: pointer;
   }
+`;
+
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  padding-bottom: 28px;
+`;
+
+const StyledLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  height: 36px;
+  background-color: ${props => props.color};
+  color: ${props => props.textcolor || 'white'};
+  border-radius: 114px;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  font-size: 18px;
+  padding: 5px auto;
+  margin-bottom: 28px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.10);
+`;
+
+const CloseButton = styled.div`
+  background: #F0F0F0;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.10);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
