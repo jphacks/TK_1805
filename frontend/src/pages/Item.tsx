@@ -11,12 +11,14 @@ type Props = {
   items: Item[],
   match: any,
   history: any,
+  inbox: Order[],
 };
 
 @inject(({ store, order }) => ({
   init: store.init,
   items: store.items,
   add: order.add,
+  inbox: order.inbox,
 }))
 @observer
 export default class ItemPage extends React.Component<Props> {
@@ -30,12 +32,24 @@ export default class ItemPage extends React.Component<Props> {
     this.props.init(props.match.params.tableId);
   }
 
+  componentWillMount() {
+    if (this.inboxItem) {
+      this.setState({
+        count: this.inboxItem.count
+      });
+    }
+  }
+
   increment() {
     this.setState({ count: this.state.count + 1 });
   }
 
   decrement() {
     this.setState({ count: Math.max(this.state.count - 1, 1) });
+  }
+
+  get inboxItem() {
+    return this.props.inbox.find(o => o.itemId === this.itemId);
   }
 
   get itemId() {

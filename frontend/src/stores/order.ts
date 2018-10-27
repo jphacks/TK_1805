@@ -31,8 +31,15 @@ class OrderStore {
 
   @action.bound
   add(order) {
-    console.log(`ADD ORDER: ${JSON.stringify(order)}`);
-    this.inbox.push(order);
+    console.debug(`ADD ORDER: ${JSON.stringify(order)}`);
+
+    const index = this.inbox.findIndex(o => o.itemId === order.itemId);
+
+    if (index === -1) {
+      this.inbox.push(order);
+    } else {
+      this.inbox[index].count = order.count;
+    }
   }
 
   @action.bound

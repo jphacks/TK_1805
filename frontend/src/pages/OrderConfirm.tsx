@@ -44,8 +44,6 @@ export default class OrderConfirm extends React.Component<Props> {
   }
 
   render() {
-    console.log(this.props.inbox.slice());
-
     const items = this.props.inbox.slice().map((order, index) => {
       const item = this.props.itemMap[order.itemId];
 

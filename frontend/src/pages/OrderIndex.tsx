@@ -163,7 +163,7 @@ export default class OrderIndex extends React.Component<Props> {
 const Container = styled.article`
   display: flex;
   flex-direction: column;
-  margin-bottom: 50px;
+  margin-bottom: 100px;
 `;
 
 const List = styled.ul`
