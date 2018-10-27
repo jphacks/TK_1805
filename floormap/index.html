@@ -28,7 +28,15 @@
        
         var addButton = document.querySelector(".addButton")
 
-        firebase.initializeApp(/*this*/ config /* is not inilized. You have to get a token*/);
+        var config = {
+            apiKey: "AIzaSyADON2Sh8SviGoldN9iP8EVMTZU5XQZBow",
+            authDomain: "jphack2018-219415.firebaseapp.com",
+            databaseURL: "https://jphack2018-219415.firebaseio.com",
+            projectId: "jphack2018-219415",
+            storageBucket: "jphack2018-219415.appspot.com",
+            messagingSenderId: "1078175040609"
+        };
+        firebase.initializeApp(config);
         var firestore = firebase.firestore();
 
         var seats = new Subject();
