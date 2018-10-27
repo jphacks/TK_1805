@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { inject } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import FireStorageImage from '../components/FireStorageImage';
 import { Item } from '../types/item';
 import { Order } from '../types/order';
@@ -18,6 +18,7 @@ type Props = {
   items: store.items,
   add: order.add,
 }))
+@observer
 export default class ItemPage extends React.Component<Props> {
   state = {
     count: 1,
@@ -218,7 +219,7 @@ const ListValueWithUnderLine = styled.div`
 
 const AddButton = styled.button`
   position: absolute;
-  bottom: 20px;
+  bottom: 28px;
   width: 320px;
   background-color: #FF8100;
   border-style: none;

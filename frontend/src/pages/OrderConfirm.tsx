@@ -34,11 +34,11 @@ export default class OrderConfirm extends React.Component<Props> {
   }
 
   render() {
-    const items = this.props.inbox.map((order, index) => {
+    const items = this.props.inbox.slice().map((order, index) => {
       const item = this.props.itemMap[order.itemId];
 
       if (item) {
-        return <div />;
+        return <div key={index} />;
       }
 
       return (

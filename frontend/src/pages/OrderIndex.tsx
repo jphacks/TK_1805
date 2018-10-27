@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { inject } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import { Order } from '../types/order';
 import { Item } from '../types/item';
 import Header from '../components/Header';
@@ -28,6 +28,7 @@ type Props = {
   storeId: store.storeId,
   groupId: store.groupId,
 }))
+@observer
 export default class OrderIndex extends React.Component<Props> {
   state = {
     showModal: false,
