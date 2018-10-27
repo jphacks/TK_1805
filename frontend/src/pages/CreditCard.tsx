@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
 import { Order } from '../types/order';
+import Initializer from '../components/Initializer';
 
 const stripe = require('stripe-client')('pk_test_DdyKpX6fYBy1gMoJqeVYdFuj');
 
 type Props = {
   itemMap: any,
   orders: Order[],
+  match: any,
 };
 
 @inject(({ store, order }) => ({
@@ -63,6 +65,8 @@ export default class CreditCard extends React.Component<Props> {
   render() {
     return (
       <div>
+        <Initializer match={this.props.match} />
+
         <input value={this.state.number} onChange={e => this.setState({ number: e.target.value }) } />
         <input value={this.state.exp_month} onChange={e => this.setState({ exp_month: Number(e.target.value) }) } />
         <input value={this.state.exp_year} onChange={e => this.setState({ exp_year: Number(e.target.value) }) } />

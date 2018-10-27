@@ -6,51 +6,24 @@ import { Category } from '../types/category';
 import FireStorageImage from '../components/FireStorageImage';
 import MenuFooter from '../components/MenuFooter';
 import { DateTime } from 'luxon';
+import Initializer from '../components/Initializer';
 
 type Props = {
   categories: Category[],
-  init: (string) => void,
   storeName: string,
   match: any,
   tableId: string,
   enterTime: DateTime,
-  storeId: string,
-  groupId: string,
-  initOrder: (groupId: string, storeId: string) => void
 };
 
-@inject(({ store, order }) => ({
-  init: store.init,
+@inject(({ store }) => ({
   storeName: store.name,
   categories: store.categories,
   tableId: store.tableId,
   enterTime: store.enterTime,
-  storeId: store.storeId,
-  groupId: store.groupId,
-  initOrder: order.init,
 }))
 @observer
 export default class Top extends React.Component<Props> {
-  constructor(props) {
-    super(props);
-
-    this.props.init(props.match.params.tableId);
-  }
-
-  componentWillMount() {
-    this.init(this.props);
-  }
-
-  componentWillReceiveProps(nextProps, nextContext) {
-    this.init(nextProps);
-  }
-
-  init(props: Props) {
-    if (props.storeId !== '' && props.groupId !== '') {
-      this.props.initOrder(props.storeId, props.groupId);
-    }
-  }
-
   render() {
     const items = this.props.categories.slice().map(category => (
       <CategoryPanel key={category.id} tableId={this.props.tableId} category={category} />
@@ -58,6 +31,8 @@ export default class Top extends React.Component<Props> {
 
     return (
       <main>
+        <Initializer match={this.props.match} />
+
         <Header>
           <StoreName>
             { this.props.storeName }

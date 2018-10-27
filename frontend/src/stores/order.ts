@@ -23,7 +23,10 @@ class OrderStore {
       //   }
       // });
 
-      this.orders = arrayFromSnapshot(snapshot);
+      const orders = arrayFromSnapshot(snapshot);
+      const newOrders = orders.slice(this.orders.length);
+
+      this.orders = orders;
     });
 
     console.debug('Initialized Order!');

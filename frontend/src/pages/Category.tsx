@@ -8,19 +8,18 @@ import FireStorageImage from '../components/FireStorageImage';
 import { Category } from '../types/category';
 import Header from '../components/Header';
 import MenuFooter from '../components/MenuFooter';
+import Initializer from '../components/Initializer';
 
 type Props = {
   items: Item[],
   categories: Category[],
   match: any,
-  init: (string) => void,
   tableId: string,
   inbox: Order[],
   history: any,
 };
 
 @inject(({ store, order }) => ({
-  init: store.init,
   items: store.items,
   categories: store.categories,
   tableId: store.tableId,
@@ -28,12 +27,6 @@ type Props = {
 }))
 @observer
 export default class CategoryPage extends React.Component<Props> {
-  constructor(props) {
-    super(props);
-
-    this.props.init(props.match.params.tableId);
-  }
-
   get category() {
     return this.props.categories.find(category => category.id === this.categoryId);
   }
@@ -66,6 +59,8 @@ export default class CategoryPage extends React.Component<Props> {
 
     return (
       <div>
+        <Initializer match={this.props.match} />
+
         { this.category &&
           <Header title={this.category.name} history={this.props.history} />
         }

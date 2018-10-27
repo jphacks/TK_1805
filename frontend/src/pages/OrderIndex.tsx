@@ -6,23 +6,17 @@ import { Item } from '../types/item';
 import Header from '../components/Header';
 import { Link } from 'react-router-dom';
 import anime from 'animejs';
+import Initializer from '../components/Initializer';
 
 type Props = {
   itemMap: any,
   tableId: string,
-  storeId: string,
-  groupId: string,
-  items: Item[],
-  initStore: (tableId: string) => void,
-  initOrder: (storeId: string, groupId: string) => void,
   orders: Order[],
   history: any,
   match: any,
 };
 
 @inject(({ store, order }) => ({
-  initStore: store.init,
-  initOrder: order.init,
   orders: order.orders,
   items: store.items,
   itemMap: store.itemMap,
@@ -35,26 +29,6 @@ export default class OrderIndex extends React.Component<Props> {
   state = {
     showModal: false,
   };
-
-  constructor(props) {
-    super(props);
-
-    this.props.initStore(this.props.match.params.tableId);
-  }
-
-  componentWillMount() {
-    this.init(this.props);
-  }
-
-  componentWillReceiveProps(nextProps, nextContext) {
-    this.init(nextProps);
-  }
-
-  init(props: Props) {
-    if (props.storeId !== '' && props.groupId !== '') {
-      this.props.initOrder(props.storeId, props.groupId);
-    }
-  }
 
   get totalPrice() {
     return this.props.orders.reduce((sum, order) => {
@@ -99,6 +73,8 @@ export default class OrderIndex extends React.Component<Props> {
 
     return (
       <Container>
+        <Initializer match={this.props.match} />
+
         <Header title='注文一覧' history={this.props.history} />
 
         <List>

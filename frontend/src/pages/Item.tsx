@@ -5,9 +5,9 @@ import { Item } from '../types/item';
 import { Order } from '../types/order';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Initializer from '../components/Initializer';
 
 type Props = {
-  init: (string) => void,
   add: (Order) => void,
   items: Item[],
   match: any,
@@ -16,7 +16,6 @@ type Props = {
 };
 
 @inject(({ store, order }) => ({
-  init: store.init,
   items: store.items,
   add: order.add,
   inbox: order.inbox,
@@ -26,20 +25,6 @@ export default class ItemPage extends React.Component<Props> {
   state = {
     count: 1,
   };
-
-  constructor(props) {
-    super(props);
-
-    this.props.init(props.match.params.tableId);
-  }
-
-  componentWillMount() {
-    if (this.inboxItem) {
-      this.setState({
-        count: this.inboxItem.count
-      });
-    }
-  }
 
   increment() {
     this.setState({ count: this.state.count + 1 });
@@ -81,6 +66,8 @@ export default class ItemPage extends React.Component<Props> {
 
     return (
       <Container>
+        <Initializer match={this.props.match} />
+        
         <FireStorageImage type="item" photo={this.item.photo} style={styles.img} />
 
         <CloseButton onClick={ () => this.props.history.goBack() }>
