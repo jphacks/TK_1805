@@ -154,6 +154,49 @@ func TestNewIrisApp(t *testing.T) {
 					},
 				})
 			})
+
+			t.Run("when it ok", func(t *testing.T) {
+				customerID := "cus_Do9kIREYKIxw48"
+				description := "Test: for not first payment"
+
+				user := &types.User{
+					StripeCustomerID: customerID,
+				}
+
+				mdb := &handler.MockDB{
+					User: user,
+				}
+
+				app := NewIrisApp(mdb)
+				e := httptest.New(t, app, httptest.URL("http://payment:8880.com"))
+
+				var count int
+
+				// Test 5 times
+				for i := 0; i < 5; i++ {
+					count++
+					req := e.POST("/v1/payment")
+					req.WithQuery("customerID", customerID)
+					req.WithQuery("amount", testAmount)
+					req.WithQuery("userID", 3)
+					req.WithQuery("description", description)
+					resp := req.Expect()
+					resp.Status(httptest.StatusOK)
+					resp.JSON().Object().ContainsMap(iris.Map{
+						"error": "",
+						"message": iris.Map{
+							"customerID":  customerID,
+							"amount":      testAmount,
+							"currency":    stripe.String(string(stripe.CurrencyJPY)),
+							"description": description,
+						},
+					})
+				}
+
+				if count == 5 {
+					t.Errorf("test tries got %v\nwant %v", count, 5)
+				}
+			})
 		})
 
 		t.Run("when missing form value", func(t *testing.T) {
