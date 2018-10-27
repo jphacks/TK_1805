@@ -1,12 +1,11 @@
 package handler
 
 import (
-	"io/ioutil"
-	"net/url"
-	"os"
-	"net/http"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"net/url"
 
 	"github.com/kataras/iris"
 )
@@ -18,21 +17,21 @@ type Payment struct {
 }
 
 type PaymentInfo struct {
-	Error interface{}
+	Error   interface{}
 	Message *Message
 }
 
 type Message struct {
-	CustomerID string
-	Amount int `json:"amount"`
-	Currency string
+	CustomerID  string
+	Amount      int `json:"amount"`
+	Currency    string
 	Description string
-	ChargeID string
+	ChargeID    string
 }
 
 type PaymentError struct {
-	StatusCode int `json:"statusCode"`
-	Message string `json:"message"`
+	StatusCode int    `json:"statusCode"`
+	Message    string `json:"message"`
 }
 
 func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
@@ -65,11 +64,15 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 		var err error
 		if payment.Token == "" {
 
-			if os.Getenv("GO_ENV") != "test" {
-				resp, err = http.PostForm("http://payment:8880", url.Values{"stripeToken": {"Value"}, "amount": {"123"}, "userID": {"1"}})
+			var paymentURL string
+
+			if ctr.DebugMode {
+				paymentURL = "http://payment:8880"
 			} else {
-				resp, err = http.PostForm("http://localhost:8000/v1/payment", url.Values{"stripeToken": {"Value"}, "amount": {"123"}, "userID": {"1"}})
+				paymentURL = "http://localhost:8000/v1/payment"
 			}
+
+			resp, err = http.PostForm(paymentURL, url.Values{"stripeToken": {"Value"}, "amount": {"123"}, "userID": {"1"}})
 
 			if err != nil {
 				ctx.StatusCode(iris.StatusInternalServerError)
@@ -95,7 +98,7 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 				return
 			}
 
-			jsonBytes := ([]byte) (byteArray)
+			jsonBytes := ([]byte)(byteArray)
 			data := new(PaymentInfo)
 
 			if err := json.Unmarshal(jsonBytes, data); err != nil {
