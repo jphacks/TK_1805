@@ -19,6 +19,19 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:8ffc7dc3003525ba3136ad0c5432a415edbc71f5c1ed7c68aab3b1ec46e1b69e"
+  name = "github.com/KeisukeYamashita/TK_1805"
+  packages = [
+    "payment/app",
+    "payment/handler",
+    "payment/helpers",
+    "payment/types",
+  ]
+  pruneopts = "UT"
+  revision = "4e55dcbfa354d68265a17dd82e8a1205102c7dba"
+
+[[projects]]
+  branch = "master"
   digest = "1:f3d644e4f9c0f3c3a23c0556df749b111bea11cf9f083f975659d8206535d06f"
   name = "github.com/Shopify/goreferrer"
   packages = ["."]
@@ -203,14 +216,6 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "a4583d0a56eac4bdd939e38050d0c69abe0a9b41"
-
-[[projects]]
-  digest = "1:16dd6b893b78a50564cdde1d9f7ea67224dece11bb0886bd882f1dc3dc1d440d"
-  name = "github.com/k0kubun/pp"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "027a6d1765d673d337e687394dbe780dd64e2a1e"
-  version = "v2.3.0"
 
 [[projects]]
   branch = "master"
@@ -411,18 +416,6 @@
   version = "1.6.3"
 
 [[projects]]
-  digest = "1:5122673c1fb366ee71eb213662b5ac11f577e6cd4f9aaffa62410c577d91ca42"
-  name = "github.com/snikch/goodman"
-  packages = [
-    ".",
-    "hooks",
-    "transaction",
-  ]
-  pruneopts = "UT"
-  revision = "87fd9cdeb18985e2e3f79ee473d0dcabfef92b76"
-  version = "0.3.1"
-
-[[projects]]
   digest = "1:c40d65817cdd41fac9aa7af8bed56927bb2d6d47e4fea566a74880f5c2b1c41e"
   name = "github.com/stretchr/testify"
   packages = [
@@ -583,16 +576,16 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/KeisukeYamashita/TK_1805/payment/app",
+    "github.com/KeisukeYamashita/TK_1805/payment/handler",
+    "github.com/KeisukeYamashita/TK_1805/payment/helpers",
+    "github.com/KeisukeYamashita/TK_1805/payment/types",
     "github.com/jinzhu/gorm",
     "github.com/jinzhu/gorm/dialects/mysql",
     "github.com/joho/godotenv",
-    "github.com/k0kubun/pp",
     "github.com/kataras/iris",
     "github.com/kataras/iris/httptest",
     "github.com/smartystreets/goconvey/convey",
-    "github.com/snikch/goodman",
-    "github.com/snikch/goodman/hooks",
-    "github.com/snikch/goodman/transaction",
     "github.com/stripe/stripe-go",
     "github.com/stripe/stripe-go/charge",
     "github.com/stripe/stripe-go/customer",
