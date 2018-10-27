@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 import { Item } from '../types/item';
 import { Order } from '../types/order';
 import FireStorageImage from '../components/FireStorageImage';
@@ -77,3 +78,7 @@ const ItemPanel = ({ tableId, item, count }) => (
     <span>{ count }</span>{}
   </Link>
 );
+
+const HogeContainer = styled.header`
+  display: flex;
+`
