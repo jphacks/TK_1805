@@ -1,17 +1,21 @@
 import * as React from 'react';
+import { Provider } from 'mobx-react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import stores from './stores';
 import IndexTest from './pages/IndexTest';
 import Poyo from './pages/Poyo';
 
 export default class App extends React.Component {
   render() {
     return (
-      <BrowserRouter>
-        <Switch>
-          <Route exact path='/' component={IndexTest} />
-          <Route path='/poyo' component={Poyo} />
-        </Switch>
-      </BrowserRouter>
+      <Provider { ...stores }>
+        <BrowserRouter>
+          <Switch>
+            <Route exact path='/' component={IndexTest} />
+            <Route path='/poyo' component={Poyo} />
+          </Switch>
+        </BrowserRouter>
+      </Provider>
     );
   }
 }
