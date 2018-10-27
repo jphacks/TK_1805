@@ -3,6 +3,7 @@ import { observer, inject } from 'mobx-react';
 import { Link } from 'react-router-dom';
 import { Category } from '../types/category';
 import FireStorageImage from '../components/FireStorageImage';
+import MenuFooter from '../components/MenuFooter';
 
 type Props = {
   categories: Category[],
@@ -39,6 +40,8 @@ export default class Top extends React.Component<Props> {
           </span>
         </header>
         { list }
+
+        <MenuFooter tableId={this.props.tableId} />
       </div>
     )
   }
