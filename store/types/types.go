@@ -1,11 +1,43 @@
 package types
 
-import "github.com/jinzhu/gorm"
+import (
+	"github.com/jinzhu/gorm"
+)
 
 const (
 	// VERSION is a version of payment API
 	VERSION = 1
 )
+
+type Store struct {
+	gorm.Model
+	Name string
+}
+
+type Table struct {
+	gorm.Model
+	Store   Store `gorm:"foreignkey:StoreId"`
+	StoreId int
+}
+
+type Group struct {
+	gorm.Model
+	Table   Table `gorm:"foreignkey:TableId"`
+	TableId int
+	Key     string
+}
+
+// User ...
+type User struct {
+	gorm.Model
+	StripeCustomerID string
+}
+
+// Transaction ...
+type Transaction struct {
+	gorm.Model
+	User *User
+}
 
 // Datastorable ...
 type Datastorable interface {

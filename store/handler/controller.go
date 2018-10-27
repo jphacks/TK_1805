@@ -1,8 +1,15 @@
 package handler
 
+import (
+	"github.com/jinzhu/gorm"
+)
+
 type Controller struct {
+  DB *gorm.DB
 }
 
-func NewController() *Controller {
-	return &Controller{}
+func NewController(db *gorm.DB) *Controller {
+	return &Controller{
+    DB: db,
+  }
 }
