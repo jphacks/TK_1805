@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<head>
+    <title>Floormap</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"></script>
+    <script src="/reload/reload.js"></script> 
+    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-firestore.js"></script>
+    <script src="https://unpkg.com/rxjs/bundles/rxjs.umd.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <style>
+        .leaflet-container {
+            background-color:rgba(255,0,0,0.0);
+        }
+    </style>
+</head>
+<body>
+    <div id="map" style="width: 800px; height: 600px;"></div>
+    <div class="buttons" style="width: 800px; height: 600px;text-align:center;">
+        <button class="addButton btn btn-outline-primary">Add seat</button>
+    </div>
+    <script>
+        const { fromEvent, Subject, BehaviorSubject } = rxjs;
+        const { filter, delay } = rxjs.operators;
+       
+        var addButton = document.querySelector(".addButton")
+
+        firebase.initializeApp(/*this*/ config /* is not inilized. You have to get a token*/);
+        var firestore = firebase.firestore();
+
+        var seats = new Subject();
+        var circles = [];
+
+        var leafletMap = L.map('map', {crs: L.CRS.Simple, dragging: false, zoomControl: false, attributionControl: false});
+        var bounds = [[0,0], [400,640]];
+        L.imageOverlay('https://www.conceptdraw.com/How-To-Guide/picture/Restaurant-Floor-Plans.png ', bounds).addTo(leafletMap);
+
+
+        firestore.collection("stores/store-1/floors/floor-1/seats")
+            .onSnapshot(docs=>{
+                circles.forEach(circleObject => {
+                    leafletMap.removeLayer(circleObject.circle)
+                })
+                circles = []
+                docs.forEach(doc=>{
+                    seats.next(doc)
+                })
+            })
+        
+        seats.pipe(
+            filter(doc => doc.exists)
+        )
+        .subscribe(doc => {
+            let data = doc.data()
+            data.color = data.isOccupied ? 'red' : 'green'
+            let circle = L.circle(data.cordinates, {color: data.color}).addTo(leafletMap)
+
+            firestore.doc(`users/${data.userID}`)
+                .get()
+                .then(userDoc=>{
+                    if (data.isOccupied){
+                        var popUpMessage = `
+                            <div style="width:160px;padding:20px 10px; 10px">
+                                <div class="img" style="text-align:center;">
+                                    <img src="${userDoc.data().profile_url}" style="width:80px;height:80px;"/>
+                                </div>
+                                <div class="pop-up-item" style="margin:20px 0px;">
+                                    <h5 style="font-size:12px;margin:2px 0px;">お客様名</h5>
+                                    <p style="margin:2px 0px;">${userDoc.data().name}様</p>
+                                </div>
+                                <div class="pop-up-item" style="margin:10px 0px;">
+                                    <h5 style="font-size:12px;margin:2px 0px;">入店時間</h5>
+                                    <p style="margin:2px 0px;">${userDoc.data().entryAt || "---" }</p>
+                                </div>  
+                                <div class="pop-up-item" style="margin:30px 0px 0px;text-align:center">
+                                    <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#exampleModal">削除</button>
+                                </div>
+                            </div>
+                        `
+                    } else {
+                        var popUpMessage = `
+                            <div style="width:160px;padding:20px 10px; 10px">
+                                <div class="pop-up-item" style="margin:20px 0px;">
+                                    <h5 style="font-size:12px;margin:2px 0px;">空席</h5>
+                                </div>
+                                <div class="pop-up-item" style="margin:10px 0px;">
+                                    <h5 style="font-size:12px;margin:2px 0px;">最終時間</h5>
+                                    <p style="margin:2px 0px;">${/* userDoc.data().leavedAt ||*/ "---" }</p>
+                                </div>  
+                                <div class="pop-up-item" style="margin:30px 0px 0px;text-align:center">
+                                    <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#exampleModal">編集</button>
+                                    <button type="button" class="${doc.data().id} button-delete btn btn-secondary btn-sm" data-toggle="modal" data-target="#exampleModal">削除</button>
+                                </div>
+                            </div>
+                        `
+                    }
+
+                    circle.bindPopup(popUpMessage);
+
+                    circles.push({
+                        "id": doc.id,
+                        "circle": circle
+                    })
+
+                    fromEvent(circle, 'mousedown')
+                        .subscribe(()=>{
+                            fromEvent(leafletMap, 'mousemove')
+                                .subscribe((e)=> circle.setLatLng(e.latlng))
+                        })
+
+                    fromEvent(circle, 'mouseup')
+                        .subscribe(()=>{
+                            leafletMap.removeEventListener('mousemove')
+                            firestore.doc(`stores/store-1/floors/floor-1/seats/${doc.id}`)
+                                .set({
+                                    cordinates: [circle.getLatLng().lat, circle.getLatLng().lng],
+                                    isOccupied: data.isOccupied,
+                                    userID: "user-1"
+                                }).then(()=>{
+                            })
+                        })
+
+                    fromEvent(circle, 'mouseover')
+                        .subscribe(()=>{
+                            circle.openPopup()
+                        })
+
+                    fromEvent(circle, 'mouseout').pipe(
+                            delay(1000 * 1.5)
+                        )
+                        .subscribe(()=>{
+                            circle.closePopup()
+                        })
+                })
+                .catch(err=>console.log(err))
+        })
+
+        fromEvent(addButton, 'click')
+            .subscribe(()=>{
+                let cordinates = [60, 60]
+                let circle = L.circle(cordinates, {color: 'gray'}).addTo(leafletMap)
+                fromEvent(circle, 'mousedown')
+                    .subscribe(()=>{
+                        fromEvent(leafletMap, 'mousemove')
+                            .subscribe((e)=> circle.setLatLng(e.latlng))
+                        firestore.doc(`stores/store-1/floors/floor-1/seats/seat-${circles.length}`)
+                            .set({
+                                cordinates: [circle.getLatLng().lat, circle.getLatLng().lng],
+                                isOccupied: false
+                            })
+                    })
+
+                fromEvent(circle, 'mouseup')
+                    .subscribe(()=>{
+                        leafletMap.removeEventListener('mousemove')
+                    })
+                    newDoc = {
+                        "id": `seat-${circles.length}`,
+                        "circle": circle
+                    }
+                    circles.push(newDoc)
+            })
+
+        leafletMap.fitBounds(bounds);
+    </script>
+</body>
