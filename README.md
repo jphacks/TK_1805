@@ -1,6 +1,6 @@
-# 居酒屋における注文から決済を一気通貫行うWeb伝票サービス 「OAISO」
+# OAISO - 居酒屋における注文から決済をスマートにするためのWeb伝票サービス
 
-[![OAISO](image.png)](https://youtu.be/jpBS05EFd7Y)
+[![OAISO](docs/eyecatch.jpg)](https://youtu.be/jpBS05EFd7Y)
 
 ## 製品概要
 
