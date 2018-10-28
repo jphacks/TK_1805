@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"strconv"
 
+	"github.com/KeisukeYamashita/TK_1805/store/types"
 	"github.com/k0kubun/pp"
 	"github.com/kataras/iris"
 )
@@ -73,12 +74,35 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 		var err error
 
 		if payment.Token == "" {
+			user := new(types.User)
+			if err := ctr.DB.Where("id = ?", payment.UserID).First(user); err.Error != nil {
+				ctx.StatusCode(iris.StatusBadRequest)
+				ctx.JSON(iris.Map{
+					"error": iris.Map{
+						"statusCode": iris.StatusBadRequest,
+						"message":    err.Error,
+					},
+				})
+				return
+			}
+			if user == nil {
+				ctx.StatusCode(iris.StatusBadRequest)
+				ctx.JSON(iris.Map{
+					"error": iris.Map{
+						"statusCode": iris.StatusBadRequest,
+						"message":    "user doesn't exist",
+					},
+				})
+				return
+			}
+			stripeCustomerID := user.StripeCustomerID
+
 			paymentURL := fmt.Sprintf("http://%v:%v/v1/payment", ctr.PaymentHost, ctr.PaymentPort)
 
 			amountStr := strconv.Itoa(payment.Amount)
 			userIDStr := strconv.Itoa(payment.UserID)
 
-			resp, err = http.PostForm(paymentURL, url.Values{"amount": {amountStr}, "userID": {userIDStr}})
+			resp, err = http.PostForm(paymentURL, url.Values{"amount": {amountStr}, "userID": {userIDStr}, "customerID": {stripeCustomerID}})
 
 			if err != nil {
 				ctx.StatusCode(iris.StatusInternalServerError)
@@ -104,9 +128,9 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 				return
 			}
 
-			resp := new(PaymentInfo)
+			resp_info := new(PaymentInfo)
 
-			if err := json.Unmarshal(([]byte)(byteArray), resp); err != nil {
+			if err := json.Unmarshal(([]byte)(byteArray), resp_info); err != nil {
 				ctx.StatusCode(iris.StatusBadRequest)
 				ctx.JSON(iris.Map{
 					"error": iris.Map{
@@ -117,11 +141,11 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 				return
 			}
 
-			switch paymentErrInfo := resp.Error.(type) {
+			switch paymentErrInfo := resp_info.Error.(type) {
 			case string:
-				//TODO confirm type of resp
+				//TODO confirm type of resp_info
 				fmt.Print(paymentErrInfo)
-				ctx.JSON(resp)
+				ctx.JSON(resp_info)
 				return
 			default:
 				ctx.StatusCode(iris.StatusInternalServerError)
@@ -134,8 +158,39 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 				return
 			}
 		}
+		user := types.User{
+			Name: payment.UserID,
+		}
 
-		ctx.StatusCode(iris.StatusOK)
+		if err := ctr.DB.Create(&user).Error; err != nil {
+			ctx.StatusCode(iris.StatusInternalServerError)
+			ctx.JSON(iris.Map{
+				"error": iris.Map{
+					"statusCode": iris.StatusInternalServerError,
+					"message":    err.Error(),
+				},
+			})
+
+			return
+		}
+
+		amountStr := strconv.Itoa(payment.Amount)
+		userIDStr := strconv.Itoa(payment.UserID)
+
+		_ = fmt.Sprintf("http://%v:%v/v1/payment", ctr.PaymentHost, ctr.PaymentPort)
+		resp, err = http.PostForm("http://localhost:8000/v1/payment", url.Values{"stripeToken": {payment.Token}, "amount": {amountStr}, "userID": {userIDStr}})
+		pp.Println(resp)
+		if err != nil {
+			ctx.StatusCode(iris.StatusInternalServerError)
+			ctx.JSON(iris.Map{
+				"error": iris.Map{
+					"statusCode": iris.StatusInternalServerError,
+					"message":    "Payment server connect error",
+				},
+			})
+			return
+		}
+
 		ctx.JSON(iris.Map{
 			"error": "",
 			"message": iris.Map{
