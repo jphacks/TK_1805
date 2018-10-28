@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strconv"
 
 	"github.com/k0kubun/pp"
 	"github.com/kataras/iris"
@@ -73,7 +74,11 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 
 		if payment.Token == "" {
 			paymentURL := fmt.Sprintf("http://%v:%v/v1/payment", ctr.PaymentHost, ctr.PaymentPort)
-			resp, err = http.PostForm(paymentURL, url.Values{"stripeToken": {"Value"}, "amount": {"123"}, "userID": {"1"}})
+
+			amountStr := strconv.Itoa(payment.Amount)
+			userIDStr := strconv.Itoa(payment.UserID)
+
+			resp, err = http.PostForm(paymentURL, url.Values{"amount": {amountStr}, "userID": {userIDStr}})
 
 			if err != nil {
 				ctx.StatusCode(iris.StatusInternalServerError)
