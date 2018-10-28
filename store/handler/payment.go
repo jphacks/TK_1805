@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/k0kubun/pp"
 	"github.com/kataras/iris"
 )
 
@@ -54,6 +55,8 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 			return
 		}
 
+		pp.Println(payment)
+
 		if payment.Amount == 0 || payment.UserID == 0 {
 			ctx.StatusCode(iris.StatusBadRequest)
 			ctx.JSON(iris.Map{
@@ -67,8 +70,8 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 
 		var resp *http.Response
 		var err error
-		if payment.Token == "" {
 
+		if payment.Token == "" {
 			paymentURL := fmt.Sprintf("http://%v:%v/v1/payment", ctr.PaymentHost, ctr.PaymentPort)
 			resp, err = http.PostForm(paymentURL, url.Values{"stripeToken": {"Value"}, "amount": {"123"}, "userID": {"1"}})
 
@@ -127,6 +130,13 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 			}
 		}
 
+		ctx.StatusCode(iris.StatusOK)
+		ctx.JSON(iris.Map{
+			"error": "",
+			"message": iris.Map{
+				"amount": 4000,
+			},
+		})
 		return
 	}
 }
