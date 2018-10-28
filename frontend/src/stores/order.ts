@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx';
+import { observable, action, computed } from 'mobx';
 import { Order } from '../types/order';
 import firebase, { db, auth } from '../config/firebase';
 import { arrayFromSnapshot } from '../lib/firestore';

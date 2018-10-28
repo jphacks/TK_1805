@@ -2,7 +2,6 @@ import * as React from 'react';
 import { inject, observer } from 'mobx-react';
 import styled from 'styled-components';
 import { Order } from '../types/order';
-import { Item } from '../types/item';
 import Header from '../components/Header';
 import { Link } from 'react-router-dom';
 import anime from 'animejs';
@@ -28,6 +27,7 @@ type Props = {
 export default class OrderIndex extends React.Component<Props> {
   state = {
     showModal: false,
+    canMakePayment: false,
   };
 
   get totalPrice() {
@@ -113,28 +113,28 @@ export default class OrderIndex extends React.Component<Props> {
         <CloseButton onClick={ () => this.setState({ showModal: false })}>✕</CloseButton>
 
         <StyledLink
-          to={`/tableId/${this.props.tableId}/pay/applePay`}
+          to={`/tables/${this.props.tableId}/pay/applePay`}
           color='#9B9B9B'
         >
           Apple Pay
         </StyledLink>
 
         <StyledLink
-          to={`/tableId/${this.props.tableId}/pay/creditCard`}
+          to={`/tables/${this.props.tableId}/pay/creditCard`}
           color='#4A90E2'
         >
           クレジットカード
         </StyledLink>
 
         <StyledLink
-          to={`/tableId/${this.props.tableId}/pay/linePay`}
+          to={`/tables/${this.props.tableId}/pay/linePay`}
           color='#7ED321'
         >
           LINE Pay
         </StyledLink>
 
         <StyledLink
-          to={[ `/tableId/${this.props.tableId}/pay/cash`, `/tableId/${this.props.tableId}/pay` ]}
+          to={[ `/tables/${this.props.tableId}/pay/cash`, `/tableId/${this.props.tableId}/pay` ]}
           color='#FFFFFF'
           textcolor='#4A4A4A'
         >

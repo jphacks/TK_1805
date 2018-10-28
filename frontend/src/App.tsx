@@ -13,6 +13,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faPlus, faMinus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import CreditCard from './pages/CreditCard';
+import ApplePay from './pages/ApplePay';
 
 library.add(faChevronLeft);
 library.add(faPlus);
@@ -33,6 +34,7 @@ export default class App extends React.Component {
             <Route exact path='/tables/:tableId/order' component={OrderConfirm} />
             <Route exact path='/tables/:tableId/orders' component={OrderIndex} />
             <Route exact path='/tables/:tableId/pay/creditCard' component={CreditCard} />
+            <Route exact path='/tables/:tableId/pay/applePay' component={ApplePay} />
             <Redirect to="/" />
           </Switch>
         </BrowserRouter>

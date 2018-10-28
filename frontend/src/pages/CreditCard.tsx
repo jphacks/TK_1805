@@ -4,8 +4,7 @@ import styled from 'styled-components';
 import { Order } from '../types/order';
 import Initializer from '../components/Initializer';
 import Header from '../components/Header';
-
-const stripe = require('stripe-client')('pk_test_DdyKpX6fYBy1gMoJqeVYdFuj');
+import stripe from '../config/stripe';
 
 type Props = {
   itemMap: any,
