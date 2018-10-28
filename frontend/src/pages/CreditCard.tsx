@@ -100,7 +100,8 @@ export default class CreditCard extends React.Component<Props> {
       console.log('data: ', storeData);
 
       if (storeResp.ok) {
-        alert('[DEMO] 決済に成功しました。')
+        alert('[DEMO] 決済に成功しました。またのご来店をお待ちしております。');
+        this.props.history.push('/thankyou');
       } else {
         alert(`[DEMO] 決済に失敗しました。有効なカード情報が入力されていません。`);
       }
