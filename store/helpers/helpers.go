@@ -8,11 +8,11 @@ import (
 
 func GetPaymentServerInfo(debugMode bool) (string, int, error) {
 	if debugMode {
-		return "http://localhost", 8880, nil
+		return "http://localhost", 8000, nil
 	}
 
 	host := "payment"
-	portStr := 8880
+	portStr := "8880"
 
 	if host == "" || portStr == "" {
 		err := errors.New("cannot get PAYMENT_HOST or PAYMENT_PORT from os.Getenv()")

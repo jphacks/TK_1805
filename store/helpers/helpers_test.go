@@ -28,7 +28,7 @@ func TestGetPaymentServerInfo(t *testing.T) {
 			host, port, err := GetPaymentServerInfo(testBool)
 			So(err, ShouldBeNil)
 			So(host, ShouldEqual, "http://localhost")
-			So(port, ShouldEqual, 8880)
+			So(port, ShouldEqual, 8000)
 		})
 
 		Convey("when prod mode", func() {
