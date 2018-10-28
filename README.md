@@ -35,6 +35,15 @@
 
 #### 1. 導入ハードルが低く、客と店の双方にメリットのある決済
 
+<p align="center">
+  <img width="460" height="300" src="https://qiita-image-store.s3.amazonaws.com/0/153320/0fd24110-1368-1633-54ca-03a8381bce28.png">
+</p>
+
+<p align="center">
+  <p align="center">簡単に注文、決済をすることができるUI</p>
+</p>
+
+
 第一の点として、サービスへの導入のハードルが非常に低い。
 
 このサービスはモバイルアプリのインストールが必要ないようにWeb上で決済を行う一方で、モバイルアプリのようなUIを搭載し、あらゆる決済方法が選べる柔軟性もある。
@@ -47,7 +56,14 @@
 
 #### 2. ホールの状況や注文を客と紐づけて可視化
 
-![floormap.gif](https://qiita-image-store.s3.amazonaws.com/0/153320/379d0de8-fb9b-7215-a67b-8ecc7447e248.gif)
+<p align="center">
+  <img width="460" height="300" src="https://qiita-image-store.s3.amazonaws.com/0/153320/379d0de8-fb9b-7215-a67b-8ecc7447e248.gif">
+</p>
+
+<p align="center">
+  <p align="center">リアルタイムに座席表が空席(緑）から席が埋まっている状況(赤）に変わる様子</p>
+</p>
+
 
 非常に簡単に操作ができるUIで、図面をアップロードし席をドラッグで配置すればホールの状況を可視化することができる。
 
