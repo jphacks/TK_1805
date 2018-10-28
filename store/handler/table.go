@@ -2,11 +2,9 @@ package handler
 
 import (
 	"crypto/sha256"
+	"encoding/base64"
 	"fmt"
 	"time"
-	"unicode/utf8"
-
-	"github.com/k0kubun/pp"
 
 	"github.com/KeisukeYamashita/TK_1805/store/types"
 	"github.com/kataras/iris"
@@ -31,14 +29,12 @@ func (ctr *Controller) CreateGroupId() func(ctx iris.Context) {
 		data := fmt.Sprintf("%v-%v", tableID, now)
 		keyByteArray := sha256.Sum256([]byte(data))
 
-		//byte list -> utf8 strings
-		key := string(keyByteArray[:])
-		keyR, _ := utf8.DecodeRuneInString(key)
-		keyUtf8 := string(keyR)
+		keyBase := base64.StdEncoding.EncodeToString(keyByteArray[:])
 
 		group := types.Group{
-			Key:      keyUtf8,
+			Key:      keyBase,
 			TableKey: tableID,
+			State:    "IN_STORE",
 		}
 		if err := ctr.DB.Create(&group).Error; err != nil {
 			ctx.StatusCode(iris.StatusInternalServerError)
@@ -54,7 +50,7 @@ func (ctr *Controller) CreateGroupId() func(ctx iris.Context) {
 		ctx.JSON(iris.Map{
 			"error": "",
 			"message": iris.Map{
-				"groupId": keyUtf8,
+				"groupId": keyBase,
 				"state":   "IN_STORE",
 			},
 		})
@@ -96,7 +92,6 @@ func (ctr *Controller) FetchState() func(ctx iris.Context) {
 		table := new(types.Table)
 
 		if err := ctr.DB.Where("table_key = ?", tableID).First(table); err.Error != nil {
-			pp.Println("hello")
 			ctx.StatusCode(iris.StatusInternalServerError)
 			ctx.JSON(iris.Map{
 				"error": iris.Map{
