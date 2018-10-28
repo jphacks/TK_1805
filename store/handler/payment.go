@@ -145,7 +145,12 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 			case string:
 				//TODO confirm type of resp_info
 				fmt.Print(paymentErrInfo)
-				ctx.JSON(resp_info)
+				ctx.JSON(iris.Map{
+					"error": "",
+					"message": iris.Map{
+						"state": "ok",
+					},
+				})
 				return
 			default:
 				ctx.StatusCode(iris.StatusInternalServerError)
@@ -194,7 +199,7 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 		ctx.JSON(iris.Map{
 			"error": "",
 			"message": iris.Map{
-				"amount": 4000,
+				"state": "ok",
 			},
 		})
 		return
