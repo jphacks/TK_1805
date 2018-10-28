@@ -17,15 +17,20 @@
         }
     </style>
 </head>
-<body>
-    <div id="map" style="width: 800px; height: 600px;"></div>
+<body style="width: 100%; height: 100%; display: flex; flex-wrap: wrap; padding: 24px;">
+    <div id="map" style="width: 50%; height: 600px;"></div>
+    <div id="order-container" style="width: 50%; height: 600px;">
+        <h1>注文一覧</h1>
+        <div id="order-list" style="width: 100%;"></div>
+    </div>
+
     <div class="buttons" style="width: 800px; height: 600px;text-align:center;">
         <button class="addButton btn btn-outline-primary">Add seat</button>
     </div>
     <script>
         const { fromEvent, Subject, BehaviorSubject } = rxjs;
         const { filter, delay } = rxjs.operators;
-       
+
         var addButton = document.querySelector(".addButton")
 
         var config = {
@@ -173,5 +178,117 @@
             })
 
         leafletMap.fitBounds(bounds);
+
+        let itemMap = {};
+
+        firestore.collection('stores/store-1/items').onSnapshot(snapshot => {
+            snapshot.forEach(doc => {
+                itemMap[doc.id] = doc.data();
+            });
+
+            console.log(itemMap);
+
+            // 任意のグループに対応できるようにする
+            firestore.collection('stores/store-1/groups/hoge/orders').onSnapshot(snapshot => {
+                snapshot.docChanges.forEach(change => {
+                    if (change.type === 'added') {
+                        const order = change.doc.data();
+
+                        if (!order || !itemMap[order.itemId]) {
+                            return;
+                        }
+
+                        if (order.state === 'resolved') {
+                            return;
+                        }
+
+                        $('#order-list').append(`
+                            <div class="order" id="${change.doc.id}">
+                                <div class="order-name">
+                                    ${itemMap[order.itemId].name}
+                                </div>
+                                <div class="order-count">
+                                    x ${order.count}
+                                </div>
+
+                                <div class="order-button" data-order-id="${change.doc.id}">Resolve</div>
+                            </div>
+                        `);
+                    }
+
+                    if (change.type === 'modified') {
+                        if (change.doc.data().state === 'resolved') {
+                            console.log(`Deleted: ${change.doc.id}`);
+                            $(`#${change.doc.id}`).remove();
+                        }
+                    }
+                });
+            });
+        });
+
+        $(document).on('click', '.order-button', (evt) => {
+            const orderId = evt.target.dataset['orderId'];
+
+            console.log(`Clicked: ${orderId}`);
+
+            firestore.collection('stores/store-1/groups/hoge/orders').doc(orderId).set({
+                state: 'resolved'
+            }, { merge: true });
+        });
+
+        function removeOrder(id) {
+            console.log(id);
+        }
     </script>
+
+    <style>
+        #order-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #order-list {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: center;
+            background-color: #EEE;
+            border: 1px solid #AAA;
+            border-radius: 8px;
+            overflow-y: scroll;
+            padding-right: 20px;
+            padding-left: 20px;
+            padding-bottom: 20px;
+        }
+
+        .order {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1);
+            margin-top: 20px;
+            margin-right: 16px;
+        }
+
+        .order-name {
+            padding: 20px;
+            padding-right: 10px;
+        }
+
+        .order-count {
+            padding-right: 10px;
+        }
+
+        .order-button {
+            height: 100%;
+            cursor: pointer;
+            padding-left: 10px;
+            border-left: 1px solid lightgrey;
+            padding-right: 20px;
+            color: blue;
+            font-weight: bold;
+        }
+    </style>
 </body>
