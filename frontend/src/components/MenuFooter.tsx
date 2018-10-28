@@ -15,8 +15,6 @@ type Props = {
 @observer
 export default class MenuFooter extends React.Component<Props> {
   get totalCount() {
-    console.log(this.props.inbox);
-
     if (!this.props.inbox) {
       return 0;
     }
@@ -47,7 +45,8 @@ const Footer = styled.footer`
   position: fixed;
   display: flex;
   bottom: 0;
-  width: calc(100% - 48px);
+  width: 100%;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   padding-left: 24px;

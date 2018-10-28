@@ -66,6 +66,22 @@
   revision = "24195e6d38b06020d7a92c7b11960cf2e7cad2f2"
 
 [[projects]]
+  digest = "1:adea5a94903eb4384abef30f3d878dc9ff6b6b5b0722da25b82e5169216dfb61"
+  name = "github.com/go-sql-driver/mysql"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "d523deb1b23d913de5bdada721a6071e71283618"
+  version = "v1.4.0"
+
+[[projects]]
+  branch = "master"
+  digest = "1:f14d1b50e0075fb00177f12a96dd7addf93d1e2883c25befd17285b779549795"
+  name = "github.com/gopherjs/gopherjs"
+  packages = ["js"]
+  pruneopts = "UT"
+  revision = "0766667cb4d1cfb8d5fde1fe210ae41ead3cf589"
+
+[[projects]]
   branch = "master"
   digest = "1:be0e14e780a05a33d034ff3a33c385a383a028c84df710a95ec402062df025c3"
   name = "github.com/iris-contrib/formBinder"
@@ -82,9 +98,12 @@
   revision = "36e9d2ebbde5e3f13ab2e25625fd453271d6522e"
 
 [[projects]]
-  digest = "1:235ae01f32fb5f12c5f6d2e0e05ab48e651ab31c126e45a4efc4f510810941ac"
+  digest = "1:b6f4477f09f11785097a121811f3a90d8d26cab73c1aa71abda859bdf6ad2334"
   name = "github.com/jinzhu/gorm"
-  packages = ["."]
+  packages = [
+    ".",
+    "dialects/mysql",
+  ]
   pruneopts = "UT"
   revision = "6ed508ec6a4ecb3531899a69cbc746ccf65a4166"
   version = "v1.9.1"
@@ -99,11 +118,19 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:8d44b575d464430d321863488733d08f98b925721fff5b5f7f5011b6848ef135"
+  digest = "1:f43d8653241b95073a5f6cc927bc5971db77031f65e8b9ceca3dbef25272e282"
   name = "github.com/json-iterator/go"
   packages = ["."]
   pruneopts = "UT"
-  revision = "2433035e513208b0f7bd5b50d0aecd889b2c1ff8"
+  revision = "05d041de1043ba04b678fb046bd35455a9b1b33b"
+
+[[projects]]
+  digest = "1:1e15f4e455f94aeaedfcf9c75b3e1c449b5acba1551c58446b4b45be507c707b"
+  name = "github.com/jtolds/gls"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "77f18212c9c7edc9bd6a33d383a7b545ce62f064"
+  version = "v4.2.1"
 
 [[projects]]
   branch = "master"
@@ -249,15 +276,39 @@
   revision = "86672fcb3f950f35f2e675df2240550f2a50762f"
 
 [[projects]]
+  digest = "1:cc1c574c9cb5e99b123888c12b828e2d19224ab6c2244bda34647f230bf33243"
+  name = "github.com/smartystreets/assertions"
+  packages = [
+    ".",
+    "internal/go-render/render",
+    "internal/oglematchers",
+  ]
+  pruneopts = "UT"
+  revision = "7678a5452ebea5b7090a6b163f844c133f523da2"
+  version = "1.8.3"
+
+[[projects]]
+  digest = "1:a3e081e593ee8e3b0a9af6a5dcac964c67a40c4f2034b5345b2ad78d05920728"
+  name = "github.com/smartystreets/goconvey"
+  packages = [
+    "convey",
+    "convey/gotest",
+    "convey/reporting",
+  ]
+  pruneopts = "UT"
+  revision = "9e8dc3f972df6c8fcc0375ef492c24d0bb204857"
+  version = "1.6.3"
+
+[[projects]]
   branch = "master"
-  digest = "1:dedf20eb0d3e8d6aa8a4d3d2fae248222b688ed528201995e152cc497899123c"
+  digest = "1:674a2405f77863f4f362e3e45078fd9caa647dc1c0e8b022e3b9dc1ae89fbc8f"
   name = "golang.org/x/crypto"
   packages = [
     "acme",
     "acme/autocert",
   ]
   pruneopts = "UT"
-  revision = "0c41d7ab0a0ee717d4590a44bcb987dfd9e183eb"
+  revision = "e84da0312774c21d64ee2317962ef669b27ffb41"
 
 [[projects]]
   branch = "master"
@@ -270,15 +321,15 @@
     "publicsuffix",
   ]
   pruneopts = "UT"
-  revision = "04a2e542c03f1d053ab3e4d6e5abcd4b66e2be8e"
+  revision = "9b4f9f5ad5197c79fd623a3638e70d8b26cef344"
 
 [[projects]]
   branch = "master"
-  digest = "1:c5791551cb1ebd8cd399edad5bc32805661a5c0340515110dd7d5ab0b0508efc"
+  digest = "1:f22e437d9328275884d0ae018ed0de4c280871c944a5ab332aa37fd71fb5801b"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "8a28ead16f52c8aaeffbf79239b251dfdf6c4f96"
+  revision = "95b1ffbd15a57cc5abb3f04402b9e8ec0016a52c"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
@@ -304,6 +355,14 @@
   version = "v0.3.0"
 
 [[projects]]
+  digest = "1:c25289f43ac4a68d88b02245742347c94f1e108c534dda442188015ff80669b3"
+  name = "google.golang.org/appengine"
+  packages = ["cloudsql"]
+  pruneopts = "UT"
+  revision = "ae0ab99deb4dc413a2b4bd6c8bdd0eb67f1e4d06"
+  version = "v1.2.0"
+
+[[projects]]
   branch = "v2"
   digest = "1:2ee0f15eb0fb04f918db7c2dcf39745f40d69f798ef171610a730e8a56aaa4fd"
   name = "gopkg.in/russross/blackfriday.v2"
@@ -324,8 +383,11 @@
   analyzer-version = 1
   input-imports = [
     "github.com/jinzhu/gorm",
+    "github.com/jinzhu/gorm/dialects/mysql",
     "github.com/k0kubun/pp",
+    "github.com/kataras/golog",
     "github.com/kataras/iris",
+    "github.com/smartystreets/goconvey/convey",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

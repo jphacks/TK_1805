@@ -4,19 +4,21 @@ import FireStorageImage from '../components/FireStorageImage';
 import { Item } from '../types/item';
 import { Order } from '../types/order';
 import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Initializer from '../components/Initializer';
 
 type Props = {
-  init: (string) => void,
   add: (Order) => void,
   items: Item[],
   match: any,
   history: any,
+  inbox: Order[],
 };
 
 @inject(({ store, order }) => ({
-  init: store.init,
   items: store.items,
   add: order.add,
+  inbox: order.inbox,
 }))
 @observer
 export default class ItemPage extends React.Component<Props> {
@@ -24,18 +26,16 @@ export default class ItemPage extends React.Component<Props> {
     count: 1,
   };
 
-  constructor(props) {
-    super(props);
-
-    this.props.init(props.match.params.tableId);
-  }
-
   increment() {
     this.setState({ count: this.state.count + 1 });
   }
 
   decrement() {
     this.setState({ count: Math.max(this.state.count - 1, 1) });
+  }
+
+  get inboxItem() {
+    return this.props.inbox.find(o => o.itemId === this.itemId);
   }
 
   get itemId() {
@@ -66,10 +66,12 @@ export default class ItemPage extends React.Component<Props> {
 
     return (
       <Container>
+        <Initializer match={this.props.match} />
+        
         <FireStorageImage type="item" photo={this.item.photo} style={styles.img} />
 
         <CloseButton onClick={ () => this.props.history.goBack() }>
-          ✕
+          <FontAwesomeIcon icon='times' />
         </CloseButton>
 
         <ItemContainer>
@@ -84,9 +86,13 @@ export default class ItemPage extends React.Component<Props> {
                 <span>数量</span>
               </ListLabel>
               <ListValue>
-                <MathButton onClick={this.decrement.bind(this)}>-</MathButton>
+                <MathButton onClick={this.decrement.bind(this)}>
+                  <FontAwesomeIcon icon='minus' />
+                </MathButton>
                 <CountNumber>{ this.state.count }</CountNumber>
-                <MathButton onClick={this.increment.bind(this)}>+</MathButton>
+                <MathButton onClick={this.increment.bind(this)}>
+                  <FontAwesomeIcon icon='plus' />
+                </MathButton>
               </ListValue>
             </ListItem>
             <ListItem>
@@ -101,7 +107,10 @@ export default class ItemPage extends React.Component<Props> {
           </ListContainer>
         </ItemContainer>
 
-        <AddButton onClick={this.onClickAddItemButton.bind(this)}>追加する</AddButton>
+        <AddButton onClick={this.onClickAddItemButton.bind(this)}>
+          追加する
+          <FontAwesomeIcon style={{ marginLeft: 10 }} icon='utensils' />
+        </AddButton>
       </Container>
     );
   }
@@ -111,6 +120,7 @@ const Container = styled.article`
   flex-direction: column;
   display: flex;
   justify-content: center;
+  padding-bottom: 72px;
 `;
 
 const CloseButton = styled.div`
@@ -130,24 +140,6 @@ const CloseButton = styled.div`
     cursor: pointer;
   }
 `;
-const Article = styled.article`
-  position: related;
-`
-
-const BackButtonContainer = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 24px;
-  height: 24px;
-  background: lightgray;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  font-size: 14px;
-  padding: 0;
-`
 
 const ItemHeader = styled.h1`
   font-size: 18px;
@@ -236,7 +228,7 @@ const ListValueWithUnderLine = styled.div`
 `;
 
 const AddButton = styled.button`
-  position: absolute;
+  position: fixed;
   bottom: 28px;
   width: 320px;
   background-color: #FF8100;
@@ -252,7 +244,7 @@ const AddButton = styled.button`
 
 const MathButton = styled.div`
   background-color: #F0F0F0;
-  font-weigtht: bold;
+  font-weight: bold;
   height: 35px;
   width: 35px;
   border-radius: 50%;
@@ -261,6 +253,7 @@ const MathButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 12px;
 `;
 
 const styles = {

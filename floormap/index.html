@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<head>
+    <title>Floormap</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"></script>
+    <script src="/reload/reload.js"></script> 
+    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-firestore.js"></script>
+    <script src="https://unpkg.com/rxjs/bundles/rxjs.umd.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <style>
+        .leaflet-container {
+            background-color:rgba(255,0,0,0.0);
+        }
+    </style>
+</head>
+<body style="width: 100%; height: 100%; display: flex; flex-wrap: wrap; padding: 24px;">
+    <div id="map" style="width: 50%; height: 600px;"></div>
+    <div id="order-container" style="width: 50%; height: 600px;">
+        <h1>注文一覧</h1>
+        <div id="order-list" style="width: 100%;"></div>
+    </div>
+
+    <div class="buttons" style="width: 800px; height: 600px;text-align:center;">
+        <button class="addButton btn btn-outline-primary">Add seat</button>
+    </div>
+    <script>
+        const { fromEvent, Subject, BehaviorSubject } = rxjs;
+        const { filter, delay } = rxjs.operators;
+
+        var addButton = document.querySelector(".addButton")
+
+        var config = {
+            apiKey: "AIzaSyADON2Sh8SviGoldN9iP8EVMTZU5XQZBow",
+            authDomain: "jphack2018-219415.firebaseapp.com",
+            databaseURL: "https://jphack2018-219415.firebaseio.com",
+            projectId: "jphack2018-219415",
+            storageBucket: "jphack2018-219415.appspot.com",
+            messagingSenderId: "1078175040609"
+        };
+        firebase.initializeApp(config);
+        var firestore = firebase.firestore();
+
+        var seats = new Subject();
+        var circles = [];
+
+        var leafletMap = L.map('map', {crs: L.CRS.Simple, dragging: false, zoomControl: false, attributionControl: false});
+        var bounds = [[0,0], [400,640]];
+        L.imageOverlay('https://www.conceptdraw.com/How-To-Guide/picture/Restaurant-Floor-Plans.png ', bounds).addTo(leafletMap);
+
+
+        firestore.collection("stores/store-1/floors/floor-1/seats")
+            .onSnapshot(docs=>{
+                circles.forEach(circleObject => {
+                    leafletMap.removeLayer(circleObject.circle)
+                })
+                circles = []
+                docs.forEach(doc=>{
+                    seats.next(doc)
+                })
+            })
+        
+        seats.pipe(
+            filter(doc => doc.exists)
+        )
+        .subscribe(doc => {
+            let data = doc.data()
+            data.color = data.isOccupied ? 'red' : 'green'
+            let circle = L.circle(data.cordinates, {color: data.color}).addTo(leafletMap)
+
+            firestore.doc(`users/${data.userID}`)
+                .get()
+                .then(userDoc=>{
+                    if (data.isOccupied){
+                        var popUpMessage = `
+                            <div style="width:160px;padding:20px 10px; 10px">
+                                <div class="img" style="text-align:center;">
+                                    <img src="${userDoc.data().profile_url}" style="width:80px;height:80px;"/>
+                                </div>
+                                <div class="pop-up-item" style="margin:20px 0px;">
+                                    <h5 style="font-size:12px;margin:2px 0px;">お客様名</h5>
+                                    <p style="margin:2px 0px;">${userDoc.data().name}様</p>
+                                </div>
+                                <div class="pop-up-item" style="margin:10px 0px;">
+                                    <h5 style="font-size:12px;margin:2px 0px;">入店時間</h5>
+                                    <p style="margin:2px 0px;">${userDoc.data().entryAt || "---" }</p>
+                                </div>  
+                                <div class="pop-up-item" style="margin:30px 0px 0px;text-align:center">
+                                    <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#exampleModal">削除</button>
+                                </div>
+                            </div>
+                        `
+                    } else {
+                        var popUpMessage = `
+                            <div style="width:160px;padding:20px 10px; 10px">
+                                <div class="pop-up-item" style="margin:20px 0px;">
+                                    <h5 style="font-size:12px;margin:2px 0px;">空席</h5>
+                                </div>
+                                <div class="pop-up-item" style="margin:10px 0px;">
+                                    <h5 style="font-size:12px;margin:2px 0px;">最終時間</h5>
+                                    <p style="margin:2px 0px;">${/* userDoc.data().leavedAt ||*/ "---" }</p>
+                                </div>  
+                                <div class="pop-up-item" style="margin:30px 0px 0px;text-align:center">
+                                    <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#exampleModal">編集</button>
+                                    <button type="button" class="${doc.data().id} button-delete btn btn-secondary btn-sm" data-toggle="modal" data-target="#exampleModal">削除</button>
+                                </div>
+                            </div>
+                        `
+                    }
+
+                    circle.bindPopup(popUpMessage);
+
+                    circles.push({
+                        "id": doc.id,
+                        "circle": circle
+                    })
+
+                    fromEvent(circle, 'mousedown')
+                        .subscribe(()=>{
+                            fromEvent(leafletMap, 'mousemove')
+                                .subscribe((e)=> circle.setLatLng(e.latlng))
+                        })
+
+                    fromEvent(circle, 'mouseup')
+                        .subscribe(()=>{
+                            leafletMap.removeEventListener('mousemove')
+                            firestore.doc(`stores/store-1/floors/floor-1/seats/${doc.id}`)
+                                .set({
+                                    cordinates: [circle.getLatLng().lat, circle.getLatLng().lng],
+                                    isOccupied: data.isOccupied,
+                                    userID: "user-1"
+                                }).then(()=>{
+                            })
+                        })
+
+                    fromEvent(circle, 'mouseover')
+                        .subscribe(()=>{
+                            circle.openPopup()
+                        })
+
+                    fromEvent(circle, 'mouseout').pipe(
+                            delay(1000 * 1.5)
+                        )
+                        .subscribe(()=>{
+                            circle.closePopup()
+                        })
+                })
+                .catch(err=>console.log(err))
+        })
+
+        fromEvent(addButton, 'click')
+            .subscribe(()=>{
+                let cordinates = [60, 60]
+                let circle = L.circle(cordinates, {color: 'gray'}).addTo(leafletMap)
+                fromEvent(circle, 'mousedown')
+                    .subscribe(()=>{
+                        fromEvent(leafletMap, 'mousemove')
+                            .subscribe((e)=> circle.setLatLng(e.latlng))
+                        firestore.doc(`stores/store-1/floors/floor-1/seats/seat-${circles.length}`)
+                            .set({
+                                cordinates: [circle.getLatLng().lat, circle.getLatLng().lng],
+                                isOccupied: false
+                            })
+                    })
+
+                fromEvent(circle, 'mouseup')
+                    .subscribe(()=>{
+                        leafletMap.removeEventListener('mousemove')
+                    })
+                    newDoc = {
+                        "id": `seat-${circles.length}`,
+                        "circle": circle
+                    }
+                    circles.push(newDoc)
+            })
+
+        leafletMap.fitBounds(bounds);
+
+        let itemMap = {};
+
+        firestore.collection('stores/store-1/items').onSnapshot(snapshot => {
+            snapshot.forEach(doc => {
+                itemMap[doc.id] = doc.data();
+            });
+
+            console.log(itemMap);
+
+            // 任意のグループに対応できるようにする
+            firestore.collection('stores/store-1/groups/hoge/orders').onSnapshot(snapshot => {
+                snapshot.docChanges.forEach(change => {
+                    if (change.type === 'added') {
+                        const order = change.doc.data();
+
+                        if (!order || !itemMap[order.itemId]) {
+                            return;
+                        }
+
+                        if (order.state === 'resolved') {
+                            return;
+                        }
+
+                        $('#order-list').append(`
+                            <div class="order" id="${change.doc.id}">
+                                <div class="order-table">
+                                    1
+                                </div>
+                                <div class="order-name">
+                                    ${itemMap[order.itemId].name}
+                                </div>
+                                <div class="order-count">
+                                    x ${order.count}
+                                </div>
+
+                                <div class="order-button" data-order-id="${change.doc.id}">Resolve</div>
+                            </div>
+                        `);
+                    }
+
+                    if (change.type === 'modified') {
+                        if (change.doc.data().state === 'resolved') {
+                            console.log(`Deleted: ${change.doc.id}`);
+                            $(`#${change.doc.id}`).remove();
+                        }
+                    }
+                });
+            });
+        });
+
+        $(document).on('click', '.order-button', (evt) => {
+            const orderId = evt.target.dataset['orderId'];
+
+            console.log(`Clicked: ${orderId}`);
+
+            firestore.collection('stores/store-1/groups/hoge/orders').doc(orderId).set({
+                state: 'resolved'
+            }, { merge: true });
+        });
+
+        function removeOrder(id) {
+            console.log(id);
+        }
+    </script>
+
+    <style>
+        #order-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #order-list {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: center;
+            background-color: #EEE;
+            border: 1px solid #AAA;
+            border-radius: 8px;
+            overflow-y: scroll;
+            padding-right: 20px;
+            padding-left: 20px;
+            padding-bottom: 20px;
+        }
+
+        .order-table {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background-color: lightblue;
+            margin-left: 10px;
+        }
+
+        .order {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1);
+            margin-top: 20px;
+            margin-right: 16px;
+        }
+
+        .order-name {
+            padding: 20px;
+            padding-right: 10px;
+            padding-left: 10px;
+        }
+
+        .order-count {
+            padding-right: 10px;
+        }
+
+        .order-button {
+            height: 100%;
+            cursor: pointer;
+            padding-left: 10px;
+            border-left: 1px solid lightgrey;
+            padding-right: 20px;
+            color: blue;
+            font-weight: bold;
+        }
+    </style>
+</body>

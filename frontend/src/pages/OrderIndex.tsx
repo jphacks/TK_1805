@@ -2,26 +2,20 @@ import * as React from 'react';
 import { inject, observer } from 'mobx-react';
 import styled from 'styled-components';
 import { Order } from '../types/order';
-import { Item } from '../types/item';
 import Header from '../components/Header';
 import { Link } from 'react-router-dom';
+import anime from 'animejs';
+import Initializer from '../components/Initializer';
 
 type Props = {
   itemMap: any,
   tableId: string,
-  storeId: string,
-  groupId: string,
-  items: Item[],
-  initStore: (tableId: string) => void,
-  initOrder: (storeId: string, groupId: string) => void,
   orders: Order[],
   history: any,
   match: any,
 };
 
 @inject(({ store, order }) => ({
-  initStore: store.init,
-  initOrder: order.init,
   orders: order.orders,
   items: store.items,
   itemMap: store.itemMap,
@@ -33,19 +27,8 @@ type Props = {
 export default class OrderIndex extends React.Component<Props> {
   state = {
     showModal: false,
+    canMakePayment: false,
   };
-
-  constructor(props) {
-    super(props);
-
-    this.props.initStore(this.props.match.params.tableId);
-  }
-
-  componentWillReceiveProps(nextProps, nextContext) {
-    if (nextProps.storeId !== '' && nextProps.groupId !== '') {
-      this.props.initOrder(nextProps.storeId, nextProps.groupId);
-    }
-  }
 
   get totalPrice() {
     return this.props.orders.reduce((sum, order) => {
@@ -73,9 +56,9 @@ export default class OrderIndex extends React.Component<Props> {
 
       return (
         <ListItem key={index}>
-          <Link to={`/tables/${this.props.tableId}/`} style={{ flex: 1, color: '#FF8100' }}>
+          <ItemLink to={`/tables/${this.props.tableId}/items/${item.id}`}>
             { item.name }
-          </Link>
+          </ItemLink>
 
           <Counter>
             x { order.count }
@@ -90,6 +73,8 @@ export default class OrderIndex extends React.Component<Props> {
 
     return (
       <Container>
+        <Initializer match={this.props.match} />
+
         <Header title='注文一覧' history={this.props.history} />
 
         <List>
@@ -101,10 +86,61 @@ export default class OrderIndex extends React.Component<Props> {
           <span>¥{ this.totalPrice }円</span>
         </TotalPriceContainer>
 
-        <PayButton onClick={this.onClickSelectPaymentMethod.bind(this)}>
+        <PayButton
+          style={this.state.showModal ? { display: 'none'} : {}}
+          onClick={this.onClickSelectPaymentMethod.bind(this)}
+        >
           お支払い方法を選択する
         </PayButton>
+
+        { this.state.showModal && this.renderButtons() }
       </Container>
+    );
+  }
+
+  renderButtons() {
+    const overlayFunc = ref => {
+      anime({
+        targets: ref,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        easing: 'easeInSine',
+        duration: 300,
+      })
+    };
+
+    return (
+      <Overlay onClick={ () => this.setState({ showModal: false }) } ref={overlayFunc}>
+        <CloseButton onClick={ () => this.setState({ showModal: false })}>✕</CloseButton>
+
+        <StyledLink
+          to={`/tables/${this.props.tableId}/pay/applePay`}
+          color='#9B9B9B'
+        >
+          Apple Pay
+        </StyledLink>
+
+        <StyledLink
+          to={`/tables/${this.props.tableId}/pay/creditCard`}
+          color='#4A90E2'
+        >
+          クレジットカード
+        </StyledLink>
+
+        <StyledLink
+          to={`/tables/${this.props.tableId}/pay/linePay`}
+          color='#7ED321'
+        >
+          LINE Pay
+        </StyledLink>
+
+        <StyledLink
+          to={`/tables/${this.props.tableId}/pay/cash`}
+          color='#FFFFFF'
+          textcolor='#4A4A4A'
+        >
+          現金でお支払い
+        </StyledLink>
+      </Overlay>
     );
   }
 }
@@ -112,7 +148,7 @@ export default class OrderIndex extends React.Component<Props> {
 const Container = styled.article`
   display: flex;
   flex-direction: column;
-  margin-bottom: 50px;
+  margin-bottom: 100px;
 `;
 
 const List = styled.ul`
@@ -125,6 +161,11 @@ const ListItem = styled.li`
   display: flex;
   align-items: center;
   margin-bottom: 16px;
+`;
+
+const ItemLink = styled(Link)`
+  flex: 1;
+  color: #FF8100;
 `;
 
 const OrderName = styled.span`
@@ -162,7 +203,7 @@ const TotalPriceContainer = styled.div`
 const PayButton = styled.div`
   position: fixed;
   background: #FF8100;
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.10);
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.1);
   bottom: 28px;
   align-self: center;
   color: white;
@@ -174,4 +215,46 @@ const PayButton = styled.div`
   &:hover {
     cursor: pointer;
   }
+`;
+
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0);
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  padding-bottom: 28px;
+`;
+
+const StyledLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  height: 36px;
+  background-color: ${props => props.color};
+  color: ${props => props.textcolor || 'white'};
+  border-radius: 114px;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  font-size: 18px;
+  padding: 5px auto;
+  margin-bottom: 28px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.10);
+`;
+
+const CloseButton = styled.div`
+  background: #F0F0F0;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.10);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './IndexTest.css';
 
 class IndexTest extends Component {
@@ -7,17 +6,17 @@ class IndexTest extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+          <img src={require('./smartphone_qr_code.png')} className="App-logo" alt="logo" />
           <p>
-            Edit <code>src/App.js</code> and save to reload.
+            店内のQRコードを読み取ってください。
           </p>
           <a
             className="App-link"
-            href="https://reactjs.org"
+            href="https://github.com/jphacks/TK_1805"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Learn React
+            Contact us
           </a>
         </header>
       </div>

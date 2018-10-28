@@ -7,19 +7,19 @@ import { Order } from '../types/order';
 import FireStorageImage from '../components/FireStorageImage';
 import { Category } from '../types/category';
 import Header from '../components/Header';
+import MenuFooter from '../components/MenuFooter';
+import Initializer from '../components/Initializer';
 
 type Props = {
   items: Item[],
   categories: Category[],
   match: any,
-  init: (string) => void,
   tableId: string,
   inbox: Order[],
   history: any,
 };
 
 @inject(({ store, order }) => ({
-  init: store.init,
   items: store.items,
   categories: store.categories,
   tableId: store.tableId,
@@ -27,12 +27,6 @@ type Props = {
 }))
 @observer
 export default class CategoryPage extends React.Component<Props> {
-  constructor(props) {
-    super(props);
-
-    this.props.init(props.match.params.tableId);
-  }
-
   get category() {
     return this.props.categories.find(category => category.id === this.categoryId);
   }
@@ -54,11 +48,19 @@ export default class CategoryPage extends React.Component<Props> {
 
   render() {
     const items = this.items.map(item => (
-      <ItemPanel key={item.id} tableId={this.props.tableId} item={item} count={this.itemToCountMap[item.id]} style={style} />
+      <ItemPanel
+        key={item.id}
+        tableId={this.props.tableId}
+        item={item}
+        count={this.itemToCountMap[item.id]}
+        style={style}
+      />
     ));
 
     return (
       <div>
+        <Initializer match={this.props.match} />
+
         { this.category &&
           <Header title={this.category.name} history={this.props.history} />
         }
@@ -66,20 +68,22 @@ export default class CategoryPage extends React.Component<Props> {
         <MainContainer>
           { items }
         </MainContainer>
+
+        <MenuFooter tableId={this.props.tableId} />
       </div>
     );
   }
 }
 
-const ItemPanel = ({ tableId, item, count, style}) => (
+const ItemPanel = ({ tableId, item, count, style }) => (
   <Link to={`/tables/${tableId}/items/${item.id}`} style={style.a} >
-  <PanelContainer>
-    <FireStorageImage type='item' photo={item.photo} style={style.img}/>
-    <OverlayLabel>{ item.name }</OverlayLabel>
-    { count &&
-      <CountLabel><p>{ count }</p></CountLabel>
-    }
-  </PanelContainer>
+    <PanelContainer>
+      <FireStorageImage type='item' photo={item.photo} style={style.img}/>
+      <OverlayLabel>{ item.name }</OverlayLabel>
+      { count &&
+        <CountLabel><p>{ count }</p></CountLabel>
+      }
+    </PanelContainer>
   </Link>
 );
 
@@ -89,27 +93,32 @@ const MainContainer = styled.div`
   padding: 4px 12px;
   display: flex;
   flex-wrap: wrap
-  
+  padding-bottom: 72px;
+
   & > a {
     width: 50%;
   }
-`
+`;
 
 const OverlayLabel = styled.div`
   position: absolute;
-  bottom: 12px;
-  background-color: rgba(0,0,0,0.4);
+  bottom: 10px;
+  background-color: rgba(0, 0, 0, 0.6);
   width: calc(100% - 30px);
   color: white;
   padding-left: 10px;
   border-radius: 0 0 4px 4px;
-`
+  color: #FFFFFF;
+  letter-spacing: 0.14px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.50);
+`;
 
 const PanelContainer = styled.div`
   display: flex;
-  border-radius: 4px;
+  border-radius: 8px;
   overflow: hidden;
-`
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+`;
 
 const CountLabel = styled.div`
   position: absolute;
@@ -125,7 +134,7 @@ const CountLabel = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-
+  opacity: 0.9;
 
   & > p {
     margin: 0px;
@@ -133,7 +142,7 @@ const CountLabel = styled.div`
     font-size: 32px;
     opacity: 1.0;
   }
-`
+`;
 
 const style = {
   a: {
@@ -146,4 +155,4 @@ const style = {
     width: "100%",
     height: "100%",
   }
-}
+};

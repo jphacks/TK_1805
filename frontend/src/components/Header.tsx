@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 type Props = {
   title: string,
@@ -11,7 +12,10 @@ export default class Header extends React.Component<Props> {
     return (
       <NavigationHeader>
         <BackButton onClick={ () => this.props.history.goBack() }>
-          戻る
+          <FontAwesomeIcon icon="chevron-left" />
+          <span style={{ marginLeft: 8 }}>
+            戻る
+          </span>
         </BackButton>
         <NavigationItem>
           { this.props.title }
@@ -23,11 +27,11 @@ export default class Header extends React.Component<Props> {
 }
 
 const NavigationHeader = styled.header`
-  padding: 26px 0;
+  padding: 26px 20px;
+  box-sizing: border-box;
   width: 100%;
   background-color: white;
   font-weight: bold;
-  z-index: 999;
 
   display:flex;
   align-items: center;
@@ -41,9 +45,11 @@ const NavigationHeader = styled.header`
   }
 `;
 
-const BackButton = styled.button`
+const BackButton = styled.div`
   flex: 1;
   font-size: 16px;
+  font-weight: bold;
+  color: #9B9B9B;
 `;
 
 const NavigationItem = styled.h1`

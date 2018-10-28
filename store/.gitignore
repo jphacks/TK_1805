@@ -22,3 +22,7 @@ vendor/
 node_modules/
 
 main
+
+cloud_sql_proxy
+old/
+private_key.json
