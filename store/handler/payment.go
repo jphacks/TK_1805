@@ -128,9 +128,9 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 				return
 			}
 
-			resp_info := new(PaymentInfo)
+			respInfo := new(PaymentInfo)
 
-			if err := json.Unmarshal(([]byte)(byteArray), resp_info); err != nil {
+			if err := json.Unmarshal(([]byte)(byteArray), respInfo); err != nil {
 				ctx.StatusCode(iris.StatusBadRequest)
 				ctx.JSON(iris.Map{
 					"error": iris.Map{
@@ -141,11 +141,11 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 				return
 			}
 
-			switch paymentErrInfo := resp_info.Error.(type) {
+			switch paymentErrInfo := respInfo.Error.(type) {
 			case string:
-				//TODO confirm type of resp_info
+				//TODO confirm type of respInfo
 				fmt.Print(paymentErrInfo)
-				ctx.JSON(resp_info)
+				ctx.JSON(respInfo)
 				return
 			default:
 				ctx.StatusCode(iris.StatusInternalServerError)
