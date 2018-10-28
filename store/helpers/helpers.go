@@ -3,7 +3,6 @@ package helpers
 import (
 	"errors"
 	"fmt"
-	"os"
 	"strconv"
 )
 
@@ -12,8 +11,8 @@ func GetPaymentServerInfo(debugMode bool) (string, int, error) {
 		return "http://localhost", 8880, nil
 	}
 
-	host := os.Getenv("PAYMENT_HOST")
-	portStr := os.Getenv("PAYMENT_PORT")
+	host := "payment"
+	portStr := 8880
 
 	if host == "" || portStr == "" {
 		err := errors.New("cannot get PAYMENT_HOST or PAYMENT_PORT from os.Getenv()")

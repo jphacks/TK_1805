@@ -9,11 +9,12 @@ import (
 )
 
 const (
-	paymentHost string = "hahaKoregaTest"
-	paymentPort int    = 9999
+	paymentHost string = "payment"
+	paymentPort int    = 8880
 )
 
 func _Setenv() {
+	// This won`t accutulally used
 	os.Setenv("PAYMENT_HOST", paymentHost)
 	os.Setenv("PAYMENT_PORT", strconv.Itoa(paymentPort))
 }
