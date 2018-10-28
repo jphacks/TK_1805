@@ -6,6 +6,8 @@ import Initializer from '../components/Initializer';
 import Header from '../components/Header';
 import stripe from '../config/stripe';
 
+const HOST_NAME = 'https://ee949b6c.ngrok.io';
+
 type Props = {
   itemMap: any,
   orders: Order[],
@@ -26,6 +28,7 @@ export default class CreditCard extends React.Component<Props> {
     exp_month: 11,
     exp_year: 2018,
     cvc: '',
+    error: '',
   };
 
   get amount() {
@@ -54,7 +57,7 @@ export default class CreditCard extends React.Component<Props> {
   }
 
   async onClickSendButton() {
-    // const data = await stripe.createToken({
+    // const response = await stripe.createToken({
     //   card: {
     //     "number": '4242424242424242',
     //     "exp_month": 12,
@@ -63,23 +66,38 @@ export default class CreditCard extends React.Component<Props> {
     //   }
     // });
 
+    console.log(this.card);
+
     try {
       const response = await stripe.createToken({ card: this.card });
       const data = await response.json();
 
+      if (data.error) {
+        alert(data.error.message);
+        this.setState({ error: data.error.message });
+        return;
+      }
+
+      console.debug(data);
       console.debug(`Create Token ${data.id}`);
 
-      // const storeResp = await fetch('http://35.221.123.85:5000', {
-      const storeResp = await fetch('http://localhost:8880', {
+      const storeResp = await fetch(`${HOST_NAME}/v1/payment/`, {
         method: 'POST',
         body: JSON.stringify({
           amount: 1,
           userID: this.props.uid,
           token: data.id,
-        })
+        }),
+        mode: 'no-cors'
       });
 
+      if (!storeResp.ok) {
+        console.error('response: ', storeResp.body);
+      }
+
       const storeData = await storeResp.json();
+
+      console.log('data: ', storeData);
 
       if (storeResp.ok) {
         alert('[DEMO] 決済に成功しました。')
@@ -137,6 +155,12 @@ export default class CreditCard extends React.Component<Props> {
           />
         </Form>
 
+        { this.state.error  &&
+          <ErrorText style={{ color: 'red' }}>
+            { this.state.error }
+          </ErrorText>
+        }
+
         <SendButton onClick={this.onClickSendButton.bind(this)}>
           クレジットカードで支払う
         </SendButton>
@@ -182,4 +206,12 @@ const SendButton = styled.div`
   font-weight: bold;
   border-radius: 80px;
   background-color: #F5A623;
+`;
+
+const ErrorText = styled.div`
+  color: red;
+  text-align: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  font-weight: bold;
 `;
