@@ -1,6 +1,6 @@
 # OAISO
 
-[![Product Name](image.png)](https://www.youtube.com/watch?v=G5rULR53uMk)
+[![OAISO Video](https://qiita-image-store.s3.amazonaws.com/0/153320/a81b6349-651f-0c77-a07c-d267d69ca338.png)](https://youtu.be/jpBS05EFd7Y)
 
 ## 製品概要
 
