@@ -13,6 +13,10 @@ import (
 func NewIrisApp(db *gorm.DB, debugMode bool, host string, port int) *iris.Application {
 	app := iris.Default()
 
+	app.Get("/", func(ctx iris.Context) {
+		ctx.WriteString("OKOK")
+	})
+
 	app.Get("/healthy", func(ctx iris.Context) {
 		ctx.WriteString("OK")
 	})

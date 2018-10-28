@@ -9,14 +9,14 @@ import (
 	"strconv"
 
 	"github.com/KeisukeYamashita/TK_1805/store/types"
-	"github.com/k0kubun/pp"
+	"github.com/kataras/golog"
 	"github.com/kataras/iris"
 )
 
 // Payment ...
 type Payment struct {
 	Amount int
-	UserID int
+	UserID string
 	Token  string
 }
 
@@ -44,9 +44,11 @@ type PaymentError struct {
 // ExecutePayment ...
 func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 	return func(ctx iris.Context) {
+		golog.Info("ExecutePayment is called")
 		var payment Payment
 
 		if err := ctx.ReadJSON(&payment); err != nil {
+			golog.Warn(fmt.Sprintf("ExecutePayment parse failed: %v", err.Error()))
 			ctx.StatusCode(iris.StatusBadRequest)
 			ctx.JSON(iris.Map{
 				"error": iris.Map{
@@ -57,9 +59,9 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 			return
 		}
 
-		pp.Println(payment)
+		golog.Info("ExecutePayment parse success")
 
-		if payment.Amount == 0 || payment.UserID == 0 {
+		if payment.Amount == 0 || payment.UserID == "" {
 			ctx.StatusCode(iris.StatusBadRequest)
 			ctx.JSON(iris.Map{
 				"error": iris.Map{
@@ -74,8 +76,9 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 		var err error
 
 		if payment.Token == "" {
+			golog.Info("ExecutePayment is not first payment")
 			user := new(types.User)
-			if err := ctr.DB.Where("id = ?", payment.UserID).First(user); err.Error != nil {
+			if err := ctr.DB.Where("id = ?", payment.UserID).First(user); err != nil {
 				ctx.StatusCode(iris.StatusBadRequest)
 				ctx.JSON(iris.Map{
 					"error": iris.Map{
@@ -97,14 +100,14 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 			}
 			stripeCustomerID := user.StripeCustomerID
 
-			paymentURL := fmt.Sprintf("http://%v:%v/v1/payment", ctr.PaymentHost, ctr.PaymentPort)
+			paymentURL := fmt.Sprintf("%v:%v/v1/payment", ctr.PaymentHost, ctr.PaymentPort)
 
 			amountStr := strconv.Itoa(payment.Amount)
-			userIDStr := strconv.Itoa(payment.UserID)
 
-			resp, err = http.PostForm(paymentURL, url.Values{"amount": {amountStr}, "userID": {userIDStr}, "customerID": {stripeCustomerID}})
+			resp, err = http.PostForm(paymentURL, url.Values{"amount": {amountStr}, "userID": {payment.UserID}, "customerID": {stripeCustomerID}})
 
 			if err != nil {
+				golog.Warn(fmt.Sprintf("ExecutePayment request failed: %v", err.Error()))
 				ctx.StatusCode(iris.StatusInternalServerError)
 				ctx.JSON(iris.Map{
 					"error": iris.Map{
@@ -128,9 +131,9 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 				return
 			}
 
-			resp_info := new(PaymentInfo)
+			respInfo := new(PaymentInfo)
 
-			if err := json.Unmarshal(([]byte)(byteArray), resp_info); err != nil {
+			if err := json.Unmarshal(([]byte)(byteArray), respInfo); err != nil {
 				ctx.StatusCode(iris.StatusBadRequest)
 				ctx.JSON(iris.Map{
 					"error": iris.Map{
@@ -141,9 +144,9 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 				return
 			}
 
-			switch paymentErrInfo := resp_info.Error.(type) {
+			switch paymentErrInfo := respInfo.Error.(type) {
 			case string:
-				//TODO confirm type of resp_info
+				//TODO confirm type of respInfo
 				fmt.Print(paymentErrInfo)
 				ctx.JSON(iris.Map{
 					"error": "",
@@ -163,11 +166,13 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 				return
 			}
 		}
+		golog.Info("ExecutePayment is first payment")
 		user := types.User{
 			Name: payment.UserID,
 		}
 
 		if err := ctr.DB.Create(&user).Error; err != nil {
+			golog.Warn(fmt.Sprintf("ExecutePayment create user failed: %v", err.Error()))
 			ctx.StatusCode(iris.StatusInternalServerError)
 			ctx.JSON(iris.Map{
 				"error": iris.Map{
@@ -178,15 +183,18 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 
 			return
 		}
-
+		golog.Info("ExecutePayment created user")
 		amountStr := strconv.Itoa(payment.Amount)
-		userIDStr := strconv.Itoa(payment.UserID)
 
-		_ = fmt.Sprintf("http://%v:%v/v1/payment", ctr.PaymentHost, ctr.PaymentPort)
-		resp, err = http.PostForm("http://localhost:8000/v1/payment", url.Values{"stripeToken": {payment.Token}, "amount": {amountStr}, "userID": {userIDStr}})
-		pp.Println(resp)
+		paymentURL := fmt.Sprintf("%v:%v/v1/payment", ctr.PaymentHost, ctr.PaymentPort)
+		resp, err = http.Post(paymentURL+"?stripeToken="+payment.Token+"&amount="+amountStr+"&userID="+payment.UserID, "", nil)
+		golog.Info("url")
+		golog.Info(paymentURL)
+		golog.Info("param")
+		golog.Info(url.Values{"stripeToken": {payment.Token}, "amount": {amountStr}, "userID": {payment.UserID}})
 		if err != nil {
-			ctx.StatusCode(iris.StatusInternalServerError)
+			golog.Warn(fmt.Sprintf("ExecutePayment payment request failed: %v", err.Error()))
+			ctx.StatusCode(iris.StatusBadRequest)
 			ctx.JSON(iris.Map{
 				"error": iris.Map{
 					"statusCode": iris.StatusInternalServerError,
@@ -195,7 +203,10 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 			})
 			return
 		}
-
+		golog.Info("ExecutePayment request success")
+		golog.Info(resp.Body)
+		ctx.Header("Access-Control-Allow-Origin", "*")
+		ctx.Header("Access-Control-Allow-Credentials", "true")
 		ctx.JSON(iris.Map{
 			"error": "",
 			"message": iris.Map{

@@ -385,6 +385,7 @@
     "github.com/jinzhu/gorm",
     "github.com/jinzhu/gorm/dialects/mysql",
     "github.com/k0kubun/pp",
+    "github.com/kataras/golog",
     "github.com/kataras/iris",
     "github.com/smartystreets/goconvey/convey",
   ]

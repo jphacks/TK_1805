@@ -33,7 +33,7 @@ type Group struct {
 // User ...
 type User struct {
 	gorm.Model
-	Name             int
+	Name             string
 	StripeCustomerID string
 }
 

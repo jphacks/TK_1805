@@ -36,3 +36,7 @@
 [[constraint]]
   name = "github.com/k0kubun/pp"
   version = "2.3.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/kataras/golog"
