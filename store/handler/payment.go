@@ -97,7 +97,7 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 			}
 			stripeCustomerID := user.StripeCustomerID
 
-			paymentURL := fmt.Sprintf("http://%v:%v/v1/payment", ctr.PaymentHost, ctr.PaymentPort)
+			paymentURL := fmt.Sprintf("%v:%v/v1/payment", ctr.PaymentHost, ctr.PaymentPort)
 
 			amountStr := strconv.Itoa(payment.Amount)
 			userIDStr := strconv.Itoa(payment.UserID)
@@ -177,8 +177,8 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 		amountStr := strconv.Itoa(payment.Amount)
 		userIDStr := strconv.Itoa(payment.UserID)
 
-		_ = fmt.Sprintf("http://%v:%v/v1/payment", ctr.PaymentHost, ctr.PaymentPort)
-		resp, err = http.PostForm("http://localhost:8000/v1/payment", url.Values{"stripeToken": {payment.Token}, "amount": {amountStr}, "userID": {userIDStr}})
+		paymentURL := fmt.Sprintf("%v:%v/v1/payment", ctr.PaymentHost, ctr.PaymentPort)
+		resp, err = http.PostForm(paymentURL, url.Values{"stripeToken": {payment.Token}, "amount": {amountStr}, "userID": {userIDStr}})
 		pp.Println(resp)
 		if err != nil {
 			ctx.StatusCode(iris.StatusInternalServerError)
