@@ -107,7 +107,10 @@ export default class ItemPage extends React.Component<Props> {
           </ListContainer>
         </ItemContainer>
 
-        <AddButton onClick={this.onClickAddItemButton.bind(this)}>追加する</AddButton>
+        <AddButton onClick={this.onClickAddItemButton.bind(this)}>
+          追加する
+          <FontAwesomeIcon style={{ marginLeft: 10 }} icon='utensils' />
+        </AddButton>
       </Container>
     );
   }

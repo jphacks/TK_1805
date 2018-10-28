@@ -11,7 +11,7 @@ import OrderConfirm from './pages/OrderConfirm';
 import OrderIndex from './pages/OrderIndex';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faPlus, faMinus, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faPlus, faMinus, faTimes, faUtensils } from '@fortawesome/free-solid-svg-icons';
 import CreditCard from './pages/CreditCard';
 import ApplePay from './pages/ApplePay';
 
@@ -19,6 +19,7 @@ library.add(faChevronLeft);
 library.add(faPlus);
 library.add(faMinus);
 library.add(faTimes);
+library.add(faUtensils);
 
 export default class App extends React.Component {
   render() {
