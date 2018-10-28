@@ -9,11 +9,12 @@ import (
 )
 
 const (
-	paymentHost string = "hahaKoregaTest"
-	paymentPort int    = 9999
+	paymentHost string = "payment"
+	paymentPort int    = 8880
 )
 
 func _Setenv() {
+	// This won`t accutulally used
 	os.Setenv("PAYMENT_HOST", paymentHost)
 	os.Setenv("PAYMENT_PORT", strconv.Itoa(paymentPort))
 }
@@ -27,7 +28,7 @@ func TestGetPaymentServerInfo(t *testing.T) {
 			host, port, err := GetPaymentServerInfo(testBool)
 			So(err, ShouldBeNil)
 			So(host, ShouldEqual, "http://localhost")
-			So(port, ShouldEqual, 8880)
+			So(port, ShouldEqual, 8000)
 		})
 
 		Convey("when prod mode", func() {
