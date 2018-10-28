@@ -204,6 +204,9 @@
 
                         $('#order-list').append(`
                             <div class="order" id="${change.doc.id}">
+                                <div class="order-table">
+                                    1
+                                </div>
                                 <div class="order-name">
                                     ${itemMap[order.itemId].name}
                                 </div>
@@ -262,6 +265,17 @@
             padding-bottom: 20px;
         }
 
+        .order-table {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background-color: lightblue;
+            margin-left: 10px;
+        }
+
         .order {
             display: flex;
             align-items: center;
@@ -275,6 +289,7 @@
         .order-name {
             padding: 20px;
             padding-right: 10px;
+            padding-left: 10px;
         }
 
         .order-count {
