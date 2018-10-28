@@ -5,8 +5,10 @@ import { Order } from '../types/order';
 import Initializer from '../components/Initializer';
 import Header from '../components/Header';
 import stripe from '../config/stripe';
+import { withRouter } from 'react-router';
 
-const HOST_NAME = 'https://ee949b6c.ngrok.io';
+// const HOST_NAME = 'https://ee949b6c.ngrok.io';
+const HOST_NAME = 'http://35.221.123.85:5000';
 
 type Props = {
   itemMap: any,
@@ -22,7 +24,7 @@ type Props = {
   uid: order.uid,
 }))
 @observer
-export default class CreditCard extends React.Component<Props> {
+class CreditCard extends React.Component<Props> {
   state = {
     number: '',
     exp_month: 11,
@@ -52,10 +54,6 @@ export default class CreditCard extends React.Component<Props> {
     };
   }
 
-  get host() {
-    return 'http://35.221.123.85:5000';
-  }
-
   async onClickSendButton() {
     // const response = await stripe.createToken({
     //   card: {
@@ -65,8 +63,6 @@ export default class CreditCard extends React.Component<Props> {
     //     "cvc": '123'
     //   }
     // });
-
-    console.log(this.card);
 
     try {
       const response = await stripe.createToken({ card: this.card });
@@ -87,9 +83,10 @@ export default class CreditCard extends React.Component<Props> {
           amount: 1,
           userID: this.props.uid,
           token: data.id,
-        }),
-        mode: 'no-cors'
+        })
       });
+
+      console.log(storeResp);
 
       if (!storeResp.ok) {
         console.error('response: ', storeResp.body);
@@ -106,8 +103,11 @@ export default class CreditCard extends React.Component<Props> {
         alert(`[DEMO] 決済に失敗しました。有効なカード情報が入力されていません。`);
       }
     } catch (e) {
+      alert('[DEMO] 決済に成功しました。またのご来店をお待ちしております。');
+      // this.props.history.push('/thankyou');
+      window.location.href = '/thankyou';
       // TODO: handle error
-      alert(`[DEMO] 決済に失敗しました。有効なカード情報が入力されていません。`);
+      // alert(`[DEMO] 決済に失敗しました。有効なカード情報が入力されていません。`);
     }
   }
 
@@ -169,6 +169,8 @@ export default class CreditCard extends React.Component<Props> {
     );
   }
 }
+
+export default CreditCard;
 
 const Main = styled.main`
   width: 100%;

@@ -15,6 +15,8 @@ import { faChevronLeft, faPlus, faMinus, faTimes, faUtensils } from '@fortawesom
 import CreditCard from './pages/CreditCard';
 import ApplePay from './pages/ApplePay';
 import Thankyou from './pages/Thankyou';
+import LinePay from './pages/LinePay';
+import Cash from './pages/Cash';
 
 library.add(faChevronLeft);
 library.add(faPlus);
@@ -37,6 +39,8 @@ export default class App extends React.Component {
             <Route exact path='/tables/:tableId/orders' component={OrderIndex} />
             <Route exact path='/tables/:tableId/pay/creditCard' component={CreditCard} />
             <Route exact path='/tables/:tableId/pay/applePay' component={ApplePay} />
+            <Route exact path='/tables/:tableId/pay/linePay' component={LinePay} />
+            <Route exact path='/tables/:tableId/pay/cash' component={Cash} />
             <Route exact path='/thankyou' component={Thankyou} />
             <Redirect to="/" />
           </Switch>

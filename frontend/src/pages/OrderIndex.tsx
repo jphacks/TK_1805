@@ -134,7 +134,7 @@ export default class OrderIndex extends React.Component<Props> {
         </StyledLink>
 
         <StyledLink
-          to={[ `/tables/${this.props.tableId}/pay/cash`, `/tableId/${this.props.tableId}/pay` ]}
+          to={`/tables/${this.props.tableId}/pay/cash`}
           color='#FFFFFF'
           textcolor='#4A4A4A'
         >
