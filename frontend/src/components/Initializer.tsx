@@ -44,7 +44,6 @@ export default class Initializer extends React.Component<Props> {
     }
   }
 
-  // TODO: Test
   notifyNewOrder(orders: Order[]) {
     const items = orders.map(order => {
       const item = this.props.itemMap[order.itemId];
@@ -52,8 +51,8 @@ export default class Initializer extends React.Component<Props> {
       return `「${item.name}」x${order.count}`
     }).filter(name => name !== '').join('、');
 
-    if (name !== '') {
-      toast.info(`次の料理が注文されました。\n${items}`);
+    if (items !== '') {
+      toast.info(`注文: \n${items}`);
     }
   }
 

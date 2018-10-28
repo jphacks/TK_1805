@@ -4,8 +4,10 @@ import firebase, { db, auth } from '../config/firebase';
 import { arrayFromSnapshot } from '../lib/firestore';
 import { Interval } from 'luxon';
 
+const TEN_SECONDS = 10 * 1000;
+
 function validDate(start, end) {
-  return Interval.fromDateTimes(start, end).toDuration().seconds < 60;
+  return Interval.fromDateTimes(start, end).toDuration().milliseconds < TEN_SECONDS;
 }
 
 class OrderStore {
@@ -31,7 +33,8 @@ class OrderStore {
     this.unsubscribe = db.collection(`stores/${storeId}/groups/${groupId}/orders`).onSnapshot(snapshot => {
       console.debug('Fetch new orders');
 
-      const orders = arrayFromSnapshot(snapshot);
+      const orders = arrayFromSnapshot(snapshot)
+        .sort((a, b) => a.createdAt.toDate() - b.createdAt.toDate());
       const newOrders = orders.slice(this.orders.length)
         .filter(order => order.uid !== this.uid)
         .filter(order => validDate(order.createdAt.toDate(), new Date()));
