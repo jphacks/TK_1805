@@ -113,6 +113,7 @@ OAISOはQRコードをテーブルや伝票に貼り付けるだけで良いの�
     - 飲食店の客は空席をあらかじめ知ることができない
         - 実際には席は空いているが行くのをを控える
         - せっかく来店したのに満席で客の印象が悪くなる
+    - 店舗の公式LINEボットに「いま空いてる？」という質問をできるようになる
 4. 注文管理
     - どの注文がどの客なのかを管理するのは難しい
     - 間違えると大きく客の体験を損なってしまう
@@ -139,16 +140,20 @@ OAISOはQRコードをテーブルや伝票に貼り付けるだけで良いの�
 以下でサービスごとの利用技術を説明する。
 
 * frontend - 来店客向けWeb伝票サービス
+    * Node.js
     * React
     * Firebase (Firestore, Storage, Authentication)
 * floormap - 飲食店向け注文管理Webサービス
+    * Node.js
     * Leaflet
     * RxJS
 * payment - 決済用サービス
+    * Golang
     * Iris
     * Stripe SDK
     * LINE Pay SDK
 * store - 店舗情報管理サービス
+    * Golang
     * Iris
 * apib - APIドキュメントサービス
     * API BluePrint
