@@ -37,7 +37,7 @@ OAISOではテーブルごとに貼られたQRコードを読み取って、メ�
 #### 1. 注文にホールスタッフを必要としない
 
 <p align="center">
-  <img width="460" height="300" src="https://qiita-image-store.s3.amazonaws.com/0/153320/71c369f7-8c9b-21fe-663e-4e3414148423.png">
+  <img src="https://qiita-image-store.s3.amazonaws.com/0/153320/71c369f7-8c9b-21fe-663e-4e3414148423.png">
 </p>
 
 <p align="center">
@@ -50,13 +50,12 @@ OAISOではテーブルごとに貼られたQRコードを読み取って、メ�
 注文はリアルタイムに可視化されるため、オーダーの不通はなくなる。
 また、店舗スタッフは客をどのくらい待たせているのかがわかる。
 
-#### 2. 多くの決済サービスに対応
-
+#### 2. 導入コストが低い
 
 導入ハードルが低く、客と店の双方にメリットのある決済
 
 <p align="center">
-  <img width="460" height="300" src="https://qiita-image-store.s3.amazonaws.com/0/153320/0fd24110-1368-1633-54ca-03a8381bce28.png">
+  <img src="https://qiita-image-store.s3.amazonaws.com/0/153320/0fd24110-1368-1633-54ca-03a8381bce28.png">
 </p>
 
 <p align="center">
@@ -64,7 +63,7 @@ OAISOではテーブルごとに貼られたQRコードを読み取って、メ�
 </p>
 
 
-第一の点として、サービスへの導入のハードルが非常に低い。
+サービスへの導入のハードルが非常に低い。
 
 注文用の専用端末が1店舗あたり30万円から50万円の導入費用が必要な一方で、
 OAISOはQRコードをテーブルや伝票に貼り付けるだけで良いので非常に導入コストが低い。
@@ -74,24 +73,34 @@ OAISOはQRコードをテーブルや伝票に貼り付けるだけで良いの�
 
 つまり、**「システム運用のコストを大幅に抑えながら注文から決済までの滑らかで、ストレスのないユーザー体験の提供することができる」**。
 
-#### 3. ホールの状況や注文を客と紐づけて可視化
+#### 3. 様々な決済サービスに対応
+
+クレジットカードやApple Pay・LINE Payなど多くの決済サービスに対応している。
+売上はOAISOを介して飲食店に振り込まれるため、飲食店側は様々なサービスにノーコストで対応できる。
+
+電子決済が普及している中国ではWeChat Payというサービスが普及しているという事情があるが、
+日本ではまだそれに相当するような普及したサービスはない。
+そのため、飲食店のオーナーがある1つの決済方法に対応したところで、カバーできる顧客層は厚くない。
+よって、日本では様々な決済サービスと店舗オーナーを結びつける中間サービスが必要になると私達は考えている。
+
+#### 4. ホールの状況や注文を来店客と紐づけて可視化できる
 
 <p align="center">
-  <img width="460" height="300" src="https://qiita-image-store.s3.amazonaws.com/0/153320/379d0de8-fb9b-7215-a67b-8ecc7447e248.gif">
+  <img src="https://qiita-image-store.s3.amazonaws.com/0/153320/379d0de8-fb9b-7215-a67b-8ecc7447e248.gif">
 </p>
 
 <p align="center">
   <p align="center">リアルタイムに座席表が空席(緑）から席が埋まっている状況(赤）に変わる様子</p>
 </p>
 
-非常に簡単に操作ができるUIで、図面をアップロードし席をドラッグで配置すればホールの状況を可視化することができる。
+簡単に操作ができるUIで、図面をアップロードし席をドラッグで配置すればホールの状況を可視化することができる。
 
 一つの円がテーブルに対応し、店舗レイアウトがどのようなものであってもオーダー状況をリアルタイムに可視化することができる。
 
 また、それぞれのユーザーに対して注文をストリームのように可視化することができて、「来店客をどれだけ待たせているか」、「どのテーブルに運ぶべきか」を分かりやすく可視化できる。
 
 <p align="center">
-  <img width="460" height="300" src="https://qiita-image-store.s3.amazonaws.com/0/153320/ec82549c-add9-ac6d-d24f-aebeaf9e277c.png">
+  <img src="https://qiita-image-store.s3.amazonaws.com/0/153320/ec82549c-add9-ac6d-d24f-aebeaf9e277c.png">
 </p>
 
 <p align="center">
@@ -135,20 +144,19 @@ OAISOはQRコードをテーブルや伝票に貼り付けるだけで良いの�
     * Google Cloud Platform
         * Google Kubernetis Engine
 * フロントエンド
-    * React
-    * Firebase (Firestore, Storage, Authentication)
-    * Stripe SDK
-    * Apple Pay SDK
+    * 来店客向けWebサイト
+        * React
+        * Firebase (Firestore, Storage, Authentication)
+    * 管理用Webサイト
+        * Leaflet
+        * RxJS
+* バックエンド
+    * Iris
 * 決済サービス
     * Stripe SDK
-    * Iris
-* 店舗サービス
-    * Iris
-* 管理画面
-    * Leaflet
-    * RxJS
+    * Apple Pay SDK
 
-### 独自開発技術（Hack Dayで開発したもの）
+### 独自開発技術
 
 #### 2日間に開発した独自の機能・技術
 
