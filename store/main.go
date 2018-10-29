@@ -39,7 +39,6 @@ func init() {
 
 	db.LogMode(debugMode)
 	db.AutoMigrate(&types.User{}, &types.Transaction{}, &types.Store{}, &types.Table{}, &types.Group{})
-
 }
 
 func main() {
