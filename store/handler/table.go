@@ -87,6 +87,13 @@ func (ctr *Controller) GetGroupId() func(ctx iris.Context) {
 			return
 		}
 
+		golog.Info(group.EnteredAt.UTC().Format(time.RFC1123))
+		if group.EnteredAt.IsZero() {
+			group.EnteredAt = time.Now()
+
+			ctr.DB.Save(&group)
+		}
+
 		groupID := &group.Key
 		state := &group.State
 		table := new(types.Table)
@@ -110,9 +117,10 @@ func (ctr *Controller) GetGroupId() func(ctx iris.Context) {
 		ctx.JSON(iris.Map{
 			"error": "",
 			"message": iris.Map{
-				"groupId": groupID,
-				"storeId": storeID,
-				"state":   state,
+				"groupId":   groupID,
+				"storeId":   storeID,
+				"state":     state,
+				"enteredAt": group.EnteredAt.UTC().Format(time.RFC1123),
 			},
 		})
 	}
