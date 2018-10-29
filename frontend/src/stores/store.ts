@@ -7,7 +7,13 @@ import { DateTime } from 'luxon';
 
 const db = firebase.firestore();
 
-const URL_BASE = 'http://35.221.123.85:5000/v1';
+const URL_BASE = 'http://localhost:8880/v1';
+
+export class BadRequestError extends Error {
+}
+
+export class InternalServerError extends Error {
+}
 
 class Store {
   @observable storeId: string = '';
@@ -39,18 +45,33 @@ class Store {
     this.tableId = tableId;
 
     const response = await fetch(`${URL_BASE}/store/groups?tableId=${tableId}`, {
-      method: 'GET'
+      method: 'GET',
+      mode: 'cors',
     });
 
-    const data = await response.json();
+    if (!response.ok) {
+      console.error(`Fetch request failed ${JSON.stringify(response)}`);
+    }
 
-    this.storeId = data.storeId;
-    this.groupId = data.groupId;
-    this.enterTime = data.enterTime;
+    let data: any = null;
+
+    try {
+      data = await response.json();
+    } catch (e) {
+      console.error(e.message);
+      throw new InternalServerError('サーバーでエラーが発生しました。');
+    }
+
+    if (data.error) {
+      console.error(data.error);
+      throw new BadRequestError('正しいURLではありません。');
+    }
+
+    console.log(data);
 
     this.storeId = 'store-1';
-    this.groupId = 'hoge';
-    this.enterTime = DateTime.local();
+    this.groupId = data.message.groupId;
+    this.enterTime = DateTime.fromRFC2822(data.message.enteredAt);
 
     db.collection(`stores`).doc(this.storeId).get().then(doc => {
       const data = doc.data();

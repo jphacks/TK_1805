@@ -44,3 +44,7 @@
 [[constraint]]
  branch = "master"
  name = "github.com/kataras/iris"
+
+[[constraint]]
+  name = "github.com/iris-contrib/middleware"
+  version = "10.0.0"

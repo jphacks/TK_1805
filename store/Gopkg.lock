@@ -98,6 +98,14 @@
   revision = "36e9d2ebbde5e3f13ab2e25625fd453271d6522e"
 
 [[projects]]
+  digest = "1:a22dcb0e9aaee82acd1a3c82c00849cf075ab92cacc920807e6f7f4a34118652"
+  name = "github.com/iris-contrib/middleware"
+  packages = ["cors"]
+  pruneopts = "UT"
+  revision = "1060fbb0ce08a72c50c612e8e5bdc8076c28343d"
+  version = "v10"
+
+[[projects]]
   digest = "1:b6f4477f09f11785097a121811f3a90d8d26cab73c1aa71abda859bdf6ad2334"
   name = "github.com/jinzhu/gorm"
   packages = [
@@ -236,6 +244,14 @@
   version = "1.0.1"
 
 [[projects]]
+  digest = "1:b0c25f00bad20d783d259af2af8666969e2fc343fa0dc9efe52936bbd67fb758"
+  name = "github.com/rs/cors"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "9a47f48565a795472d43519dd49aac781f3034fb"
+  version = "v1.6.0"
+
+[[projects]]
   branch = "master"
   digest = "1:0cdbe7b717bdc81f143bbdd516c3639828c5e1cd158e4140ca100d657fc26550"
   name = "github.com/ryanuber/columnize"
@@ -358,6 +374,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/iris-contrib/middleware/cors",
     "github.com/jinzhu/gorm",
     "github.com/jinzhu/gorm/dialects/mysql",
     "github.com/kataras/golog",

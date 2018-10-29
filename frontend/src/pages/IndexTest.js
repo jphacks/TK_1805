@@ -7,8 +7,8 @@ class IndexTest extends Component {
       <div className="App">
         <header className="App-header">
           <img src={require('./smartphone_qr_code.png')} className="App-logo" alt="logo" />
-          <p>
-            店内のQRコードを読み取ってください。
+          <p style={{ padding: 20 }}>
+            カメラを起動し店内のQRコードを読み取ってください。
           </p>
           <a
             className="App-link"
