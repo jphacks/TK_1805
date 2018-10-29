@@ -4,6 +4,8 @@
 
 [![OAISO](docs/eyecatch.jpg)](https://youtu.be/jpBS05EFd7Y)
 
+[**Youtubeへのリンク**](https://youtu.be/jpBS05EFd7Y)
+
 ## 製品概要
 
 ### 背景
