@@ -38,15 +38,15 @@ class Store {
 
     this.tableId = tableId;
 
-    // const response = await fetch(`${URL_BASE}/store/groups?tableId=${tableId}`, {
-    //   method: 'GET'
-    // });
+    const response = await fetch(`${URL_BASE}/store/groups?tableId=${tableId}`, {
+      method: 'GET'
+    });
 
-    // const data = await response.json();
+    const data = await response.json();
 
-    // this.storeId = data.storeId;
-    // this.groupId = data.groupId;
-    // this.enterTime = data.enterTime;
+    this.storeId = data.storeId;
+    this.groupId = data.groupId;
+    this.enterTime = data.enterTime;
 
     this.storeId = 'store-1';
     this.groupId = 'hoge';
