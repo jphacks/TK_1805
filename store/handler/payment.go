@@ -188,3 +188,14 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 		}
 	}
 }
+
+// LinepayConfirm ...
+func (ctr *Controller) LinepayConfirm() func(ctx iris.Context) {
+	return func(ctx iris.Context) {
+		golog.Info("CALLED: LinepayConfirm")
+	}
+}
+
+type linePayConfirm struct {
+	transactionID string
+}

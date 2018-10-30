@@ -71,7 +71,12 @@ app.get('/v1/confirm', (req, res) => {
     pay.confirm(confirmation)
         .then((response) => {
             logger.info(`confirm successfully finish`)
-            res.redirect('http://google.com');
+            res.status(200).json({
+                error: '',
+                message: {
+                    amount: reservation.amount
+                }
+            });
         })
         .catch((error => {
             logger.error(error)
