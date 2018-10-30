@@ -1,4 +1,13 @@
 steps:
+- name: gcr.io/cloud-builders/gcloud
+  args:
+  - kms
+  - decrypt
+  - --ciphertext-file=$_SERVICEDIR_NAME/.auth.json.enc
+  - --plaintext-file=$_SERVICEDIR_NAME/.auth.json
+  - --location=global
+  - --keyring=$_KEY_RING
+  - --key=$_KEY
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'asia.gcr.io/$PROJECT_ID/$_SERVICEDIR_NAME:latest', '-f', './$_SERVICEDIR_NAME/Dockerfile', '.']
 - name: 'gcr.io/cloud-builders/docker'
