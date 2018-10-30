@@ -71,12 +71,7 @@ app.get('/v1/confirm', (req, res) => {
     pay.confirm(confirmation)
         .then((response) => {
             logger.info(`confirm successfully finish`)
-            res.status(200).json({
-                error: '',
-                message: {
-                    amount: reservation.amount
-                }
-            });
+            res.status(200).json();
         })
         .catch((error => {
             logger.error(error)
