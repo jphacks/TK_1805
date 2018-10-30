@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "aglio": "^2.3.0",
+    "basic-auth": "^2.0.1",
     "express": "^4.16.4"
   }
 }
