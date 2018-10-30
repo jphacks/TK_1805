@@ -8,7 +8,6 @@ steps:
   - --location=global
   - --keyring=$_KEY_RING
   - --key=$_KEY
-steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'asia.gcr.io/$PROJECT_ID/$_SERVICEDIR_NAME:latest', '-f', './$_SERVICEDIR_NAME/Dockerfile', '.']
 - name: 'gcr.io/cloud-builders/docker'
