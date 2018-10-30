@@ -8,7 +8,7 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/KeisukeYamashita/TK_1805/store/types"
+	"github.com/KeisukeYamashita/TK_1805/payment/types"
 	"github.com/kataras/golog"
 	"github.com/kataras/iris"
 )
@@ -127,9 +127,11 @@ func handleAnonymousUser(ctr *Controller, ctx iris.Context, payment Payment) {
 		Name: payment.UserID,
 	}
 
-	if err := ctr.DB.Create(&user).Error; err != nil {
-		createBadRequest(ctx, fmt.Sprintf("The request for new users needs a stripe token: %v", err.Error()))
-		return
+	if ctr.DB.First(&user, "name = ?", payment.UserID).RecordNotFound() {
+		if err := ctr.DB.Create(&user).Error; err != nil {
+			createBadRequest(ctx, fmt.Sprintf("The request for new users needs a stripe token: %v", err.Error()))
+			return
+		}
 	}
 
 	paymentURL := fmt.Sprintf("%v:%v/v1/payment?stripeToken=%v&amount=%v&userID=%v", ctr.PaymentHost, ctr.PaymentPort, payment.Token, payment.Amount, payment.UserID)

@@ -19,7 +19,7 @@ class CheckoutForm extends React.Component {
     const response = await fetch(`${STORE_API_URL_BASE}/payment`, {
       method: 'POST',
       body: JSON.stringify({
-        amount: 1,
+        amount: this.props.amount,
         userID: this.props.uid,
         token: token.id,
       }),
