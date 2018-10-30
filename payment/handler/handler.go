@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/KeisukeYamashita/TK_1805/payment/helpers"
 	"github.com/KeisukeYamashita/TK_1805/payment/types"
+	"github.com/kataras/golog"
 	"github.com/kataras/iris"
 	stripe "github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/charge"
@@ -91,6 +92,8 @@ func (ctr *Controller) ExecPayment() func(ctx iris.Context) {
 				return
 			}
 
+			golog.Info("CreateCustomerWithEmailAndUserID succeeded")
+
 			if err := ctr.DB.Where("id = ?", userID).First(user); err != nil {
 				ctx.StatusCode(iris.StatusInternalServerError)
 				ctx.JSON(iris.Map{
@@ -102,6 +105,8 @@ func (ctr *Controller) ExecPayment() func(ctx iris.Context) {
 				return
 			}
 
+			golog.Info("Finding user succeeded")
+
 			if err := ctr.DB.Model(user).Update("stripe_customer_id", cus.ID); err != nil {
 				ctx.StatusCode(iris.StatusInternalServerError)
 				ctx.JSON(iris.Map{
@@ -112,6 +117,8 @@ func (ctr *Controller) ExecPayment() func(ctx iris.Context) {
 				})
 				return
 			}
+
+			golog.Info("Updating user succeeded")
 
 			chargeParams.Customer = &cus.ID
 
@@ -131,6 +138,8 @@ func (ctr *Controller) ExecPayment() func(ctx iris.Context) {
 			})
 			return
 		}
+
+		golog.Info("Charge succeeded")
 
 		ctx.StatusCode(iris.StatusOK)
 		ctx.JSON(iris.Map{
