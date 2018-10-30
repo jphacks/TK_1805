@@ -5,13 +5,19 @@ import (
 
 	"github.com/KeisukeYamashita/TK_1805/store/handler"
 	"github.com/KeisukeYamashita/TK_1805/store/types"
+	"github.com/iris-contrib/middleware/cors"
 	"github.com/jinzhu/gorm"
 	"github.com/kataras/iris"
 )
 
 // NewIrisApp ...
 func NewIrisApp(db *gorm.DB, debugMode bool, host string, port int) *iris.Application {
-	app := iris.Default()
+	app := iris.New()
+
+	crs := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowCredentials: true,
+	})
 
 	app.Get("/", func(ctx iris.Context) {
 		ctx.WriteString("OKOK")
@@ -23,13 +29,11 @@ func NewIrisApp(db *gorm.DB, debugMode bool, host string, port int) *iris.Applic
 
 	ctr := handler.NewController(db, debugMode, host, port)
 
-	api := app.Party(fmt.Sprintf("/v%v", types.VERSION))
+	api := app.Party(fmt.Sprintf("/v%v", types.VERSION), crs).AllowMethods(iris.MethodOptions)
+
+	api.Get("/store/groups", ctr.GetGroupId())
 	api.Post("/store/groups", ctr.CreateGroupId())
-
-	api.Get("/store/groups", ctr.FetchState())
-
 	api.Get("/store", ctr.CreateGroupId())
-
 	api.Post("/payment", ctr.ExecutePayment())
 
 	return app

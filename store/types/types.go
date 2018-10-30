@@ -1,6 +1,8 @@
 package types
 
 import (
+	"time"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
@@ -24,10 +26,11 @@ type Table struct {
 
 type Group struct {
 	gorm.Model
-	Table    Table `gorm:"foreignkey:TableKey"`
-	TableKey string
-	Key      string
-	State    string
+	Table     Table `gorm:"foreignkey:TableKey"`
+	TableKey  string
+	Key       string
+	State     string
+	EnteredAt time.Time
 }
 
 // User ...
