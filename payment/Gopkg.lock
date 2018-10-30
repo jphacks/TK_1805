@@ -566,6 +566,7 @@
     "github.com/jinzhu/gorm",
     "github.com/jinzhu/gorm/dialects/mysql",
     "github.com/joho/godotenv",
+    "github.com/kataras/golog",
     "github.com/kataras/iris",
     "github.com/kataras/iris/httptest",
     "github.com/smartystreets/goconvey/convey",
