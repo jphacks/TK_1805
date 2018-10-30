@@ -5,26 +5,25 @@
 import React from 'react';
 import {injectStripe} from 'react-stripe-elements';
 import styled from 'styled-components';
-
+import { STORE_API_URL_BASE } from '../config/api';
 import CardSection from './CardSection';
-
-const HOST_NAME = 'http://35.221.123.85:5000';
 
 class CheckoutForm extends React.Component {
   async handleSubmit(ev) {
     ev.preventDefault();
 
-    const { token } = this.props.stripe.createToken({name: 'Jenny Rosen'});
+    const { token } = await this.props.stripe.createToken({name: 'Jenny Rosen'});
 
     console.debug('Received Stripe token:', token);
 
-    const response = await fetch(`${HOST_NAME}/v1/payment/`, {
+    const response = await fetch(`${STORE_API_URL_BASE}/payment`, {
       method: 'POST',
       body: JSON.stringify({
         amount: 1,
         userID: this.props.uid,
-        token: token,
-      })
+        token: token.id,
+      }),
+      mode: 'cors',
     });
 
     try {
