@@ -5,7 +5,10 @@ import { Order } from '../types/order';
 import Initializer from '../components/Initializer';
 import Header from '../components/Header';
 import stripe from '../config/stripe';
+import { Elements } from 'react-stripe-elements';
+
 import { withRouter } from 'react-router';
+import MyStoreCheckout from '../components/MyStoreCheckout';
 
 // const HOST_NAME = 'https://ee949b6c.ngrok.io';
 const HOST_NAME = 'http://35.221.123.85:5000';
@@ -115,58 +118,69 @@ class CreditCard extends React.Component<Props> {
     // TODO: validation
 
     return (
-      <main>
-        <Initializer match={this.props.match} />
-        <Header title='クレジットカード' history={this.props.history} />
+      <Main>
+       <Initializer match={this.props.match} />
+       <Header title='クレジットカード' history={this.props.history} />
 
-        <Form>
-          <Label>カード番号</Label>
 
-          <Input
-            type='tel'
-            required
-            value={this.state.number}
-            onChange={e => this.setState({ number: e.target.value })}
-            placeholder="4321432143214321"
-            autoComplete="cc-number"
-          />
 
-          <Label>有効期限</Label>
-
-          <Input
-            type='month'
-            required
-            autoComplete='cc-exp'
-            value={`${this.state.exp_year}-${this.state.exp_month}`}
-            onChange={e => {
-              const values = e.target.value.split('-');
-              this.setState({ exp_year: values[0], exp_month: values[1] });
-            }}
-          />
-
-          <Label>CVC</Label>
-
-          <Input
-            type='tel'
-            required
-            autoComplete='cc-csc'
-            value={this.state.cvc}
-            onChange={e => this.setState({ cvc: e.target.value })}
-            placeholder="123"
-          />
-        </Form>
-
-        { this.state.error  &&
-          <ErrorText style={{ color: 'red' }}>
-            { this.state.error }
-          </ErrorText>
-        }
-
-        <SendButton onClick={this.onClickSendButton.bind(this)}>
-          クレジットカードで支払う
-        </SendButton>
-      </main>
+       <MyStoreCheckout />
+      </Main>
     );
+
+  //   return (
+  //     <main>
+  //       <Initializer match={this.props.match} />
+  //       <Header title='クレジットカード' history={this.props.history} />
+
+  //       <Form>
+  //         <Label>カード番号</Label>
+
+  //         <Input
+  //           type='tel'
+  //           required
+  //           value={this.state.number}
+  //           onChange={e => this.setState({ number: e.target.value })}
+  //           placeholder="4321432143214321"
+  //           autoComplete="cc-number"
+  //         />
+
+  //         <Label>有効期限</Label>
+
+  //         <Input
+  //           type='month'
+  //           required
+  //           autoComplete='cc-exp'
+  //           value={`${this.state.exp_year}-${this.state.exp_month}`}
+  //           onChange={e => {
+  //             const values = e.target.value.split('-');
+  //             this.setState({ exp_year: values[0], exp_month: values[1] });
+  //           }}
+  //         />
+
+  //         <Label>CVC</Label>
+
+  //         <Input
+  //           type='tel'
+  //           required
+  //           autoComplete='cc-csc'
+  //           value={this.state.cvc}
+  //           onChange={e => this.setState({ cvc: e.target.value })}
+  //           placeholder="123"
+  //         />
+  //       </Form>
+
+  //       { this.state.error  &&
+  //         <ErrorText style={{ color: 'red' }}>
+  //           { this.state.error }
+  //         </ErrorText>
+  //       }
+
+  //       <SendButton onClick={this.onClickSendButton.bind(this)}>
+  //         クレジットカードで支払う
+  //       </SendButton>
+  //     </main>
+  //   );
   }
 }
 

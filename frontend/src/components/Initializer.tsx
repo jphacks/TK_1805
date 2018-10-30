@@ -27,11 +27,12 @@ export default class Initializer extends React.Component<Props> {
 
     if (this.props.initStore) {
       this.props.initStore(this.props.match.params.tableId).then(() => {}).catch(e => {
-        toast.error(e.message);
+        console.error(e.message);
+        toast.error(`${e.message}\nトップページに移動します。`);
 
         setTimeout(() => {
           window.location.href = '/';
-        }, 300000);
+        }, 5000);
       });
     }
   }

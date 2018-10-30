@@ -67,8 +67,6 @@ class Store {
       throw new BadRequestError('正しいURLではありません。');
     }
 
-    console.log(data);
-
     this.storeId = 'store-1';
     this.groupId = data.message.groupId;
     this.enterTime = DateTime.fromRFC2822(data.message.enteredAt);
