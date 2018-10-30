@@ -79,6 +79,8 @@ func (ctr *Controller) ExecPayment() func(ctx iris.Context) {
 				return
 			}
 
+			golog.Info("CreateCustomerWithEmailAndUserID trying")
+
 			cus, err := helpers.CreateCustomerWithEmailAndUserID(email, userID, stripeToken)
 
 			if err != nil {
