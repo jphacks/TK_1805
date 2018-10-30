@@ -133,28 +133,34 @@ func handleAnonymousUser(ctr *Controller, ctx iris.Context, payment Payment) {
 	}
 
 	paymentURL := fmt.Sprintf("%v:%v/v1/payment?stripeToken=%v&amount=%v&userID=%v", ctr.PaymentHost, ctr.PaymentPort, payment.Token, payment.Amount, payment.UserID)
-	_, err := http.Post(paymentURL, "plain/text", nil)
+	response, err := http.Post(paymentURL, "plain/text", nil)
 
 	if err != nil {
 		createInternalServerError(ctx, fmt.Sprintf("Payment server returned error: %v", err.Error()))
 		return
 	}
 
-	ctx.JSON(iris.Map{
-		"error": "",
-		"message": iris.Map{
-			"result": "OK",
-		},
-	})
+	switch response.StatusCode {
+	case 200:
+		ctx.JSON(iris.Map{
+			"error": "",
+			"message": iris.Map{
+				"result": "OK",
+			},
+		})
+	case 400:
+		createBadRequest(ctx, "Payment server received bad request")
+	case 500:
+		createInternalServerError(ctx, "Payment server caused problem")
+	default:
+		createInternalServerError(ctx, "Unknown error in payment server")
+	}
 }
 
 // ExecutePayment ...
 func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 	return func(ctx iris.Context) {
 		golog.Info("CALLED: ExecutePayment")
-
-		ctx.Header("Access-Control-Allow-Origin", "*")
-		ctx.Header("Access-Control-Allow-Credentials", "true")
 
 		var payment Payment
 
