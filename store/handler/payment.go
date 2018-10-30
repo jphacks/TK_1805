@@ -224,8 +224,7 @@ func (ctr *Controller) LinepayReserve() func(ctx iris.Context) {
 
 		// TODO: Duplicated stuff with LinepayConfirm
 
-		// linepaymentURL := "http://linepay:6789/v1/reserve"
-		linepaymentURL := "http://localhost:6789/v1/reserve"
+		linepaymentURL := "http://linepay:6789/v1/reserve"
 
 		reservation := new(linePayReserve)
 
