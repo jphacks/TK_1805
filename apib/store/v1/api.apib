@@ -159,14 +159,30 @@ Frontend -> Store API -> LINEPAY API(OAISO) -> LINE PAY API(LINE社) -> Store AP
 ## 予約 [/v1/linepay/reserve]
 ### 予約を作成する [POST]
 
+TODO: Example入力
+
 + Request
 
-    + Body
+    + Body (application/json)
 
         {
             "amount":
             "item": 
             "orderID":
+        }
+        
++ Response
+
+    + Body 
+
+        {
+            "error": "",
+            "message": {
+                "paymentURL": 
+                "amount":
+                "item": 
+                "orderID":
+            }
         }
 
 
@@ -176,3 +192,14 @@ Frontend -> Store API -> LINEPAY API(OAISO) -> LINE PAY API(LINE社) -> Store AP
 LinePayの決済承認機能を提供する。LinePayAPI(LINE社)からアクセスを受け付ける)
 
 TODO: この機能は本来は切り離すべき。
+
++ Response
+    
+    + Body (application/json)
+
+        {
+            "error": "",
+            "message": {
+                "groupId": "UTHER4TwQEYJERUEwHNhrxjo"
+            }
+        }
