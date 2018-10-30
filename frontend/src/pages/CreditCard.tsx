@@ -59,7 +59,25 @@ export default class CreditCard extends React.Component<Props> {
           <p>{ this.amount }円</p>
         </Amount>
 
-        <MyStoreCheckout uid={this.props.uid} amount={this.amount} />
+        <Caution>
+          こちらはテスト環境の入力画面です。
+          テスト環境では本物のクレジットカードの情報は利用できません。
+          代わりに次の情報をご入力ください。
+
+          <br />
+          <br />
+
+          カード番号: 4242 4242 4242 4242 <br />
+          有効期限: 2038年12月 <br />
+          CVC: 123 <br />
+          郵便番号: 12345 <br />
+        </Caution>
+
+        <MyStoreCheckout
+          history={this.props.history}
+          uid={this.props.uid}
+          amount={this.amount}
+        />
       </Main>
     );
   }
@@ -86,4 +104,15 @@ const Amount = styled.div`
   & > p {
     margin: 0;
   }
+`;
+
+const Caution = styled.div`
+  margin-top: 40px;
+  box-sizing: border-box;
+  padding: 10px;
+  width: 90%;
+  color: #664D22;
+  background-color: #FEFBE7;
+  border: 1px solid #FEF5C7;
+  border-radius: 4px;
 `;
