@@ -12,15 +12,13 @@ const HOST_NAME = 'http://35.221.123.85:5000';
 
 class CheckoutForm extends React.Component {
   async handleSubmit(ev) {
-    // We don't want to let default form submission happen here, which would refresh the page.
     ev.preventDefault();
 
-    // Within the context of `Elements`, this call to createToken knows which Element to
-    // tokenize, since there's only one in this group.
     const { token } = this.props.stripe.createToken({name: 'Jenny Rosen'});
-    console.log('Received Stripe token:', token);
 
-    const storeResp = await fetch(`${HOST_NAME}/v1/payment/`, {
+    console.debug('Received Stripe token:', token);
+
+    const response = await fetch(`${HOST_NAME}/v1/payment/`, {
       method: 'POST',
       body: JSON.stringify({
         amount: 1,
@@ -29,24 +27,27 @@ class CheckoutForm extends React.Component {
       })
     });
 
-    // However, this line of code will do the same thing:
-    //
-    // this.props.stripe.createToken({type: 'card', name: 'Jenny Rosen'});
+    try {
+      const data = await response.json();
 
-    // You can also use createSource to create Sources. See our Sources
-    // documentation for more: https://stripe.com/docs/stripe-js/reference#stripe-create-source
-    //
-    // this.props.stripe.createSource({type: 'card', owner: {
-    //   name: 'Jenny Rosen'
-    // }});
+      if (!response.ok) {
+        console.error(data);
+        alert('[DEMO] 有効なカード情報が入力されておらず、決済に失敗しました。');
+      } else {
+        alert('[DEMO] 決済に成功しました。またのご来店をお待ちしております。');
+        this.props.history.push('/thankyou');
+      }
+    } catch (e) {
+      alert('[DEMO] サーバーに問題が発生し決済に失敗しました。')
+    }
   };
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit} style={styles.form}>
+      <StyledForm onSubmit={this.handleSubmit.bind(this)}>
         <CardSection {...createOptions('18px')} />
         <PayButton>支払う</PayButton>
-      </form>
+      </StyledForm>
     );
   }
 }
@@ -73,15 +74,13 @@ const createOptions = (fontSize, padding) => {
   };
 };
 
-const styles = {
-  form: {
-    width: '90%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    marginTop: 40,
-  },
-};
+const StyledForm = styled.form`
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 40px;
+`;
 
 const PayButton = styled.button`
   white-space: nowrap;

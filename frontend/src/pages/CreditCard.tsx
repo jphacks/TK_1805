@@ -115,16 +115,11 @@ class CreditCard extends React.Component<Props> {
   }
 
   render() {
-    // TODO: validation
-
     return (
       <Main>
        <Initializer match={this.props.match} />
        <Header title='クレジットカード' history={this.props.history} />
-
-
-
-       <MyStoreCheckout />
+       <MyStoreCheckout uid={this.props.uid} amount={this.amount} />
       </Main>
     );
 
