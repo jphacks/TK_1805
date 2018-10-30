@@ -44,7 +44,15 @@ app.use("/v1/reserve", (req,res) => {
 
             cache.put(reservation.transactionId, reservation);
 
-            res.status(200).send("hoge")
+            res.status(200).json({
+                error: "",
+                message: {
+                    paymentURL: response.info.paymentUrl.web,
+                    amount: options.amount,
+                    orderId: options.orderId,
+                    item: options.productName
+                }
+            })
         })
         .catch(error => {
             logger.error(error)
