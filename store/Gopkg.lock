@@ -98,6 +98,14 @@
   revision = "36e9d2ebbde5e3f13ab2e25625fd453271d6522e"
 
 [[projects]]
+  digest = "1:a22dcb0e9aaee82acd1a3c82c00849cf075ab92cacc920807e6f7f4a34118652"
+  name = "github.com/iris-contrib/middleware"
+  packages = ["cors"]
+  pruneopts = "UT"
+  revision = "1060fbb0ce08a72c50c612e8e5bdc8076c28343d"
+  version = "v10"
+
+[[projects]]
   digest = "1:b6f4477f09f11785097a121811f3a90d8d26cab73c1aa71abda859bdf6ad2334"
   name = "github.com/jinzhu/gorm"
   packages = [
@@ -141,14 +149,6 @@
   revision = "a4583d0a56eac4bdd939e38050d0c69abe0a9b41"
 
 [[projects]]
-  digest = "1:16dd6b893b78a50564cdde1d9f7ea67224dece11bb0886bd882f1dc3dc1d440d"
-  name = "github.com/k0kubun/pp"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "027a6d1765d673d337e687394dbe780dd64e2a1e"
-  version = "v2.3.0"
-
-[[projects]]
   branch = "master"
   digest = "1:f17dfd7df684b802076e8b0b316f27788763f647f8dbee368c98b2cb933d8657"
   name = "github.com/kataras/golog"
@@ -157,7 +157,8 @@
   revision = "03be101463868edc5a81f094fc68a5f6c1b5503a"
 
 [[projects]]
-  digest = "1:e1d6fbcd897f25be40aa052a8b1429be67403c4a922f420ce989f0ce89b755d0"
+  branch = "master"
+  digest = "1:0fcb3db7baa8f76fcf9081f01fe485b3931de7a600feb0ac8920336c1f344849"
   name = "github.com/kataras/iris"
   packages = [
     ".",
@@ -186,8 +187,7 @@
     "view",
   ]
   pruneopts = "UT"
-  revision = "934e668595ae357fae895002fe5d7e2252f1e315"
-  version = "v11.0.0"
+  revision = "8a34743b0002e1ee600b3b387ec1e9a496e0ddde"
 
 [[projects]]
   branch = "master"
@@ -220,22 +220,6 @@
   version = "v1.1"
 
 [[projects]]
-  digest = "1:c658e84ad3916da105a761660dcaeb01e63416c8ec7bc62256a9b411a05fcd67"
-  name = "github.com/mattn/go-colorable"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "167de6bfdfba052fa6b2d3664c8f5272e23c9072"
-  version = "v0.0.9"
-
-[[projects]]
-  digest = "1:0981502f9816113c9c8c4ac301583841855c8cf4da8c72f696b3ebedf6d0e4e5"
-  name = "github.com/mattn/go-isatty"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "6ca4dbf54d38eea1a992b3c722a76a5d1c4cb25c"
-  version = "v0.0.4"
-
-[[projects]]
   branch = "master"
   digest = "1:1fc201f179a7d45f944655de3cdbfb0a8a226fd525569454e31ca87f9e4bb677"
   name = "github.com/microcosm-cc/bluemonday"
@@ -258,6 +242,14 @@
   pruneopts = "UT"
   revision = "4b7aa43c6742a2c18fdef89dd197aaae7dac7ccd"
   version = "1.0.1"
+
+[[projects]]
+  digest = "1:b0c25f00bad20d783d259af2af8666969e2fc343fa0dc9efe52936bbd67fb758"
+  name = "github.com/rs/cors"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "9a47f48565a795472d43519dd49aac781f3034fb"
+  version = "v1.6.0"
 
 [[projects]]
   branch = "master"
@@ -382,9 +374,9 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/iris-contrib/middleware/cors",
     "github.com/jinzhu/gorm",
     "github.com/jinzhu/gorm/dialects/mysql",
-    "github.com/k0kubun/pp",
     "github.com/kataras/golog",
     "github.com/kataras/iris",
     "github.com/smartystreets/goconvey/convey",

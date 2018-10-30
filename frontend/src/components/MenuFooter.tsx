@@ -82,7 +82,6 @@ const styles = {
     alignItems: 'center',
     fontSize: 18,
     textDecoration: 'none',
-    // whiteSpace: 'nowrap',
     color: 'white',
     padding: '9px 16px',
     borderRadius: 2,
