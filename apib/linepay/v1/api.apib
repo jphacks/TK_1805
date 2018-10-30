@@ -9,7 +9,7 @@ LinePayに登録していればアプリ、モバイル共に簡単に決済を�
 
 # Group Payment
 
-## Payment [/v1/reserve]
+## 予約 [/v1/reserve]
 
 ### 決済を予約する [POST]
 
@@ -20,15 +20,14 @@ LinePayに登録していればアプリ、モバイル共に簡単に決済を�
     + Attributes (object)
         + orderId: u8chcreo5uocc5UQpiueon (string, required) - 決済に対して一意のID
         + amount: 4000 (string, required) - 料金
-        + label: ミライザカ駒込 (string, required) - 何に対して決済をするのか。
+        + item: ミライザカ駒込 (string, required) - 何に対して決済をするのか。
     
     + Body
 
         {
             "orderId": "u8chcreo5uocc5UQpiueon",
             "amount": 4000,
-            "label": "ミライザカ駒込"
-            
+            "item": "ミライザカ駒込"
         }
 
 + Responce 200 (application/json)
@@ -40,7 +39,20 @@ LinePayに登録していればアプリ、モバイル共に簡単に決済を�
             "message": {
                     "amount": 4000,
                     "orderId": u8chcreo5uocc5UQpiueon",
-                    "label": "ミライザカ駒込",
+                    "item": "ミライザカ駒込",
                     "paymentURL": "https://sandbox-web-pay.line.me/web/payment/wait?transactionReserveId=cjBzdVJYaGRjaWtJZXJOdHNIeHNiVXNkQ0ZMRlNMeHhGMTQrVFFXOTkya2lNYUc2eVR0UHp6cllnMnhRVVZjVA"
                 }
+        }
+
+## 承認 [/v1/confirm]
+
+### 決済を承認する [GET]
+
+LINEからアクセスされる用です。
+
++ Response 200 
+    + Body
+
+        {
+            "result": 200
         }
