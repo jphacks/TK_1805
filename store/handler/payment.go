@@ -8,7 +8,7 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/KeisukeYamashita/TK_1805/store/types"
+	"github.com/KeisukeYamashita/TK_1805/payment/types"
 	"github.com/kataras/golog"
 	"github.com/kataras/iris"
 )
