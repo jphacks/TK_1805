@@ -10,6 +10,7 @@ const (
 // User ...
 type User struct {
 	gorm.Model
+	Name             string
 	StripeCustomerID string
 }
 

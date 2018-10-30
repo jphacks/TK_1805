@@ -86,6 +86,8 @@ func (ctr *Controller) ExecPayment() func(ctx iris.Context) {
 				return
 			}
 
+			golog.Info("CreateCustomerWithEmailAndUserID trying...")
+
 			cus, err := helpers.CreateCustomerWithEmailAndUserID(email, userID, stripeToken)
 
 			if err != nil {
@@ -100,6 +102,8 @@ func (ctr *Controller) ExecPayment() func(ctx iris.Context) {
 				return
 			}
 
+			golog.Info("CreateCustomerWithEmailAndUserID succeeded")
+
 			if err := ctr.DB.Where("id = ?", userID).First(user); err != nil {
 				golog.Error(fmt.Sprintf("error while finding customer with userID: err: %v, userID:%v", err.Error(), userID))
 				ctx.StatusCode(iris.StatusInternalServerError)
@@ -112,6 +116,8 @@ func (ctr *Controller) ExecPayment() func(ctx iris.Context) {
 				return
 			}
 
+			golog.Info("Finding user succeeded")
+
 			if err := ctr.DB.Model(user).Update("stripe_customer_id", cus.ID); err != nil {
 				ctx.StatusCode(iris.StatusInternalServerError)
 				ctx.JSON(iris.Map{
@@ -122,6 +128,8 @@ func (ctr *Controller) ExecPayment() func(ctx iris.Context) {
 				})
 				return
 			}
+
+			golog.Info("Updating user succeeded")
 
 			chargeParams.Customer = &cus.ID
 
