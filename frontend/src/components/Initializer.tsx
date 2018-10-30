@@ -8,8 +8,8 @@ type Props = {
   storeId?: string,
   groupId?: string,
   itemMap?: any,
-  initStore?: (tableId: string) => void,
-  initOrder?: (storeId: string, groupId: string, notify: (ids: Order[]) => void) => void,
+  initStore?: any,
+  initOrder?: any,
   match: any,
 };
 
@@ -26,7 +26,14 @@ export default class Initializer extends React.Component<Props> {
     super(props);
 
     if (this.props.initStore) {
-      this.props.initStore(this.props.match.params.tableId);
+      this.props.initStore(this.props.match.params.tableId).then(() => {}).catch(e => {
+        console.error(e.message);
+        toast.error(`${e.message}\nトップページに移動します。`);
+
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 5000);
+      });
     }
   }
 
