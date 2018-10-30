@@ -45,14 +45,14 @@ type PaymentError struct {
 // TODO: these should NOT be here
 
 type linePayReserve struct {
-	amount  int
-	orderID string
-	item    string
+	Amount  int    `json:"amount"`
+	OrderID string `json:"orderId"`
+	Item    string `json:"item"`
 }
 
-type linePayReserveResponse struct {
-	Err     interface{}
-	Message *ReserveMessage
+type LinePayReserveResponse struct {
+	Err     interface{}     `json:"error"`
+	Message *ReserveMessage `json:"message"`
 }
 
 type ReserveMessage struct {
@@ -224,7 +224,8 @@ func (ctr *Controller) LinepayReserve() func(ctx iris.Context) {
 
 		// TODO: Duplicated stuff with LinepayConfirm
 
-		linepaymentURL := "http://linepay:6789/v1/reserve"
+		// linepaymentURL := "http://linepay:6789/v1/reserve"
+		linepaymentURL := "http://localhost:6789/v1/reserve"
 
 		reservation := new(linePayReserve)
 
@@ -243,7 +244,7 @@ func (ctr *Controller) LinepayReserve() func(ctx iris.Context) {
 		req, err := http.NewRequest("POST", linepaymentURL, bytes.NewBuffer(jsonBody))
 
 		if err != nil {
-			createBadRequest(ctx, fmt.Sprintf("Failed to parse: %v", err.Error()))
+			createBadRequest(ctx, fmt.Sprintf("Failed to create new request: %v", err.Error()))
 			return
 		}
 
@@ -255,7 +256,7 @@ func (ctr *Controller) LinepayReserve() func(ctx iris.Context) {
 		resp, err := client.Do(req)
 
 		if err != nil {
-			createBadRequest(ctx, fmt.Sprintf("Failed to parse: %v", err.Error()))
+			createBadRequest(ctx, fmt.Sprintf("Failed to request for linepay reserve: %s", err))
 			return
 		}
 
@@ -266,9 +267,9 @@ func (ctr *Controller) LinepayReserve() func(ctx iris.Context) {
 			return
 		}
 
-		reserveResp := new(linePayReserveResponse)
+		reserveResp := new(LinePayReserveResponse)
 
-		if err := json.Unmarshal(jsonBytes, reserveResp.Message); err != nil {
+		if err := json.Unmarshal(jsonBytes, reserveResp); err != nil {
 			createInternalServerError(ctx, fmt.Sprintf("Failed to parse body of payment request: %v", err.Error()))
 			return
 		}
