@@ -19,6 +19,14 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:eab5d98e7ac820add022bedd4ec36e92142cce21d901558306f28f57384f2e71"
+  name = "github.com/KeisukeYamashita/TK_1805"
+  packages = ["payment/types"]
+  pruneopts = "UT"
+  revision = "9b3e9cab2f663dbe82e8ac5504fce67e2034e39f"
+
+[[projects]]
+  branch = "master"
   digest = "1:f3d644e4f9c0f3c3a23c0556df749b111bea11cf9f083f975659d8206535d06f"
   name = "github.com/Shopify/goreferrer"
   packages = ["."]
@@ -374,6 +382,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/KeisukeYamashita/TK_1805/payment/types",
     "github.com/iris-contrib/middleware/cors",
     "github.com/jinzhu/gorm",
     "github.com/jinzhu/gorm/dialects/mysql",

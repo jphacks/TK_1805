@@ -42,6 +42,33 @@ type PaymentError struct {
 	Message    string `json:"message"`
 }
 
+// TODO: these should NOT be here
+
+type linePayReserve struct {
+	amount  int
+	orderID string
+	item    string
+}
+
+type linePayReserveResponse struct {
+	Err     interface{}
+	Message *ReserveMessage
+}
+
+type ReserveMessage struct {
+	Amount     int    `json:"amount"`
+	OrderID    string `json:"orderId"`
+	Item       string `json:"item"`
+	PaymentURL string `json:"paymentURL"`
+}
+
+type linePayConfirm struct {
+	transactionID string
+}
+
+type linePayConfirmResponce struct {
+}
+
 func createBadRequest(ctx iris.Context, message string) {
 	golog.Warn(message)
 
@@ -273,7 +300,7 @@ func (ctr *Controller) LinepayConfirm() func(ctx iris.Context) {
 			return
 		}
 
-		req, err := http.NewRequest("POST", linepaymentURL, bytes.NewBuffer(jsonBody))
+		req, err := http.NewRequest("GET", linepaymentURL, bytes.NewBuffer(jsonBody))
 
 		if err != nil {
 			createBadRequest(ctx, fmt.Sprintf("Failed to parse: %v", err.Error()))
@@ -306,31 +333,4 @@ func (ctr *Controller) LinepayConfirm() func(ctx iris.Context) {
 
 		defer resp.Body.Close()
 	}
-}
-
-// TODO: these should NOT be here
-
-type linePayReserve struct {
-	amount  int
-	orderID string
-	item    string
-}
-
-type linePayReserveResponse struct {
-	Err     interface{}
-	Message *ReserveMessage
-}
-
-type ReserveMessage struct {
-	Amount     int    `json:"amount"`
-	OrderID    string `json:"orderId"`
-	Item       string `json:"item"`
-	PaymentURL string `json:"paymentURL"`
-}
-
-type linePayConfirm struct {
-	transactionID string
-}
-
-type linePayConfirmResponce struct {
 }
