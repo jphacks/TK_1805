@@ -66,7 +66,7 @@ func main() {
 	app := app.NewIrisApp(db)
 
 	go func() {
-		if err := app.Run(iris.Addr(":8000")); err != nil {
+		if err := app.Run(iris.Addr(":8880")); err != nil {
 			log.Fatal("shutting down server")
 		}
 	}()
