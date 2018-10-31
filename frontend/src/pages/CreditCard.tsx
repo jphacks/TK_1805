@@ -15,6 +15,7 @@ type Props = {
   itemMap: any,
   orders: Order[],
   uid: string,
+  groupId: string,
   match: any,
   history: any,
 };
@@ -23,17 +24,10 @@ type Props = {
   itemMap: store.itemMap,
   orders: order.orders,
   uid: order.uid,
+  groupId: store.groupId,
 }))
 @observer
 export default class CreditCard extends React.Component<Props> {
-  state = {
-    number: '',
-    exp_month: 11,
-    exp_year: 2018,
-    cvc: '',
-    error: '',
-  };
-
   get amount() {
     return this.props.orders.slice().reduce((sum, order) => {
       const item = this.props.itemMap[order.itemId];
@@ -66,6 +60,7 @@ export default class CreditCard extends React.Component<Props> {
           onCompletePayment={this.onCompletePayment.bind(this)}
           uid={this.props.uid}
           amount={this.amount}
+          groupId={this.props.groupId}
         />
       </Main>
     );
