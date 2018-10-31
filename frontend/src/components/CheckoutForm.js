@@ -28,7 +28,7 @@ class CheckoutForm extends React.Component {
     });
 
     try {
-      const data = await response.json();
+      const data = await response.json();;
 
       if (!response.ok) {
         console.error(data);
