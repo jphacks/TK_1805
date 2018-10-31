@@ -52,6 +52,7 @@ type linePayReserve struct {
 	Item        string `json:"item"`
 	RedirectURL string `json:"redirectUrl"`
 	ImageURL    string `json:"imageUrl"`
+	TableID     string `json:"tableId"`
 }
 
 type LinePayReserveResponse struct {
@@ -283,6 +284,8 @@ func (ctr *Controller) LinepayReserve() func(ctx iris.Context) {
 			return
 		}
 
+		golog.Info("request linepayAPI success")
+
 		jsonBytes, err := ioutil.ReadAll(resp.Body)
 
 		if err != nil {
@@ -294,6 +297,14 @@ func (ctr *Controller) LinepayReserve() func(ctx iris.Context) {
 
 		if err := json.Unmarshal(jsonBytes, reserveResp); err != nil {
 			createInternalServerError(ctx, fmt.Sprintf("Failed to parse body of payment request: %v", err.Error()))
+			return
+		}
+
+		// TODO: LINE Pay決済をキャンセルしても新しいグループを作ってしまう
+		group := helpers.NewGroup(reservation.TableID)
+
+		if err := ctr.DB.Create(&group).Error; err != nil {
+			createInternalServerError(ctx, fmt.Sprintf("Failed to create new group: %v", err.Error()))
 			return
 		}
 
@@ -325,7 +336,7 @@ func (ctr *Controller) LinepayConfirm() func(ctx iris.Context) {
 
 		req.Header.Set("Content-Type", "application/json")
 
-		golog.Info("requesting linepayAPI server...")
+		golog.Info("confirming linepayAPI server...")
 
 		client := &http.Client{}
 		resp, err := client.Do(req)
@@ -339,6 +350,8 @@ func (ctr *Controller) LinepayConfirm() func(ctx iris.Context) {
 			createBadRequest(ctx, fmt.Sprintf("status code not 200: statusCode: %v", resp.StatusCode))
 			return
 		}
+
+		golog.Info("confirmed linepayAPI successfully")
 
 		jsonBytes, err := ioutil.ReadAll(resp.Body)
 
