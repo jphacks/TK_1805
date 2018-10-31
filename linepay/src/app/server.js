@@ -33,11 +33,11 @@ app.use("/v1/reserve", (req,res) => {
         productImageUrl: body.imageUrl || "https://storage.googleapis.com/jphack2018-219415.appspot.com/logo.JPG"
     }
 
-    logger.info(`reserving payment of item: ${options.productName}, orderId: ${options.orderId}, amount:${options.amount}...`)
+    console.log(`reserving payment of item: ${options.productName}, orderId: ${options.orderId}, amount:${options.amount}...`)
 
     pay.reserve(options)
         .then((response)=> {
-            logger.info("reserve successfully finish")
+            console.log("reserve successfully finish")
 
             let reservation = options
             reservation.transactionId = response.info.transactionId;
@@ -56,7 +56,7 @@ app.use("/v1/reserve", (req,res) => {
             })
         })
         .catch(error => {
-            logger.error(error)
+            console.log(error)
             res.status(404).json({
                 error: {
                     status: 404,
@@ -68,7 +68,7 @@ app.use("/v1/reserve", (req,res) => {
 
 
 app.get('/v1/confirm', (req, res) => {
-    logger.info(`confirming payment...`)
+    console.log(`confirming payment...`)
     let reservation = cache.get(req.query.transactionId);
 
     let confirmation = {
@@ -79,7 +79,7 @@ app.get('/v1/confirm', (req, res) => {
 
     pay.confirm(confirmation)
         .then((response) => {
-            logger.info(`confirm successfully finish`)
+            console.log(`confirm successfully finish`)
             res.status(200).json({
                 error: "",
                 message: {
@@ -89,7 +89,7 @@ app.get('/v1/confirm', (req, res) => {
             
         })
         .catch((error => {
-            logger.error(error)
+            console.log(error)
             res.status(404).json({
                 error: {
                     status: 404,
@@ -100,4 +100,4 @@ app.get('/v1/confirm', (req, res) => {
 })
 
 
-app.listen(port, () => logger.info(`LinePay server is running on port ${port}`))
+app.listen(port, () => console.log(`LinePay server is running on port ${port}`))
