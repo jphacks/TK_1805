@@ -313,6 +313,20 @@ func (ctr *Controller) LinepayConfirm() func(ctx iris.Context) {
 			return
 		}
 
+		jsonBytes, err := ioutil.ReadAll(resp.Body)
+
+		if err != nil {
+			createInternalServerError(ctx, fmt.Sprintf("Failed to read body of payment request: %v", err.Error()))
+			return
+		}
+
+		var redirectURL string
+
+		if err := json.Unmarshal(jsonBytes, &redirectURL); err != nil {
+			createInternalServerError(ctx, fmt.Sprintf("Failed to parse body of payment request: %v", err.Error()))
+			return
+		}
+
 		ctx.JSON(iris.Map{
 			"error": "",
 			"message": iris.Map{
@@ -320,6 +334,7 @@ func (ctr *Controller) LinepayConfirm() func(ctx iris.Context) {
 			},
 		})
 
+		ctx.Redirect(redirectURL, iris.StatusSeeOther)
 		defer resp.Body.Close()
 	}
 }

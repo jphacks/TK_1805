@@ -80,16 +80,11 @@ app.get('/v1/confirm', (req, res) => {
     pay.confirm(confirmation)
         .then((response) => {
             logger.info(`confirm successfully finish`)
-            res.status(200).json();
+            res.status(200).send(reservation.redirectUrl)
         })
         .catch((error => {
             logger.error(error)
-            res.status(404).json({
-                error: {
-                    status: 404,
-                    message: error
-                }
-            })
+            res.status(404).send()
         }));
 })
 
