@@ -45,9 +45,11 @@ type PaymentError struct {
 // TODO: these should NOT be here
 
 type linePayReserve struct {
-	Amount  int    `json:"amount"`
-	OrderID string `json:"orderId"`
-	Item    string `json:"item"`
+	Amount      int    `json:"amount"`
+	OrderID     string `json:"orderId"`
+	Item        string `json:"item"`
+	RedirectURL string `json:"redirectUrl"`
+	ImageURL    string `json:"imageUrl"`
 }
 
 type LinePayReserveResponse struct {
@@ -60,13 +62,6 @@ type ReserveMessage struct {
 	OrderID    string `json:"orderId"`
 	Item       string `json:"item"`
 	PaymentURL string `json:"paymentURL"`
-}
-
-type linePayConfirm struct {
-	transactionID string
-}
-
-type linePayConfirmResponce struct {
 }
 
 func createBadRequest(ctx iris.Context, message string) {
@@ -318,13 +313,26 @@ func (ctr *Controller) LinepayConfirm() func(ctx iris.Context) {
 			return
 		}
 
-		ctx.JSON(iris.Map{
-			"error": "",
-			"message": iris.Map{
-				"result": "OK",
-			},
-		})
+		jsonBytes, err := ioutil.ReadAll(resp.Body)
 
+		if err != nil {
+			createInternalServerError(ctx, fmt.Sprintf("Failed to read body of payment request: %v", err.Error()))
+			return
+		}
+
+		var redirectURL string
+
+		if err := json.Unmarshal(jsonBytes, &redirectURL); err != nil {
+			createInternalServerError(ctx, fmt.Sprintf("Failed to parse body of payment request: %v", err.Error()))
+			return
+		}
+
+		if redirectURL == "" {
+			createInternalServerError(ctx, "Failed to get redirect URL")
+			return
+		}
+
+		ctx.Redirect(redirectURL, iris.StatusSeeOther)
 		defer resp.Body.Close()
 	}
 }

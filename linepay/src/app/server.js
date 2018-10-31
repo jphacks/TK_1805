@@ -29,7 +29,8 @@ app.use("/v1/reserve", (req,res) => {
         amount: body.amount,
         currency: "JPY",
         confirmUrl: process.env.LINE_PAY_CONFIRM_URL, 
-        orderId: body.orderId
+        orderId: body.orderId,
+        productImageUrl: body.imageUrl || "https://storage.googleapis.com/jphack2018-219415.appspot.com/logo.JPG"
     }
 
     logger.info(`reserving payment of item: ${options.productName}, orderId: ${options.orderId}, amount:${options.amount}...`)
@@ -79,16 +80,11 @@ app.get('/v1/confirm', (req, res) => {
     pay.confirm(confirmation)
         .then((response) => {
             logger.info(`confirm successfully finish`)
-            res.status(200).json();
+            res.status(200).send(reservation.redirectUrl)
         })
         .catch((error => {
             logger.error(error)
-            res.status(404).json({
-                error: {
-                    status: 404,
-                    message: error
-                }
-            })
+            res.status(404).send()
         }));
 })
 
