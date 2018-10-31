@@ -40,21 +40,11 @@ export default class ApplePay extends React.Component<Props> {
     this.props.history.push('/thankyou');
   }
 
-  get paymentMethod() {
-    var userAgent = window.navigator.userAgent.toLowerCase();
-
-    if (userAgent.indexOf('chrome') != -1) {
-      return 'Google Pay';
-    } else {
-      return 'Apple Pay';
-    }
-  }
-
   render() {
     return (
       <Main>
         <Initializer match={this.props.match} />
-        <Header title={this.paymentMethod} history={this.props.history} />
+        <Header title='Apple Pay or Google Pay' history={this.props.history} />
 
         <Amount amount={this.amount} style={{ margin: '0 auto 40px' }} />
 
