@@ -29,7 +29,8 @@ app.use("/v1/reserve", (req,res) => {
         amount: body.amount,
         currency: "JPY",
         confirmUrl: process.env.LINE_PAY_CONFIRM_URL, 
-        orderId: body.orderId
+        orderId: body.orderId,
+        productImageUrl: body.imageUrl || "https://storage.googleapis.com/jphack2018-219415.appspot.com/logo.JPG"
     }
 
     logger.info(`reserving payment of item: ${options.productName}, orderId: ${options.orderId}, amount:${options.amount}...`)

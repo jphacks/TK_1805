@@ -45,9 +45,11 @@ type PaymentError struct {
 // TODO: these should NOT be here
 
 type linePayReserve struct {
-	Amount  int    `json:"amount"`
-	OrderID string `json:"orderId"`
-	Item    string `json:"item"`
+	Amount      int    `json:"amount"`
+	OrderID     string `json:"orderId"`
+	Item        string `json:"item"`
+	RedirectURL string `json:"redirectUrl"`
+	ImageURL    string `json:"imageUrl"`
 }
 
 type LinePayReserveResponse struct {
@@ -60,13 +62,6 @@ type ReserveMessage struct {
 	OrderID    string `json:"orderId"`
 	Item       string `json:"item"`
 	PaymentURL string `json:"paymentURL"`
-}
-
-type linePayConfirm struct {
-	transactionID string
-}
-
-type linePayConfirmResponce struct {
 }
 
 func createBadRequest(ctx iris.Context, message string) {
