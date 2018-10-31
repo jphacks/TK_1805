@@ -5,6 +5,8 @@ import { Order } from '../types/order';
 import Initializer from '../components/Initializer';
 import Header from '../components/Header';
 
+const QRCode = require('qrcode.react');
+
 type Props = {
   itemMap: any,
   orders: Order[],
@@ -45,13 +47,23 @@ export default class Cash extends React.Component<Props> {
     return (
       <main>
         <Initializer match={this.props.match} />
-        <Header title='LINE Pay' history={this.props.history} />
+        <Header title='現金でのお支払い' history={this.props.history} />
 
-        <div style={{ height: 200, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          こちらの画面をスタッフにお見せください。
-          グループID: { this.props.groupId }
-        </div>
+        <Body>
+          こちらの画面をスタッフにお見せください。 <br /> <br />
+
+          <QRCode value={this.props.groupId} size={192} />
+        </Body>
       </main>
     );
   }
 }
+
+const Body = styled.section`
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+`;
