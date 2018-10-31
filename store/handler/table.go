@@ -1,13 +1,12 @@
 package handler
 
 import (
-	"crypto/sha256"
-	"encoding/base64"
 	"fmt"
 	"time"
 
 	"github.com/kataras/golog"
 
+	"github.com/KeisukeYamashita/TK_1805/store/helpers"
 	"github.com/KeisukeYamashita/TK_1805/store/types"
 	"github.com/kataras/iris"
 )
@@ -29,15 +28,7 @@ func (ctr *Controller) CreateGroupId() func(ctx iris.Context) {
 			return
 		}
 
-		now := time.Now()
-		data := fmt.Sprintf("%v-%v", tableID, now)
-		keyByteArray := sha256.Sum256([]byte(data))
-		keyBase := base64.URLEncoding.EncodeToString(keyByteArray[:])
-		group := types.Group{
-			Key:      keyBase,
-			TableKey: tableID,
-			State:    "IN_STORE",
-		}
+		group := helpers.NewGroup(tableID)
 
 		if err := ctr.DB.Create(&group).Error; err != nil {
 			golog.Error(err.Error())
@@ -51,7 +42,7 @@ func (ctr *Controller) CreateGroupId() func(ctx iris.Context) {
 		ctx.JSON(iris.Map{
 			"error": "",
 			"message": iris.Map{
-				"groupId": keyBase,
+				"groupId": group.Key,
 				"state":   "IN_STORE",
 			},
 		})
@@ -61,6 +52,8 @@ func (ctr *Controller) CreateGroupId() func(ctx iris.Context) {
 func (ctr *Controller) GetGroupId() func(ctx iris.Context) {
 	return func(ctx iris.Context) {
 		tableID := ctx.FormValue("tableId")
+
+		// TODO: tableの存在チェック
 
 		if tableID == "" {
 			ctx.StatusCode(iris.StatusBadRequest)
@@ -72,7 +65,7 @@ func (ctr *Controller) GetGroupId() func(ctx iris.Context) {
 
 		group := new(types.Group)
 
-		if err := ctr.DB.First(group, "table_key = ?", tableID).Error; err != nil {
+		if err := ctr.DB.Last(group, "table_key = ?", tableID).Error; err != nil {
 			golog.Error(fmt.Sprintf("DB error in GetGroupId when finding group: %v", err.Error()))
 			ctx.StatusCode(iris.StatusBadRequest)
 			ctx.JSON(iris.Map{

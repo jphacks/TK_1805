@@ -10,15 +10,17 @@ import (
 	"strconv"
 
 	"github.com/KeisukeYamashita/TK_1805/payment/types"
+	"github.com/KeisukeYamashita/TK_1805/store/helpers"
 	"github.com/kataras/golog"
 	"github.com/kataras/iris"
 )
 
 // Payment ...
 type Payment struct {
-	Amount int
-	UserID string
-	Token  string
+	Amount  int
+	UserID  string
+	Token   string
+	TableID string
 }
 
 // PaymentInfo ...
@@ -54,7 +56,7 @@ type linePayReserve struct {
 
 type LinePayReserveResponse struct {
 	Err     interface{}     `json:"error"`
-	Message *ReserveMessage `json:"message"`
+	Message *ReserveMessage `json:"message,omitempty"`
 }
 
 type ReserveMessage struct {
@@ -66,7 +68,7 @@ type ReserveMessage struct {
 
 type LinePayConfirmResponse struct {
 	Err     interface{}     `json:"error"`
-	Message *ConfirmMessage `json:"message"`
+	Message *ConfirmMessage `json:"message, omitempty"`
 }
 
 type ConfirmMessage struct {
@@ -178,6 +180,17 @@ func handleAnonymousUser(ctr *Controller, ctx iris.Context, payment Payment) {
 
 	switch response.StatusCode {
 	case 200:
+		group := helpers.NewGroup(payment.TableID)
+
+		if err := ctr.DB.Create(&group).Error; err != nil {
+			golog.Error(err.Error())
+			ctx.StatusCode(iris.StatusInternalServerError)
+			ctx.JSON(iris.Map{
+				"error": "creation_failed",
+			})
+			return
+		}
+
 		ctx.JSON(iris.Map{
 			"error": "",
 			"message": iris.Map{
@@ -212,6 +225,11 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 
 		if payment.UserID == "" {
 			createBadRequest(ctx, "`userId` should not be empty")
+			return
+		}
+
+		if payment.TableID == "" {
+			createBadRequest(ctx, "`tableId` should not be empty")
 			return
 		}
 

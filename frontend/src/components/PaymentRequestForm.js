@@ -27,6 +27,7 @@ class PaymentRequestForm extends React.Component {
           amount: this.props.amount,
           userID: this.props.uid,
           token: token.id,
+          groupId: this.props.groupId
         }),
         mode: 'cors',
       }).then(response => {
