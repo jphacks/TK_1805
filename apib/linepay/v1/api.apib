@@ -21,13 +21,18 @@ LinePayに登録していればアプリ、モバイル共に簡単に決済を�
         + orderId: u8chcreo5uocc5UQpiueon (string, required) - 決済に対して一意のID
         + amount: 4000 (string, required) - 料金
         + item: ミライザカ駒込 (string, required) - 何に対して決済をするのか。
+        + redirectUrl: http://hogeyama.com/v1/thankyou - 決済が終わった時にリダイレクトされるURL
+        + imageUrl: http://hogeyama.com/image.png - 決済時に表示される画像。デフォルトはOAISOのロゴです。
+             + Default: `https://storage.googleapis.com/jphack2018-219415.appspot.com/logo.JPG`
     
     + Body
 
         {
             "orderId": "u8chcreo5uocc5UQpiueon",
             "amount": 4000,
-            "item": "ミライザカ駒込"
+            "item": "ミライザカ駒込",
+            "redirectUrl": "http://hogeyama.com/v1/thankyou",
+            "imageUrl": "http://hogeyama.com/image.png"
         }
 
 + Responce 200 (application/json)
@@ -49,9 +54,3 @@ LinePayに登録していればアプリ、モバイル共に簡単に決済を�
 ### 決済を承認する [GET]
 
 LINEからアクセスされる用です。
-
-+ Response 200 
-    + Body
-
-        {
-        }
