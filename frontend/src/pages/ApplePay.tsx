@@ -36,33 +36,36 @@ export default class ApplePay extends React.Component<Props> {
   }
 
   onCompletePayment() {
-    console.log('success!');
+    alert('[DEMO] お支払いが完了しました。');
+    this.props.history.push('/thankyou');
+  }
+
+  get paymentMethod() {
+    var userAgent = window.navigator.userAgent.toLowerCase();
+
+    if (userAgent.indexOf('chrome') != -1) {
+      return 'Google Pay';
+    } else {
+      return 'Apple Pay';
+    }
   }
 
   render() {
-    // if (this.amount === 0) {
-    //   return (
-    //     <div>
-    //       ご注文がありません。
-    //     </div>
-    //   );
-    // }
-
     return (
       <Main>
         <Initializer match={this.props.match} />
-        <Header title='Apple Pay' history={this.props.history} />
+        <Header title={this.paymentMethod} history={this.props.history} />
 
         <Amount amount={this.amount} style={{ margin: '0 auto 40px' }} />
 
         <Elements>
           <PaymentRequestForm
             uid={this.props.uid}
-            amount={1234}
+            amount={this.amount}
             onCompletePayment={this.onCompletePayment.bind(this)}
             note={
               <Note>
-                ご利用のデバイス・ブラウザはApple PayとGoogle Payのどちらにも対応しておりません。
+                ご利用のブラウザはApple PayとGoogle Payのどちらにも対応しておりません。
               </Note>
             }
           />

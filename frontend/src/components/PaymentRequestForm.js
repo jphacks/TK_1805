@@ -46,7 +46,6 @@ class PaymentRequestForm extends React.Component {
       });
     });
 
-
     paymentRequest.canMakePayment().then((result) => {
       this.setState({canMakePayment: !!result});
     });
@@ -55,6 +54,15 @@ class PaymentRequestForm extends React.Component {
       canMakePayment: false,
       paymentRequest,
     };
+  }
+
+  componentWillReceiveProps(props) {
+    this.state.paymentRequest.update({
+      total: {
+        label: '[DEMO] OAISOでのお支払い',
+        amount: props.amount,
+      }
+    });
   }
 
   render() {

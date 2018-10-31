@@ -116,7 +116,7 @@ export default class OrderIndex extends React.Component<Props> {
           to={`/tables/${this.props.tableId}/pay/applePay`}
           color='#9B9B9B'
         >
-          Apple Pay
+          Apple Pay or Google Pay
         </StyledLink>
 
         <StyledLink
