@@ -7,6 +7,7 @@ import Header from '../components/Header';
 import PaymentRequestForm from '../components/PaymentRequestForm';
 import { Elements } from 'react-stripe-elements';
 import Amount from '../components/Amount';
+import CreditCardCaution from '../components/CreditCardCaution';
 
 type Props = {
   itemMap: any,
@@ -47,6 +48,8 @@ export default class ApplePay extends React.Component<Props> {
         <Header title='Apple Pay or Google Pay' history={this.props.history} />
 
         <Amount amount={this.amount} style={{ margin: '0 auto 40px' }} />
+
+        <CreditCardCaution style={{ margin: '0 auto 40px' }}/>
 
         <Elements>
           <PaymentRequestForm

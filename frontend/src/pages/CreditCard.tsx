@@ -4,12 +4,9 @@ import styled from 'styled-components';
 import { Order } from '../types/order';
 import Initializer from '../components/Initializer';
 import Header from '../components/Header';
-import stripe from '../config/stripe';
-import { Elements } from 'react-stripe-elements';
-
-import { withRouter } from 'react-router';
 import MyStoreCheckout from '../components/MyStoreCheckout';
 import Amount from '../components/Amount';
+import CreditCardCaution from '../components/CreditCardCaution';
 
 // const HOST_NAME = 'https://ee949b6c.ngrok.io';
 const HOST_NAME = 'http://35.221.123.85:5000';
@@ -63,19 +60,7 @@ export default class CreditCard extends React.Component<Props> {
 
         <Amount amount={this.amount} style={{}} />
 
-        <Caution>
-          こちらはテスト環境の入力画面です。
-          テスト環境では本物のクレジットカードの情報は利用できません。
-          代わりに次の情報をご入力ください。
-
-          <br />
-          <br />
-
-          カード番号: 4242 4242 4242 4242 <br />
-          有効期限: 2038年12月 <br />
-          CVC: 123 <br />
-          郵便番号: 12345 <br />
-        </Caution>
+        <CreditCardCaution style={{}} />
 
         <MyStoreCheckout
           onCompletePayment={this.onCompletePayment.bind(this)}
@@ -92,15 +77,4 @@ const Main = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
-`;
-
-const Caution = styled.div`
-  margin-top: 40px;
-  box-sizing: border-box;
-  padding: 10px;
-  width: 90%;
-  color: #664D22;
-  background-color: #FEFBE7;
-  border: 1px solid #FEF5C7;
-  border-radius: 4px;
 `;
