@@ -30,7 +30,7 @@ type Group struct {
 	TableKey  string
 	Key       string
 	State     string
-	EnteredAt time.Time
+	EnteredAt *time.Time
 }
 
 // User ...

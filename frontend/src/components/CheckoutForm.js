@@ -22,7 +22,7 @@ class CheckoutForm extends React.Component {
         amount: this.props.amount,
         userID: this.props.uid,
         token: token.id,
-        groupId: this.props.groupId,
+        tableId: this.props.tableId,
       }),
       mode: 'cors',
     });
