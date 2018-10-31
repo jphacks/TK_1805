@@ -128,6 +128,8 @@ func handleAnonymousUser(ctr *Controller, ctx iris.Context, payment Payment) {
 	}
 
 	if ctr.DB.First(&user, "name = ?", payment.UserID).RecordNotFound() {
+		golog.Info("Create new customer")
+
 		if err := ctr.DB.Create(&user).Error; err != nil {
 			createBadRequest(ctx, fmt.Sprintf("The request for new users needs a stripe token: %v", err.Error()))
 			return
