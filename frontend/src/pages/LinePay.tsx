@@ -45,6 +45,10 @@ export default class LinePay extends React.Component<Props> {
   }
 
   async componentDidUpdate() {
+    await this.setupPaymentRequest();
+  }
+
+  async setupPaymentRequest() {
     if (this.props.groupId === '' || this.amount=== 0 || this.state.done) {
       return;
     } else {

@@ -52,6 +52,7 @@ type linePayReserve struct {
 	Item        string `json:"item"`
 	RedirectURL string `json:"redirectUrl"`
 	ImageURL    string `json:"imageUrl"`
+	TableID     string `json:"tableId"`
 }
 
 type LinePayReserveResponse struct {
@@ -296,6 +297,14 @@ func (ctr *Controller) LinepayReserve() func(ctx iris.Context) {
 
 		if err := json.Unmarshal(jsonBytes, reserveResp); err != nil {
 			createInternalServerError(ctx, fmt.Sprintf("Failed to parse body of payment request: %v", err.Error()))
+			return
+		}
+
+		// TODO: LINE Pay決済をキャンセルしても新しいグループを作ってしまう
+		group := helpers.NewGroup(reservation.TableID)
+
+		if err := ctr.DB.Create(&group).Error; err != nil {
+			createInternalServerError(ctx, fmt.Sprintf("Failed to create new group: %v", err.Error()))
 			return
 		}
 
