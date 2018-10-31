@@ -47,14 +47,16 @@ type PaymentError struct {
 // TODO: these should NOT be here
 
 type linePayReserve struct {
-	Amount  int    `json:"amount"`
-	OrderID string `json:"orderId"`
-	Item    string `json:"item"`
+	Amount      int    `json:"amount"`
+	OrderID     string `json:"orderId"`
+	Item        string `json:"item"`
+	RedirectURL string `json:"redirectUrl"`
+	ImageURL    string `json:"imageUrl"`
 }
 
 type LinePayReserveResponse struct {
 	Err     interface{}     `json:"error"`
-	Message *ReserveMessage `json:"message"`
+	Message *ReserveMessage `json:"message,omitempty"`
 }
 
 type ReserveMessage struct {
@@ -64,11 +66,13 @@ type ReserveMessage struct {
 	PaymentURL string `json:"paymentURL"`
 }
 
-type linePayConfirm struct {
-	transactionID string
+type LinePayConfirmResponse struct {
+	Err     interface{}     `json:"error"`
+	Message *ConfirmMessage `json:"message, omitempty"`
 }
 
-type linePayConfirmResponce struct {
+type ConfirmMessage struct {
+	RedirectURL string `json:"redirectUrl"`
 }
 
 func createBadRequest(ctx iris.Context, message string) {
@@ -336,13 +340,21 @@ func (ctr *Controller) LinepayConfirm() func(ctx iris.Context) {
 			return
 		}
 
-		ctx.JSON(iris.Map{
-			"error": "",
-			"message": iris.Map{
-				"result": "OK",
-			},
-		})
+		jsonBytes, err := ioutil.ReadAll(resp.Body)
 
+		if err != nil {
+			createInternalServerError(ctx, fmt.Sprintf("Failed to read body of payment request: %v", err.Error()))
+			return
+		}
+
+		confirmResponse := new(LinePayConfirmResponse)
+
+		if err := json.Unmarshal(jsonBytes, &confirmResponse); err != nil {
+			createInternalServerError(ctx, fmt.Sprintf("Failed to parse body of payment request: %v", err.Error()))
+			return
+		}
+
+		ctx.Redirect(confirmResponse.Message.RedirectURL, iris.StatusSeeOther)
 		defer resp.Body.Close()
 	}
 }
