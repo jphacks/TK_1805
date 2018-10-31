@@ -13,7 +13,7 @@ type Props = {
   itemMap: any,
   orders: Order[],
   uid: string,
-  groupId: string,
+  tableId: string,
   match: any,
   history: any,
 };
@@ -22,7 +22,7 @@ type Props = {
   itemMap: store.itemMap,
   orders: order.orders,
   uid: order.uid,
-  groupId: store.groupId,
+  tableId: store.tableId,
 }))
 @observer
 export default class ApplePay extends React.Component<Props> {
@@ -57,7 +57,7 @@ export default class ApplePay extends React.Component<Props> {
           <PaymentRequestForm
             uid={this.props.uid}
             amount={this.amount}
-            groupId={this.props.groupId}
+            tableId={this.props.tableId}
             onCompletePayment={this.onCompletePayment.bind(this)}
             note={
               <Note>
