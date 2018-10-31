@@ -36,5 +36,8 @@ func NewIrisApp(db *gorm.DB, debugMode bool, host string, port int) *iris.Applic
 	api.Get("/store", ctr.CreateGroupId())
 	api.Post("/payment", ctr.ExecutePayment())
 
+	api.Post("/linepay/reserve", ctr.LinepayReserve())
+	api.Get("/linepay/confirm", ctr.LinepayConfirm())
+
 	return app
 }

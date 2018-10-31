@@ -120,6 +120,20 @@ func (ctr *Controller) ExecPayment() func(ctx iris.Context) {
 				return
 			}
 
+			if err := ctr.DB.Where("name = ?", userID).First(user); err != nil {
+				golog.Error(fmt.Sprintf("error while finding customer with name field: err: %v, userID:%v", err.Error(), userID))
+				ctx.StatusCode(iris.StatusInternalServerError)
+				ctx.JSON(iris.Map{
+					"error": iris.Map{
+						"statusCode": iris.StatusInternalServerError,
+						"message":    err.Error(),
+					},
+				})
+				return
+			}
+
+			golog.Info("Finding user succeeded")
+
 			if err := ctr.DB.Model(user).Update("stripe_customer_id", cus.ID); err != nil {
 				ctx.StatusCode(iris.StatusInternalServerError)
 				ctx.JSON(iris.Map{
