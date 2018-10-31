@@ -75,7 +75,8 @@ func (ctr *Controller) GetGroupId() func(ctx iris.Context) {
 		}
 
 		if group.EnteredAt.IsZero() {
-			group.EnteredAt = time.Now()
+			enteredAt := time.Now()
+			group.EnteredAt = &enteredAt
 
 			ctr.DB.Save(&group)
 		}
