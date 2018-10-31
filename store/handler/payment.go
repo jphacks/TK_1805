@@ -64,6 +64,15 @@ type ReserveMessage struct {
 	PaymentURL string `json:"paymentURL"`
 }
 
+type LinePayConfirmResponse struct {
+	Err     interface{}     `json:"error"`
+	Message *ConfirmMessage `json:"message"`
+}
+
+type ConfirmMessage struct {
+	RedirectURL string `json:"redirectUrl"`
+}
+
 func createBadRequest(ctx iris.Context, message string) {
 	golog.Warn(message)
 
@@ -320,19 +329,19 @@ func (ctr *Controller) LinepayConfirm() func(ctx iris.Context) {
 			return
 		}
 
-		var redirectURL string
+		confirmResponse := new(LinePayConfirmResponse)
 
-		if err := json.Unmarshal(jsonBytes, &redirectURL); err != nil {
+		if err := json.Unmarshal(jsonBytes, &confirmResponse); err != nil {
 			createInternalServerError(ctx, fmt.Sprintf("Failed to parse body of payment request: %v", err.Error()))
 			return
 		}
 
-		if redirectURL == "" {
+		if confirmResponse.Err != nil {
 			createInternalServerError(ctx, "Failed to get redirect URL")
 			return
 		}
 
-		ctx.Redirect(redirectURL, iris.StatusSeeOther)
+		ctx.Redirect(confirmResponse.Message.RedirectURL, iris.StatusSeeOther)
 		defer resp.Body.Close()
 	}
 }
