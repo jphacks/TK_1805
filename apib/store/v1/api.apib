@@ -147,3 +147,59 @@ NOTE: ハッカソン中はデータベースに直箸で入れてしまえば�
 ### カテゴリーを追加する [POST]
 
 NOTE: 同上
+
+# Group LinePay
+
+ここでは以下のような流れである。
+
+```
+Frontend -> Store API -> LINEPAY API(OAISO) -> LINE PAY API(LINE社) -> Store API -> LINE PAY API(LINE社) -> LFrontend
+```
+
+## 予約 [/v1/linepay/reserve]
+### 予約を作成する [POST]
+
+TODO: Example入力
+
++ Request
+
+    + Body (application/json)
+
+        {
+            "amount":
+            "item": 
+            "orderID":
+        }
+        
++ Response
+
+    + Body 
+
+        {
+            "error": "",
+            "message": {
+                "paymentURL": 
+                "amount":
+                "item": 
+                "orderID":
+            }
+        }
+
+
+## 承認 [/v1/linepay/confirm]
+### 承認をする [GET]
+
+LinePayの決済承認機能を提供する。LinePayAPI(LINE社)からアクセスを受け付ける)
+
+TODO: この機能は本来は切り離すべき。
+
++ Response
+    
+    + Body (application/json)
+
+        {
+            "error": "",
+            "message": {
+                "groupId": "UTHER4TwQEYJERUEwHNhrxjo"
+            }
+        }
