@@ -4,7 +4,7 @@
 
 [![OAISO](docs/eyecatch.jpg)](https://youtu.be/jpBS05EFd7Y)
 
-[**Youtubeへのリンク**](https://youtu.be/jpBS05EFd7Y)
+[**Youtubeへのリンク**](https://www.youtube.com/watch?v=-KmAj45PNaA&feature=youtu.be)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
