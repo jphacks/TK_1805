@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -8,7 +9,7 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/KeisukeYamashita/TK_1805/store/types"
+	"github.com/KeisukeYamashita/TK_1805/payment/types"
 	"github.com/kataras/golog"
 	"github.com/kataras/iris"
 )
@@ -39,6 +40,33 @@ type Message struct {
 type PaymentError struct {
 	StatusCode int    `json:"statusCode"`
 	Message    string `json:"message"`
+}
+
+// TODO: these should NOT be here
+
+type linePayReserve struct {
+	Amount  int    `json:"amount"`
+	OrderID string `json:"orderId"`
+	Item    string `json:"item"`
+}
+
+type LinePayReserveResponse struct {
+	Err     interface{}     `json:"error"`
+	Message *ReserveMessage `json:"message"`
+}
+
+type ReserveMessage struct {
+	Amount     int    `json:"amount"`
+	OrderID    string `json:"orderId"`
+	Item       string `json:"item"`
+	PaymentURL string `json:"paymentURL"`
+}
+
+type linePayConfirm struct {
+	transactionID string
+}
+
+type linePayConfirmResponce struct {
 }
 
 func createBadRequest(ctx iris.Context, message string) {
@@ -127,9 +155,11 @@ func handleAnonymousUser(ctr *Controller, ctx iris.Context, payment Payment) {
 		Name: payment.UserID,
 	}
 
-	if err := ctr.DB.Create(&user).Error; err != nil {
-		createBadRequest(ctx, fmt.Sprintf("The request for new users needs a stripe token: %v", err.Error()))
-		return
+	if ctr.DB.First(&user, "name = ?", payment.UserID).RecordNotFound() {
+		if err := ctr.DB.Create(&user).Error; err != nil {
+			createBadRequest(ctx, fmt.Sprintf("The request for new users needs a stripe token: %v", err.Error()))
+			return
+		}
 	}
 
 	paymentURL := fmt.Sprintf("%v:%v/v1/payment?stripeToken=%v&amount=%v&userID=%v", ctr.PaymentHost, ctr.PaymentPort, payment.Token, payment.Amount, payment.UserID)
@@ -165,7 +195,7 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 		var payment Payment
 
 		if err := ctx.ReadJSON(&payment); err != nil {
-			createBadRequest(ctx, fmt.Sprintf("Faield to parse: %v", err.Error()))
+			createBadRequest(ctx, fmt.Sprintf("Failed to parse: %v", err.Error()))
 			return
 		}
 
@@ -184,5 +214,123 @@ func (ctr *Controller) ExecutePayment() func(ctx iris.Context) {
 		} else {
 			handleAnonymousUser(ctr, ctx, payment)
 		}
+	}
+}
+
+// LinepayReserve ...
+func (ctr *Controller) LinepayReserve() func(ctx iris.Context) {
+	return func(ctx iris.Context) {
+		golog.Info("CALLED: LinepayReserve")
+
+		// TODO: Duplicated stuff with LinepayConfirm
+
+		linepaymentURL := "http://linepay:6789/v1/reserve"
+
+		reservation := new(linePayReserve)
+
+		if err := ctx.ReadJSON(reservation); err != nil {
+			createBadRequest(ctx, fmt.Sprintf("Failed to parse: %v", err.Error()))
+			return
+		}
+
+		jsonBody, err := json.Marshal(reservation)
+
+		if err != nil {
+			createBadRequest(ctx, fmt.Sprintf("Failed to marshal: %v", err.Error()))
+			return
+		}
+
+		req, err := http.NewRequest("POST", linepaymentURL, bytes.NewBuffer(jsonBody))
+
+		if err != nil {
+			createBadRequest(ctx, fmt.Sprintf("Failed to create new request: %v", err.Error()))
+			return
+		}
+
+		req.Header.Set("Content-Type", "application/json")
+
+		golog.Info("requesting linepayAPI server...")
+
+		client := &http.Client{}
+		resp, err := client.Do(req)
+
+		if err != nil {
+			createBadRequest(ctx, fmt.Sprintf("Failed to request for linepay reserve: %s", err))
+			return
+		}
+
+		jsonBytes, err := ioutil.ReadAll(resp.Body)
+
+		if err != nil {
+			createInternalServerError(ctx, fmt.Sprintf("Failed to read body of payment request: %v", err.Error()))
+			return
+		}
+
+		reserveResp := new(LinePayReserveResponse)
+
+		if err := json.Unmarshal(jsonBytes, reserveResp); err != nil {
+			createInternalServerError(ctx, fmt.Sprintf("Failed to parse body of payment request: %v", err.Error()))
+			return
+		}
+
+		ctx.JSON(reserveResp)
+
+		defer resp.Body.Close()
+	}
+}
+
+// LinepayConfirm ...
+func (ctr *Controller) LinepayConfirm() func(ctx iris.Context) {
+	return func(ctx iris.Context) {
+		golog.Info("CALLED: LinepayConfirm")
+
+		linepaymentURL := "http://linepay:6789/v1/confirm"
+
+		confirmation := new(linePayConfirm)
+
+		if err := ctx.ReadJSON(confirmation); err != nil {
+			createBadRequest(ctx, fmt.Sprintf("Failed to parse: %v", err.Error()))
+			return
+		}
+
+		jsonBody, err := json.Marshal(confirmation)
+
+		if err != nil {
+			createBadRequest(ctx, fmt.Sprintf("Failed to marshal: %v", err.Error()))
+			return
+		}
+
+		req, err := http.NewRequest("GET", linepaymentURL, bytes.NewBuffer(jsonBody))
+
+		if err != nil {
+			createBadRequest(ctx, fmt.Sprintf("Failed to parse: %v", err.Error()))
+			return
+		}
+
+		req.Header.Set("Content-Type", "application/json")
+
+		golog.Info("requesting linepayAPI server...")
+
+		client := &http.Client{}
+		resp, err := client.Do(req)
+
+		if err != nil {
+			createBadRequest(ctx, fmt.Sprintf("Failed to parse: %v", err.Error()))
+			return
+		}
+
+		if resp.StatusCode != 200 {
+			createBadRequest(ctx, fmt.Sprintf("status code not 200: statusCode: %v", resp.StatusCode))
+			return
+		}
+
+		ctx.JSON(iris.Map{
+			"error": "",
+			"message": iris.Map{
+				"result": "OK",
+			},
+		})
+
+		defer resp.Body.Close()
 	}
 }

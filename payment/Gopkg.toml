@@ -56,3 +56,7 @@
 [[constraint]]
   name = "github.com/snikch/goodman"
   version = "0.3.1"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/kataras/golog"

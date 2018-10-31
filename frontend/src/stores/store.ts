@@ -4,10 +4,9 @@ import { Category } from '../types/category';
 import firebase from '../config/firebase';
 import { arrayFromSnapshot } from '../lib/firestore';
 import { DateTime } from 'luxon';
+import { STORE_API_URL_BASE } from '../config/api';
 
 const db = firebase.firestore();
-
-const URL_BASE = 'http://localhost:8880/v1';
 
 export class BadRequestError extends Error {
 }
@@ -44,7 +43,7 @@ class Store {
 
     this.tableId = tableId;
 
-    const response = await fetch(`${URL_BASE}/store/groups?tableId=${tableId}`, {
+    const response = await fetch(`${STORE_API_URL_BASE}/store/groups?tableId=${tableId}`, {
       method: 'GET',
       mode: 'cors',
     });

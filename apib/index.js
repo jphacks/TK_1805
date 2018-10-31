@@ -14,6 +14,7 @@ app.get('/', [auth, (req, res) => res.send(`
         <li><a href="/payment">Payment API</a></li>
         <li><a href="/store">Store API</a></li>
         <li><a href="/frontend">Frontend API</a></li>
+        <li><a href="/linepay">Linepay API</a></li>
     </ul>
 `)]);
 
@@ -29,5 +30,8 @@ app.get('/frontend', [auth, (req, res) => {
     res.sendFile(path.join(__dirname, 'frontend', 'v1', 'api.html'));
 }]);
 
+app.get('/linepay', [auth, (req, res) => {
+    res.sendFile(path.join(__dirname, 'linepay', 'v1', 'api.html'));
+}]);
 
 app.listen(port, () => console.log(`Express app listening on port ${port}!`));
