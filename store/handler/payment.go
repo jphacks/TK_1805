@@ -336,11 +336,6 @@ func (ctr *Controller) LinepayConfirm() func(ctx iris.Context) {
 			return
 		}
 
-		if confirmResponse.Err != nil {
-			createInternalServerError(ctx, "Failed to get redirect URL")
-			return
-		}
-
 		ctx.Redirect(confirmResponse.Message.RedirectURL, iris.StatusSeeOther)
 		defer resp.Body.Close()
 	}
