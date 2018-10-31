@@ -25,4 +25,4 @@ steps:
   - 'delete'
   - 'pod'
   - -l
-  - app.kubernetes.io/instance=$_SERVICEDIR_NAME
+  - app=$_SERVICEDIR_NAME

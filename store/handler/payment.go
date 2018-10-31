@@ -285,24 +285,16 @@ func (ctr *Controller) LinepayReserve() func(ctx iris.Context) {
 func (ctr *Controller) LinepayConfirm() func(ctx iris.Context) {
 	return func(ctx iris.Context) {
 		golog.Info("CALLED: LinepayConfirm")
+		transactionID := ctx.FormValue("transactionId")
 
-		linepaymentURL := "http://linepay:6789/v1/confirm"
-
-		confirmation := new(linePayConfirm)
-
-		if err := ctx.ReadJSON(confirmation); err != nil {
-			createBadRequest(ctx, fmt.Sprintf("Failed to parse: %v", err.Error()))
+		if transactionID == "" {
+			createBadRequest(ctx, "faild to get transactionId")
 			return
 		}
 
-		jsonBody, err := json.Marshal(confirmation)
+		linepaymentURL := "http://linepay:6789/v1/confirm?transactionId=" + transactionID
 
-		if err != nil {
-			createBadRequest(ctx, fmt.Sprintf("Failed to marshal: %v", err.Error()))
-			return
-		}
-
-		req, err := http.NewRequest("GET", linepaymentURL, bytes.NewBuffer(jsonBody))
+		req, err := http.NewRequest("GET", linepaymentURL, bytes.NewBuffer(nil))
 
 		if err != nil {
 			createBadRequest(ctx, fmt.Sprintf("Failed to parse: %v", err.Error()))
