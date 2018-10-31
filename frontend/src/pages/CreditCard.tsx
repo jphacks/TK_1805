@@ -9,6 +9,7 @@ import { Elements } from 'react-stripe-elements';
 
 import { withRouter } from 'react-router';
 import MyStoreCheckout from '../components/MyStoreCheckout';
+import Amount from '../components/Amount';
 
 // const HOST_NAME = 'https://ee949b6c.ngrok.io';
 const HOST_NAME = 'http://35.221.123.85:5000';
@@ -48,16 +49,19 @@ export default class CreditCard extends React.Component<Props> {
     }, 0);
   }
 
+  onCompletePayment() {
+    this.props.history.push('/thankyou');
+
+    // reset group id
+  }
+
   render() {
     return (
       <Main>
         <Initializer match={this.props.match} />
         <Header title='クレジットカード' history={this.props.history} />
 
-        <Amount>
-          <p>小計</p>
-          <p>{ this.amount }円</p>
-        </Amount>
+        <Amount amount={this.amount} style={{}} />
 
         <Caution>
           こちらはテスト環境の入力画面です。
@@ -74,7 +78,7 @@ export default class CreditCard extends React.Component<Props> {
         </Caution>
 
         <MyStoreCheckout
-          history={this.props.history}
+          onCompletePayment={this.onCompletePayment.bind(this)}
           uid={this.props.uid}
           amount={this.amount}
         />
@@ -88,22 +92,6 @@ const Main = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
-`;
-
-const Amount = styled.div`
-  display: flex;
-  justify-content: space-between;
-  box-sizing: border-box;
-  width: 90%;
-  padding: 10px;
-  border: 1px solid lightgrey;
-  border-radius: 4px;
-  color: grey;
-  font-weight: bold;
-
-  & > p {
-    margin: 0;
-  }
 `;
 
 const Caution = styled.div`

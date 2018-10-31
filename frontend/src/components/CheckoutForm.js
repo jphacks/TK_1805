@@ -34,7 +34,7 @@ class CheckoutForm extends React.Component {
         alert('[DEMO] 有効なカード情報が入力されておらず、決済に失敗しました。');
       } else {
         alert('[DEMO] 決済に成功しました。またのご来店をお待ちしております。');
-        this.props.history.push('/thankyou');
+        this.props.onCompletePayment();
       }
     } catch (e) {
       alert('[DEMO] サーバーに問題が発生し決済に失敗しました。')
