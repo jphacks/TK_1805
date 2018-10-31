@@ -55,7 +55,7 @@ export default class LinePay extends React.Component<Props> {
       const response = await fetch(`${STORE_API_URL_BASE}/linepay/reserve`, {
         method: 'POST',
         body: JSON.stringify({
-          orderId: this.props.groupId,
+          orderId: this.props.groupId + Math.random().toString(36).slice(-8),
           amount: this.amount,
           item: `[OAISO] ${this.props.storeName}でのお支払い`,
           redirectUrl: 'https://oaiso.tk/thankyou',
