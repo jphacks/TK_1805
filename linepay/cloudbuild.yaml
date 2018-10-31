@@ -4,7 +4,7 @@ steps:
   - kms
   - decrypt
   - --ciphertext-file=$_SERVICEDIR_NAME/.env.enc
-  - --plaintext-file=$_SERVICEDIR_NAME/.enw
+  - --plaintext-file=$_SERVICEDIR_NAME/.env
   - --location=global
   - --keyring=$_KEY_RING
   - --key=$_KEY
