@@ -283,6 +283,8 @@ func (ctr *Controller) LinepayReserve() func(ctx iris.Context) {
 			return
 		}
 
+		golog.Info("request linepayAPI success")
+
 		jsonBytes, err := ioutil.ReadAll(resp.Body)
 
 		if err != nil {
@@ -325,7 +327,7 @@ func (ctr *Controller) LinepayConfirm() func(ctx iris.Context) {
 
 		req.Header.Set("Content-Type", "application/json")
 
-		golog.Info("requesting linepayAPI server...")
+		golog.Info("confirming linepayAPI server...")
 
 		client := &http.Client{}
 		resp, err := client.Do(req)
@@ -339,6 +341,8 @@ func (ctr *Controller) LinepayConfirm() func(ctx iris.Context) {
 			createBadRequest(ctx, fmt.Sprintf("status code not 200: statusCode: %v", resp.StatusCode))
 			return
 		}
+
+		golog.Info("confirmed linepayAPI successfully")
 
 		jsonBytes, err := ioutil.ReadAll(resp.Body)
 
