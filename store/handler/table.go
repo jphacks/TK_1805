@@ -74,7 +74,7 @@ func (ctr *Controller) GetGroupId() func(ctx iris.Context) {
 			return
 		}
 
-		if group.EnteredAt.IsZero() {
+		if group.EnteredAt == nil {
 			enteredAt := time.Now()
 			group.EnteredAt = &enteredAt
 
