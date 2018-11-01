@@ -11,6 +11,7 @@ type Props = {
   itemMap: any,
   orders: Order[],
   groupId: string,
+  tableId: string,
   storeName: string,
   uid: string,
   match: any,
@@ -21,6 +22,7 @@ type Props = {
   itemMap: store.itemMap,
   orders: order.orders,
   uid: order.uid,
+  tableId: store.tableId,
   groupId: store.groupId,
   storeName: store.name,
 }))
@@ -44,6 +46,10 @@ export default class LinePay extends React.Component<Props> {
     }, 0);
   }
 
+  async componentDidMount() {
+    await this.setupPaymentRequest();
+  }
+
   async componentDidUpdate() {
     await this.setupPaymentRequest();
   }
@@ -59,6 +65,7 @@ export default class LinePay extends React.Component<Props> {
       const response = await fetch(`${STORE_API_URL_BASE}/linepay/reserve`, {
         method: 'POST',
         body: JSON.stringify({
+          tableId: this.props.tableId,
           orderId: this.props.groupId + Math.random().toString(36).slice(-8),
           amount: this.amount,
           item: `[OAISO] ${this.props.storeName}でのお支払い`,
@@ -89,7 +96,7 @@ export default class LinePay extends React.Component<Props> {
 
         <Amount amount={this.amount} style={{ marginBottom: 20 }} />
 
-        { this.props.orders.length === 0
+        { this.props.orders.slice().length === 0
         ?
           <Description>
             まだ注文がありません。
