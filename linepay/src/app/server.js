@@ -49,7 +49,7 @@ app.use("/v1/reserve", (req,res) => {
             res.status(200).json({
                 error: "",
                 message: {
-                    paymentURL: response.info.paymentUrl.app,
+                    paymentURL: response.info.paymentUrl.web,
                     amount: options.amount,
                     orderId: options.orderId,
                     item: options.productName
