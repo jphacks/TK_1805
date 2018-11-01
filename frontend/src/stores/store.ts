@@ -101,13 +101,12 @@ class Store {
         const { photo } = this.items[i];
         const key = `items/${photo.filename}`;
 
-        storageRef.child(key).getDownloadURL().then(url => {
-          this.items[i].photo.url = url;
-          prefetch(url);
-          // this.items[i] = { ...this.items[i], photo: { ...photo, url } };
-          // this.items[i] = extendObservable(this.items[i], { photo: { ...photo, url } })
-          // this.items[i] = Object.assign(this.items[i], { photo: { ...photo, url } });
-        });
+        setTimeout(() => {
+          storageRef.child(key).getDownloadURL().then(url => {
+            this.items[i].photo.url = url;
+            prefetch(url);
+          });
+        }, 3000);
       }
     });
 
