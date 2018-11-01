@@ -1,7 +1,7 @@
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, extendObservable } from 'mobx';
 import { Item } from '../types/item';
 import { Category } from '../types/category';
-import firebase from '../config/firebase';
+import firebase, { storage } from '../config/firebase';
 import { arrayFromSnapshot } from '../lib/firestore';
 import { DateTime } from 'luxon';
 import { STORE_API_URL_BASE } from '../config/api';
@@ -37,7 +37,7 @@ class Store {
   }
 
   @action.bound
-  async init(tableId: string) {
+  async init(tableId: string, prefetch: any) {
     if (this.initialized) { return; }
     if (!tableId) { throw 'ERROR: tableId is not defined!' }
 
@@ -78,12 +78,36 @@ class Store {
       }
     });
 
+    const storageRef = storage.ref();
+
     db.collection(`stores/${this.storeId}/categories`).orderBy('precedence').get().then(snapshot => {
       this.categories = arrayFromSnapshot(snapshot);
+
+      for (let i = 0; i < this.categories.length; i++) {
+        const { photo } = this.categories[i];
+        const key = `categories/${photo.filename}`;
+
+        storageRef.child(key).getDownloadURL().then(url => {
+          this.categories[i].photo.url = url;
+          prefetch(url);
+        });
+      }
     });
 
     db.collection(`stores/${this.storeId}/items`).get().then(snapshot => {
       this.items = arrayFromSnapshot(snapshot);
+
+      for (let i = 0; i < this.items.length; i++) {
+        const { photo } = this.items[i];
+        const key = `items/${photo.filename}`;
+
+        setTimeout(() => {
+          storageRef.child(key).getDownloadURL().then(url => {
+            this.items[i].photo.url = url;
+            prefetch(url);
+          });
+        }, 3000);
+      }
     });
 
     console.debug('Initialized Store!');

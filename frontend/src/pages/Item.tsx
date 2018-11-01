@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { toJS } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import FireStorageImage from '../components/FireStorageImage';
 import { Item } from '../types/item';
@@ -35,7 +36,7 @@ export default class ItemPage extends React.Component<Props> {
   }
 
   get inboxItem() {
-    return this.props.inbox.find(o => o.itemId === this.itemId);
+    return this.props.inbox.slice().find(o => o.itemId === this.itemId);
   }
 
   get itemId() {
@@ -43,7 +44,7 @@ export default class ItemPage extends React.Component<Props> {
   }
 
   get item() {
-    return this.props.items.find(item => item.id === this.itemId);
+    return this.props.items.slice().find(item => item.id === this.itemId);
   }
 
   get totalPrice() {
@@ -67,8 +68,8 @@ export default class ItemPage extends React.Component<Props> {
     return (
       <Container>
         <Initializer match={this.props.match} />
-        
-        <FireStorageImage type="item" photo={this.item.photo} style={styles.img} />
+
+        <img src={this.item.photo.url} style={styles.img} />
 
         <CloseButton onClick={ () => this.props.history.goBack() }>
           <FontAwesomeIcon icon='times' />

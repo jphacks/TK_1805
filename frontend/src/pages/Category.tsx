@@ -28,7 +28,7 @@ type Props = {
 @observer
 export default class CategoryPage extends React.Component<Props> {
   get category() {
-    return this.props.categories.find(category => category.id === this.categoryId);
+    return this.props.categories.slice().find(category => category.id === this.categoryId);
   }
 
   get categoryId() {
@@ -36,18 +36,18 @@ export default class CategoryPage extends React.Component<Props> {
   }
 
   get items() {
-    return this.props.items.filter(item => item.categoryId === this.categoryId);
+    return this.props.items.slice().filter(item => item.categoryId === this.categoryId);
   }
 
   get itemToCountMap() {
-    return this.props.inbox.reduce((hash, order) => {
+    return this.props.inbox.slice().reduce((hash, order) => {
       hash[order.itemId] = order.count;
       return hash;
     }, {});
   }
 
   render() {
-    const items = this.items.map(item => (
+    const items = this.items.slice().map(item => (
       <ItemPanel
         key={item.id}
         tableId={this.props.tableId}
@@ -78,7 +78,7 @@ export default class CategoryPage extends React.Component<Props> {
 const ItemPanel = ({ tableId, item, count, style }) => (
   <Link to={`/tables/${tableId}/items/${item.id}`} style={style.a} >
     <PanelContainer>
-      <FireStorageImage type='item' photo={item.photo} style={style.img}/>
+      <img src={item.photo.url} style={style.img} />
       <OverlayLabel>{ item.name }</OverlayLabel>
       { count &&
         <CountLabel><p>{ count }</p></CountLabel>
