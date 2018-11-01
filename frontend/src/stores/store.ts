@@ -37,7 +37,7 @@ class Store {
   }
 
   @action.bound
-  async init(tableId: string) {
+  async init(tableId: string, prefetch: any) {
     if (this.initialized) { return; }
     if (!tableId) { throw 'ERROR: tableId is not defined!' }
 
@@ -89,7 +89,7 @@ class Store {
 
         storageRef.child(key).getDownloadURL().then(url => {
           this.categories[i].photo.url = url;
-          fetch(url, { mode: 'no-cors' });
+          prefetch(url);
         });
       }
     });
@@ -103,7 +103,7 @@ class Store {
 
         storageRef.child(key).getDownloadURL().then(url => {
           this.items[i].photo.url = url;
-          fetch(url, { mode: 'no-cors' });
+          prefetch(url);
           // this.items[i] = { ...this.items[i], photo: { ...photo, url } };
           // this.items[i] = extendObservable(this.items[i], { photo: { ...photo, url } })
           // this.items[i] = Object.assign(this.items[i], { photo: { ...photo, url } });

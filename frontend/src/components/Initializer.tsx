@@ -26,7 +26,15 @@ export default class Initializer extends React.Component<Props> {
     super(props);
 
     if (this.props.initStore) {
-      this.props.initStore(this.props.match.params.tableId).then(() => {}).catch(e => {
+      this.props.initStore(this.props.match.params.tableId, (url) => {
+        let link = document.createElement('link');
+        link.href = url;
+        link.rel = 'prefetch';
+        link.as = 'image';
+        if (document.head) {
+          document.head.appendChild(link);
+        }
+      }).then(() => {}).catch(e => {
         console.error(e.message);
         toast.error(`${e.message}\nトップページに移動します。`);
 
