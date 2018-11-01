@@ -28,7 +28,7 @@ app.use("/v1/reserve", (req,res) => {
         productName: body.item,
         amount: body.amount,
         currency: "JPY",
-        confirmUrl: process.env.LINE_PAY_CONFIRM_URL, 
+        confirmUrl: process.env.LINE_PAY_CONFIRM_URL,
         orderId: body.orderId,
         productImageUrl: body.imageUrl || "https://storage.googleapis.com/jphack2018-219415.appspot.com/logo.JPG"
     }
@@ -43,6 +43,7 @@ app.use("/v1/reserve", (req,res) => {
             reservation.transactionId = response.info.transactionId;
             reservation.redirectUrl =  body.redirectUrl
 
+            cache.put(`${reservation.transactionId}-table_id`, body.tableId);
             cache.put(reservation.transactionId, reservation);
 
             res.status(200).json({
@@ -70,6 +71,7 @@ app.use("/v1/reserve", (req,res) => {
 app.get('/v1/confirm', (req, res) => {
     console.log(`confirming payment...`)
     let reservation = cache.get(req.query.transactionId);
+    let tableId = cache.get(`${req.query.transactionId}-table_id`);
 
     let confirmation = {
         transactionId: req.query.transactionId,
@@ -83,10 +85,11 @@ app.get('/v1/confirm', (req, res) => {
             res.status(200).json({
                 error: "",
                 message: {
-                    redirectUrl: reservation.redirectUrl
+                    redirectUrl: reservation.redirectUrl,
+                    tableId: tableId,
                 }
             })
-            
+
         })
         .catch((error => {
             console.log(error)

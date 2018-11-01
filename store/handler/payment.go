@@ -74,6 +74,7 @@ type LinePayConfirmResponse struct {
 
 type ConfirmMessage struct {
 	RedirectURL string `json:"redirectUrl"`
+	TableID     string `json:"tableId"`
 }
 
 func createBadRequest(ctx iris.Context, message string) {
@@ -300,14 +301,6 @@ func (ctr *Controller) LinepayReserve() func(ctx iris.Context) {
 			return
 		}
 
-		// TODO: LINE Pay決済をキャンセルしても新しいグループを作ってしまう
-		group := helpers.NewGroup(reservation.TableID)
-
-		if err := ctr.DB.Create(&group).Error; err != nil {
-			createInternalServerError(ctx, fmt.Sprintf("Failed to create new group: %v", err.Error()))
-			return
-		}
-
 		ctx.JSON(reserveResp)
 
 		defer resp.Body.Close()
@@ -364,6 +357,13 @@ func (ctr *Controller) LinepayConfirm() func(ctx iris.Context) {
 
 		if err := json.Unmarshal(jsonBytes, &confirmResponse); err != nil {
 			createInternalServerError(ctx, fmt.Sprintf("Failed to parse body of payment request: %v", err.Error()))
+			return
+		}
+
+		group := helpers.NewGroup(confirmResponse.Message.TableID)
+
+		if err := ctr.DB.Create(&group).Error; err != nil {
+			createInternalServerError(ctx, fmt.Sprintf("Failed to create new group: %v", err.Error()))
 			return
 		}
 
