@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { toJS } from 'mobx';
 import { observer, inject } from 'mobx-react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -25,6 +26,7 @@ type Props = {
 @observer
 export default class Top extends React.Component<Props> {
   render() {
+    console.log(toJS(this.props.categories));
     const items = this.props.categories.slice().map(category => (
       <CategoryPanel key={category.id} tableId={this.props.tableId} category={category} />
     ));
@@ -79,7 +81,7 @@ const __CategoryPanelName = styled.span`
 const CategoryPanel = ({ tableId, category }) => (
   <Link to={`/tables/${tableId}/categories/${category.id}`} style={{ ...styles.link, boxSizing: 'border-box' }}>
     <__CategoryPanelContainer>
-      <FireStorageImage type='category' photo={category.photo} style={styles.image} />
+      <img src={category.photo.url} style={styles.image} />
       <__CategoryPanelName>{category.name}</__CategoryPanelName>
     </__CategoryPanelContainer>
   </Link>
